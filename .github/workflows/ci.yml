@@ -1,0 +1,105 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  commitlint:
+    name: ci/commitlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate Conventional Commit subjects
+        shell: bash
+        run: |
+          set -euo pipefail
+          regex='^(feat|fix|docs|chore|build|ci|refactor|test|polish)(\(.+\))?: .+'
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            range="origin/${{ github.base_ref }}..HEAD"
+          elif [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            range="${{ github.event.before }}..${{ github.sha }}"
+          else
+            range="${{ github.sha }}"
+          fi
+          git log --pretty=format:'%s' "$range" | while IFS= read -r subject; do
+            [ -z "$subject" ] && continue
+            if ! printf '%s\n' "$subject" | grep -Eq "$regex"; then
+              echo "Invalid commit subject: $subject" >&2
+              exit 1
+            fi
+          done
+
+  schema-validate:
+    name: ci/schema-validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate reference vessel manifests with ajv
+        run: |
+          npx --yes ajv-cli@5 validate \
+            --spec=draft2020 \
+            -s specs/vessel-format/manifest.schema.json \
+            -d examples/horcrx-001-candysoul/manifest.json \
+            -d examples/horcrx-002-orbel-pack/manifest.json
+
+  markdown-link-check:
+    name: ci/markdown-link-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check internal markdown links
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re
+          import sys
+          from pathlib import Path
+          from urllib.parse import unquote
+
+          root = Path.cwd()
+          link_re = re.compile(r'(?<!!)\[[^\]]+\]\(([^)]+)\)')
+          missing = []
+          for md in root.rglob('*.md'):
+              if '.git' in md.parts or 'node_modules' in md.parts:
+                  continue
+              text = md.read_text(encoding='utf-8')
+              for raw in link_re.findall(text):
+                  target = raw.strip().split()[0].strip('<>')
+                  if not target or target.startswith(('#', 'http://', 'https://', 'mailto:')):
+                      continue
+                  target = unquote(target.split('#', 1)[0])
+                  if not target:
+                      continue
+                  candidate = (md.parent / target).resolve()
+                  try:
+                      candidate.relative_to(root.resolve())
+                  except ValueError:
+                      continue
+                  if not candidate.exists():
+                      missing.append(f'{md.relative_to(root)} -> {raw}')
+          if missing:
+              print('Broken internal markdown links:')
+              print('\n'.join(missing))
+              sys.exit(1)
+          print('markdown-link-check: PASS')
+          PY
+
+  voice-lint:
+    name: ci/voice-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure root SOUL.md stays identity-only
+        run: |
+          ! grep -E '(/Users/|git |npm )' SOUL.md
