@@ -69,6 +69,7 @@ Non-interactive Exec Mode prevented an interactive prompt. The assigned feature 
 - `pnpm lint` → PASS (`commits OK`).
 - PR #1 GitHub Actions checks → PASS: `ci/commitlint`, `ci/schema-validate`, `ci/markdown-link-check`, `ci/voice-lint`.
 - PR #5 GitHub Actions checks → PASS: `ci/commitlint`, `ci/schema-validate`, `ci/markdown-link-check`, `ci/voice-lint`.
+- Release workflow extraction was fixed after the first tag run exposed an awk escaping issue; the final `v0.1.0-foundation` tag run passed and created a draft release.
 - `gh repo view chipoto69/HORCRX --json ...` → PASS; description, visibility, topics verified.
 - `git ls-remote --tags origin` → PASS; includes `v0.1.0-foundation`.
 
