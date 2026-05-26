@@ -9,6 +9,7 @@ ATLAS → CORPUS → HORCRX.
 - Preserve the SOUL.md / AGENTS.md split. `SOUL.md` is identity and voice only; `AGENTS.md` is the operational contract for paths, commands, workflows, validation, safety gates, and repo rules.
 - Voice doctrine lives at `packages/design-system/VOICE.md`. Technical specs stay precise; artistic prose follows the inherited HORCRX voice.
 - Brand canon lives in `packages/design-system/`. Preserve inherited design-system files verbatim unless a task explicitly asks for a change.
+- Worker completion reports go to repo root WORKER-COMPLETE.md or under validation/, never inside specs/ or docs/.
 
 ## Commit format
 
