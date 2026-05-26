@@ -13,7 +13,7 @@ jobs:
     name: draft GitHub release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Extract matching CHANGELOG section
         shell: bash
         run: |
