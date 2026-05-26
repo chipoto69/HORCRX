@@ -66,7 +66,7 @@ Preferred flow:
 
 ### 2.5 Registry and search services
 
-Run the indexer against sqlite with two logical tables at minimum:
+Run the indexer against sqlite with four logical tables at minimum:
 
 - `listings`
 - `lineage_events`
