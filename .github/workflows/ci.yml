@@ -31,6 +31,9 @@ jobs:
           fi
           git log --pretty=format:'%s' "$range" | while IFS= read -r subject; do
             [ -z "$subject" ] && continue
+            if printf '%s\n' "$subject" | grep -Eq '^(Merge|Revert) '; then
+              continue
+            fi
             if ! printf '%s\n' "$subject" | grep -Eq "$regex"; then
               echo "Invalid commit subject: $subject" >&2
               exit 1
