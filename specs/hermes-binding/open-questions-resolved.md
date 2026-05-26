@@ -146,6 +146,20 @@ Portable doctrine can express expected working style without weakening host safe
 **Status**  
 `accepted-pending-HITL`
 
+## ADR 11 — Parent/subagent iteration-budget enforcement
+
+**Context**  
+The foundation mission records Hermes constraint #12 as a shared parent/subagent iteration budget, but F03 flagged that the current upstream runtime file `~/.hermes/hermes-agent/agent/iteration_budget.py` documents independent per-subagent caps that can exceed the parent's total. The binding must choose a HORCRX policy before CLI install/export work relies on budget semantics.
+
+**Decision**  
+HORCRX follows the mission doctrine and treats the parent cap as the effective safety ceiling for the whole delegated run. A vessel may recommend per-role budgets, but install, graft, and marketplace-triggered execution must not let aggregate subagent work exceed the host-enforced parent ceiling. Phase 1 must verify the current Hermes runtime behavior and either add HORCRX-side enforcement in the CLI/binding adapter or propose an upstream Hermes patch that brings runtime behavior in line with the shared-budget doctrine.
+
+**Consequences**  
+The protocol remains conservative even if upstream Hermes currently permits larger aggregate subagent iteration counts. Marketplace vessels cannot amplify work budgets just by spawning more roles, and any divergence becomes an explicit Phase 1 compatibility item rather than an accidental runtime assumption.
+
+**Status**  
+`accepted-pending-HITL`
+
 ## Source paths
 
 - `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`

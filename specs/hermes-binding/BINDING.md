@@ -240,17 +240,26 @@ HORCRX export, import, graft, and marketplace behavior MUST preserve all fourtee
 
 ## 9. Cross-check against the vessel format spec
 
-The current vessel format spec is compatible with this binding contract:
+The current vessel format spec is compatible with this binding contract. This table mirrors the fourteen hard constraints in §8 so audit workers can confirm each constraint directly against the vessel spec.
 
-| Vessel spec surface | Hermes binding result |
-|---|---|
-| `/Users/rudlord/HORCRX/specs/vessel-format/SPEC.md` declares the vessel as a strict superset of Hermes profile shape. | Compatible with §2 because import/export keeps Hermes as the runtime directory model. |
-| `/Users/rudlord/HORCRX/specs/vessel-format/memory-split.md` splits portable canon, ephemeral session memory, and host-bound secrets. | Compatible with §4 and the strip/rehydrate rules; no raw `state.db`, `sessions/`, or credentials are required to travel by default. |
-| The vessel spec preserves `soul.md` and `agents.md` as separate surfaces. | Compatible with the SOUL/AGENTS split constraint. |
-| The vessel spec keeps Anthropic-compatible `SKILL.md` packets unchanged. | Compatible with the skill manifest constraint. |
-| The vessel spec requires host-side secret rehydration and deterministic bundle assembly. | Compatible with shell-env key injection and the non-modification guarantee. |
+| §8 hard constraint | Vessel spec confirmation | Result |
+|---|---|---|
+| Secret injection via shell env, not `.env` | `SPEC.md` §7 and `memory-split.md` require secret stripping and host rehydration; example manifests contain no credentials. | compatible |
+| `dispatch()` audit requirement | `traces-format.md` defines redacted audit traces and `BINDING.md` §4.4 requires `vessel_cid` attribution without bypassing Hermes audit. | compatible |
+| Profile directory shape is canonical | `SPEC.md` defines the working folder as a strict Hermes-profile superset with `soul.md`, `agents.md`, skills, memory, crons, and traces. | compatible |
+| Skill manifest format is Anthropic `SKILL.md` | `SPEC.md` §3.3 and `compatibility-matrix.md` preserve `skills/<name>/SKILL.md` unchanged. | compatible |
+| Honcho/GBrain memory boundary | `memory-split.md` separates portable canon from host-bound providers and ephemeral runtime memory. | compatible |
+| Kanban as task substrate | `strip-and-rehydrate.md` keeps raw `kanban.db` host-owned while allowing declarative workflow policy. | compatible |
+| Session log retention | `memory-split.md` and `traces-format.md` exclude raw sessions by default and allow only normalized redacted traces. | compatible |
+| Shell-env LLM keys path | `SPEC.md` §7 and `strip-and-rehydrate.md` require rehydration from host environment or host secret binding. | compatible |
+| SOUL/AGENTS split | `SPEC.md` §3.1 and `soul-md.schema.md` keep identity in `soul.md` and operations in `agents.md`. | compatible |
+| Root Hermes config is read-only | Import behavior in `BINDING.md` materializes new profile-local config and does not modify root Hermes config. | compatible |
+| GATE-01..08 for canon writes | Vessel examples do not write wiki canon; future wiki-touching vessels must use AGENTS.md operational gates, not `soul.md`. | compatible |
+| Iteration budget shared with subagents | `open-questions-resolved.md` ADR 11 sets shared effective cap as HORCRX policy and flags upstream-runtime divergence for Phase 1 verification. | compatible with policy; runtime divergence flagged |
+| Three-tier memory; Tier 3 single-provider-active | `memory-split.md` treats external providers as host-bound and keeps portable memory in markdown canon and optional redacted traces. | compatible |
+| Curator never deletes; archives only | `strip-and-rehydrate.md` requires namespaced grafts and non-destructive curator treatment for imported skill packs. | compatible |
 
-No current vessel-format decision in `/Users/rudlord/HORCRX/specs/vessel-format/` requires HORCRX to violate a Hermes hard constraint. Cross-check sources: `/Users/rudlord/HORCRX/specs/vessel-format/SPEC.md`, `/Users/rudlord/HORCRX/specs/vessel-format/memory-split.md`, `/Users/rudlord/HORCRX/research/09-hermes-binding-recon.md`.
+No current vessel-format decision in `specs/vessel-format/` requires HORCRX to violate a Hermes hard constraint. Cross-check sources: `specs/vessel-format/SPEC.md`, `specs/vessel-format/memory-split.md`, `specs/vessel-format/traces-format.md`, `specs/hermes-binding/strip-and-rehydrate.md`, `research/09-hermes-binding-recon.md`.
 
 ## Source paths
 

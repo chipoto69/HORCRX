@@ -1,0 +1,19 @@
+{
+  "name": "horcrx",
+  "version": "0.1.0-foundation",
+  "private": true,
+  "description": "HORCRX soul-vessel protocol foundation monorepo.",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "lint": "git log --pretty=format:'%s' | grep -vE '^(feat|fix|docs|chore|build|ci|refactor|test|polish)(\\(.+\\))?: .+' && exit 1 || echo 'commits OK'",
+    "test": "python3 -m json.tool specs/vessel-format/manifest.schema.json >/dev/null && echo 'schema json OK'",
+    "build": "turbo run build --continue --no-cache",
+    "validate:manifests": "python3 -m json.tool specs/vessel-format/manifest.schema.json >/dev/null && echo 'manifest schema JSON OK'"
+  },
+  "devDependencies": {
+    "turbo": "latest"
+  }
+}

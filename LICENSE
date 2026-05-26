@@ -1,0 +1,9 @@
+HORCRX foundation licensing notice
+
+Code in this repository is offered under either MIT OR Apache-2.0, at the downstream user's option, unless a file states otherwise.
+
+Brand, documentation, vessel prose, and example content remain owned by their respective authors and are provided for foundation-specification use.
+
+Inherited fonts and font-related files from the HORCRX design system retain their upstream SIL OFL terms. See packages/design-system/LICENSE for the inherited font and brand asset notice.
+
+No production token, wallet seed, private key, or credential is licensed for inclusion in any HORCRX vessel.
