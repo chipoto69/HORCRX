@@ -14,7 +14,7 @@ jobs:
     name: ci/commitlint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Validate Conventional Commit subjects
@@ -44,8 +44,8 @@ jobs:
     name: ci/schema-validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
       - name: Validate reference vessel manifests with ajv
@@ -60,7 +60,7 @@ jobs:
     name: ci/markdown-link-check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Check internal markdown links
         shell: bash
         run: |
@@ -102,7 +102,7 @@ jobs:
     name: ci/voice-lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Ensure root SOUL.md stays identity-only
         run: |
           ! grep -E '(/Users/|git |npm )' SOUL.md

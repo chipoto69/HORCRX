@@ -13,22 +13,22 @@ jobs:
     name: draft GitHub release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Extract matching CHANGELOG section
         shell: bash
         run: |
           set -euo pipefail
           version="${GITHUB_REF_NAME#v}"
           awk -v version="$version" '
-            $0 == "## [" version "]" || $0 ~ "^## \[" version "\] - " { capture=1; next }
-            capture && /^## \[/ { exit }
+            $0 == "## [" version "]" || index($0, "## [" version "] - ") == 1 { capture=1; next }
+            capture && index($0, "## [") == 1 { exit }
             capture { print }
           ' CHANGELOG.md > release-notes.md
           if [ ! -s release-notes.md ]; then
             echo "No CHANGELOG.md section found for $version" >&2
             exit 1
           fi
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           draft: true
           body_path: release-notes.md
