@@ -2,7 +2,7 @@
 
 Version: `v0.1-draft`
 
-ATLAS → CORPUS → HORCRX.
+ATLAS → ORACLE → HORCRX.
 
 HORCRX belongs in a three-layer stack already implied by the mission and the local lineage:
 
