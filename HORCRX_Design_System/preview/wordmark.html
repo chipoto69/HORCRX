@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400; font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#050505; }
+
+  #c { display:block; width:100%; height:100%; }
+
+  #scanlines {
+    position:absolute; inset:0; z-index:5; pointer-events:none;
+    background: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.20) 2px, rgba(0,0,0,0.20) 3px);
+    mix-blend-mode:multiply; opacity:0.45;
+  }
+  #vignette {
+    position:absolute; inset:0; z-index:6; pointer-events:none;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%);
+  }
+
+  .hud {
+    position:absolute; z-index:10; pointer-events:none;
+    font-family:"Departure","Courier New",monospace;
+    color:#fff; mix-blend-mode:difference;
+    display:inline-block; width:max-content;
+  }
+  #attr     { top:14px; left:18px; font-size:8px; letter-spacing:0.24em; text-transform:uppercase; opacity:0.40; }
+  #version  { top:14px; right:18px; font-size:8px; letter-spacing:0.24em; text-transform:uppercase; opacity:0.30; }
+  #tag      { bottom:20px; left:50%; transform:translateX(-50%); text-align:center; font-size:10px; letter-spacing:0.36em; text-transform:uppercase; opacity:0.50; }
+  #domain   { bottom:6px; right:14px; font-size:7px; letter-spacing:0.16em; opacity:0.22; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="scanlines"></div>
+<div id="vignette"></div>
+<div id="attr"    class="hud">wordmark · primary lockup</div>
+<div id="version" class="hud">v0.1 · the atlas sequel</div>
+<div id="tag"     class="hud">essence, distributed</div>
+<div id="domain"  class="hud">horcrux.dev</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+
+let W = 0, H = 0, dpr = 1;
+let mouseX = -9999, mouseY = -9999;
+let alive = 0, aliveTarget = 0;
+
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const r = canvas.getBoundingClientRect();
+  W = r.width; H = r.height;
+  canvas.width  = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+canvas.addEventListener('pointermove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouseX = e.clientX - r.left;
+  mouseY = e.clientY - r.top;
+  aliveTarget = 1;
+});
+canvas.addEventListener('pointerleave', () => { aliveTarget = 0; });
+canvas.addEventListener('pointerenter', () => { aliveTarget = 1; });
+
+// ──────────────────────────────────────────────────────────
+//  LOCKUP COMPOSITION: [[. HORCRX ]]
+//  - [[      brackets, white-channel-heavy
+//  - .       period, cyan-dominant (the live essence)
+//  - HORCRX  wordmark, full chromatic split
+//  - ]]      brackets, white-channel-heavy
+//
+//  Every ~9 seconds a faint U briefly materializes between R and X,
+//  marking where the extracted self once lived.
+// ──────────────────────────────────────────────────────────
+
+function drawSplitGlyph(ch, x, y, size, abb, palette) {
+  ctx.font = `${size}px "Departure","Courier New",monospace`;
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'left';
+  ctx.globalCompositeOperation = 'lighter';
+
+  ctx.fillStyle = palette.r;
+  ctx.fillText(ch, x - abb, y);
+  ctx.fillStyle = palette.c;
+  ctx.fillText(ch, x + abb, y);
+  ctx.fillStyle = palette.w;
+  ctx.fillText(ch, x, y);
+
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+function render(timeMs) {
+  const t = timeMs * 0.001;
+  alive += (aliveTarget - alive) * 0.06;
+
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, W, H);
+
+  const cy = H * 0.50;
+
+  // Sizing — fills the card with comfortable margins
+  const fontSize = Math.min(W * 0.075, H * 0.30);
+  ctx.font = `${fontSize}px "Departure","Courier New",monospace`;
+
+  // Measure each component for precise asymmetric positioning
+  const wOpen    = ctx.measureText('[[').width;
+  const wPeriod  = ctx.measureText('.').width;
+  const wSpace   = ctx.measureText(' ').width;
+  const wWord    = ctx.measureText('HORCRX').width;
+  const wClose   = ctx.measureText(']]').width;
+
+  // Total lockup width:  [[  +  .  +  space  +  HORCRX  +  space  +  ]]
+  const totalW = wOpen + wPeriod + wSpace + wWord + wSpace + wClose;
+  const startX = (W - totalW) * 0.5;
+
+  // Position waypoints
+  let x = startX;
+  const xOpen   = x;                          x += wOpen;
+  const xPeriod = x;                          x += wPeriod;
+  const xSpace1 = x;                          x += wSpace;
+  const xWord   = x;                          const xWordEnd = x + wWord; x = xWordEnd;
+  const xSpace2 = x;                          x += wSpace;
+  const xClose  = x;
+
+  // Breathing — different phases for different elements
+  const breath  = (Math.sin(t * 0.75) + 1) * 0.5;
+  const heart   = Math.pow(Math.sin(t * 1.50), 4);
+
+  const baseAbb = 1.3 + breath * 0.6;
+
+  // Brackets — white-channel-heavy
+  const bracketPalette = {
+    r: 'rgba(255,55,55,0.45)',
+    c: 'rgba(60,220,230,0.45)',
+    w: 'rgba(225,225,230,0.65)',
+  };
+  drawSplitGlyph('[[', xOpen,  cy, fontSize, baseAbb * 1.05, bracketPalette);
+  drawSplitGlyph(']]', xClose, cy, fontSize, baseAbb * 1.05, bracketPalette);
+
+  // Period — pure cyan, no additive blowout
+  ctx.font = `${fontSize}px "Departure","Courier New",monospace`;
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'left';
+  const periodA = 0.85 + heart * 0.15;
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = `rgba(0,240,255,${periodA.toFixed(3)})`;
+  ctx.fillText('.', xPeriod, cy);
+
+  // Subtle period ghosts only at peak heartbeat
+  if (heart > 0.5) {
+    const ghostA = (heart - 0.5) * 0.3;
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = `rgba(255,55,75,${ghostA.toFixed(3)})`;
+    ctx.fillText('.', xPeriod - 1.4, cy);
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
+  // HORCRX wordmark — chromatic per character
+  const wordChars = 'HORCRX';
+  ctx.font = `${fontSize}px "Departure","Courier New",monospace`;
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'left';
+
+  // Compute per-char x positions
+  const charW = wWord / wordChars.length; // monospace
+  const wordPalette = {
+    r: 'rgba(255,55,55,0.78)',
+    c: 'rgba(60,220,230,0.78)',
+    w: 'rgba(225,225,230,0.45)',
+  };
+  for (let i = 0; i < wordChars.length; i++) {
+    const ch = wordChars[i];
+    const cx = xWord + i * charW;
+    // Subtle phase variation per char
+    const phase = breath + i * 0.07;
+    const abb = baseAbb + 0.3 + Math.sin(phase * 3) * 0.3;
+    drawSplitGlyph(ch, cx, cy, fontSize, abb, wordPalette);
+  }
+
+  // ── U-ghost reveal · the missing self
+  // Every ~9 seconds, a faint U appears for ~700ms between R and X
+  const ghostPeriod = 9;       // seconds
+  const ghostT = (t % ghostPeriod) / ghostPeriod;
+  if (ghostT < 0.10) {
+    // 0..0.10 of the period — fade in then out
+    const localT = ghostT / 0.10;
+    const ghostAlpha = Math.sin(localT * Math.PI) * 0.45;
+    // Position: between R (idx 4) and X (idx 5) — between two character cells
+    const xGhost = xWord + (4.5) * charW;
+    ctx.font = `${fontSize}px "Departure","Courier New",monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.globalCompositeOperation = 'lighter';
+    // Trembling vertical offset — like the ghost is trying to hold form
+    const jitter = (Math.random() - 0.5) * 0.8;
+    ctx.fillStyle = `rgba(255,55,55,${(ghostAlpha * 0.7).toFixed(3)})`;
+    ctx.fillText('U', xGhost - 2.4, cy + jitter);
+    ctx.fillStyle = `rgba(60,220,230,${(ghostAlpha * 0.7).toFixed(3)})`;
+    ctx.fillText('U', xGhost + 2.4, cy - jitter);
+    ctx.fillStyle = `rgba(225,225,230,${(ghostAlpha * 0.5).toFixed(3)})`;
+    ctx.fillText('U', xGhost, cy);
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  // ── Scan sweep — vertical beam passes once per ~12s
+  const sweepPeriod = 12;
+  const sweepPhase = (t % sweepPeriod) / sweepPeriod;
+  if (sweepPhase < 0.10) {
+    const sx = sweepPhase / 0.10 * (W + 80) - 40;
+    const grd = ctx.createLinearGradient(sx - 6, 0, sx + 6, 0);
+    grd.addColorStop(0, 'rgba(0,240,255,0)');
+    grd.addColorStop(0.5, 'rgba(0,240,255,0.08)');
+    grd.addColorStop(1, 'rgba(0,240,255,0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(sx - 6, 0, 12, H);
+  }
+
+  requestAnimationFrame(render);
+}
+
+window.addEventListener('load', () => { resize(); requestAnimationFrame(render); });
+window.addEventListener('resize', resize);
+</script>
+</body>
+</html>

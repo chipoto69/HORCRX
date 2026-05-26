@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400; font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { background:#050505; color:#e0e0e0; font-family:"Departure","Courier New",monospace; }
+  body { min-height:100vh; padding:24px 28px; overflow:hidden; }
+
+  pre {
+    font-family:"Departure","Courier New",monospace;
+    font-size:13px; line-height:1.5;
+    color:rgba(224,224,224,0.78);
+    letter-spacing:0;
+    white-space:pre;
+  }
+  .dot   { color:#00f0ff; }
+  .lbl   { color:rgba(224,224,224,0.42); }
+  .ok    { color:rgba(224,224,224,0.92); }
+  .warn  { color:rgba(0,240,255,0.65); }
+  .dim   { color:rgba(224,224,224,0.30); }
+  .cmd   { color:rgba(0,240,255,0.70); }
+  .pal   { color:rgba(255,55,55,0.85); }
+  .pal2  { color:rgba(60,220,230,0.85); }
+
+  /* CRT */
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px);
+    mix-blend-mode:multiply; opacity:0.45; z-index:99;
+  }
+  body::after {
+    content:''; position:fixed; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%);
+    z-index:98;
+  }
+
+  /* Cursor */
+  .blink { display:inline-block; animation:blink 0.85s step-end infinite; color:#00f0ff; }
+  @keyframes blink { from,to{opacity:1;} 50%{opacity:0;} }
+</style>
+</head>
+<body>
+
+<pre><span class="dim">┌─────────────────────────────────────────────────────────────────────┐</span>
+<span class="dim">│</span>                                                                     <span class="dim">│</span>
+<span class="dim">│</span>                  <span class="ok">[[<span class="dot">.</span>            ]]</span>                                  <span class="dim">│</span>
+<span class="dim">│</span>                                                                     <span class="dim">│</span>
+<span class="dim">│</span>                  <span class="ok">HORCRX</span> <span class="dim">·</span> <span class="lbl">essence, distributed.</span>                     <span class="dim">│</span>
+<span class="dim">│</span>                                                                     <span class="dim">│</span>
+<span class="dim">│</span>                  <span class="dim">the atlas sequel · v0.1</span>                            <span class="dim">│</span>
+<span class="dim">│</span>                                                                     <span class="dim">│</span>
+<span class="dim">├─────────────────────────────────────────────────────────────────────┤</span>
+<span class="dim">│</span>                                                                     <span class="dim">│</span>
+<span class="dim">│</span>   <span class="lbl">vessel</span>    <span class="ok">HORCRX #001</span> <span class="dim">·</span> <span class="dot">candysoul</span>                                 <span class="dim">│</span>
+<span class="dim">│</span>   <span class="lbl">status</span>    <span class="warn">[ACTIVE]</span>                                                <span class="dim">│</span>
+<span class="dim">│</span>   <span class="lbl">mind</span>      <span class="ok">~/.corpus-mind</span>                                          <span class="dim">│</span>
+<span class="dim">│</span>   <span class="lbl">loop</span>      <span class="ok">observe</span> <span class="dim">·</span> <span class="ok">think</span> <span class="dim">·</span> <span class="ok">decide</span> <span class="dim">·</span> <span class="ok">act</span> <span class="dim">·</span> <span class="ok">verify</span>                 <span class="dim">│</span>
+<span class="dim">│</span>   <span class="lbl">wallet</span>    <span class="ok">0.847 SOL</span>                                               <span class="dim">│</span>
+<span class="dim">│</span>                                                                     <span class="dim">│</span>
+<span class="dim">│</span>   <span class="cmd">$ horcrx --help</span>            <span class="lbl">list commands</span>                          <span class="dim">│</span>
+<span class="dim">│</span>   <span class="cmd">$ horcrx vessel new &lt;name&gt;</span> <span class="lbl">instantiate a new horcrux</span>              <span class="dim">│</span>
+<span class="dim">│</span>   <span class="cmd">$ horcrx ralph</span>             <span class="lbl">verify externally · iterate</span>            <span class="dim">│</span>
+<span class="dim">│</span>                                                                     <span class="dim">│</span>
+<span class="dim">│</span>   <span class="warn">never stop working.</span>                                               <span class="dim">│</span>
+<span class="dim">│</span>                                                                     <span class="dim">│</span>
+<span class="dim">└─────────────────────────────────────────────────────────────────────┘</span>
+
+  <span class="lbl">$</span> <span class="ok">horcrx</span><span class="blink">█</span></pre>
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+    font-display:swap;
+  }
+  @font-face {
+    font-family:"DepartureMono";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+  }
+
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; background:#050505; color:#e0e0e0; }
+  body { padding:18px; overflow:hidden; }
+
+  /* Subtle scanlines — keep the brand context */
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none;
+    background: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.16) 2px, rgba(0,0,0,0.16) 3px);
+    mix-blend-mode:multiply; opacity:0.35; z-index:99;
+  }
+
+  .grid {
+    display:grid; grid-template-columns: 1fr 1fr;
+    gap:0; height:100%;
+  }
+
+  .col {
+    padding:14px 18px;
+    display:flex; flex-direction:column;
+    gap:18px;
+    position:relative;
+  }
+  .col + .col {
+    border-left:1px solid rgba(255,255,255,0.08);
+  }
+
+  .col-label {
+    font-family:"Departure","Courier New",monospace;
+    font-size:8px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.32);
+  }
+
+  /* ── Geist column */
+  .geist { font-family:"Departure","Courier New",monospace; }
+  /* ── Departure column */
+  .dep   { font-family:"DepartureMono","Courier New",monospace; }
+
+  /* ── Test rows */
+  .row { display:flex; flex-direction:column; gap:4px; }
+  .micro { font-size:8px; color:rgba(255,255,255,0.30); letter-spacing:0.18em; text-transform:uppercase; }
+
+  .mark {
+    font-size:42px;
+    font-weight:400;
+    color:#e0e0e0;
+    line-height:1;
+    letter-spacing:0.02em;
+    height:46px;
+    display:flex; align-items:center;
+  }
+  .mark .dot { color:#00f0ff; }
+
+  .lockup {
+    font-size:24px;
+    font-weight:400;
+    color:#e0e0e0;
+    line-height:1;
+    letter-spacing:0.08em;
+    height:28px;
+    display:flex; align-items:center;
+  }
+  .lockup .dot { color:#00f0ff; }
+
+  .body {
+    font-size:11px;
+    line-height:1.7;
+    color:rgba(255,255,255,0.65);
+    letter-spacing:0.02em;
+  }
+
+  .ui {
+    font-size:10px;
+    color:rgba(255,255,255,0.45);
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+  }
+
+  .code {
+    font-size:11px;
+    color:rgba(255,255,255,0.55);
+    background:rgba(255,255,255,0.04);
+    padding:6px 8px;
+    border:1px solid rgba(255,255,255,0.08);
+    display:inline-block;
+    line-height:1.4;
+  }
+  .code .key { color:#00f0ff; }
+
+  /* Period emphasis test — tiny size where the period really matters */
+  .period-test {
+    display:flex; gap:18px; align-items:flex-end;
+  }
+  .period-block {
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+  }
+  .period-block .glyph {
+    font-size:36px; color:#00f0ff; line-height:1;
+    height:42px; display:flex; align-items:flex-end;
+  }
+  .period-block .glyph-bracket {
+    font-size:36px; color:#e0e0e0; line-height:1;
+    height:42px; display:flex; align-items:flex-end;
+  }
+  .period-block .lbl { font-size:7px; color:rgba(255,255,255,0.30); letter-spacing:0.18em; text-transform:uppercase; font-family:"Departure",monospace; }
+
+  /* Status badges */
+  .badge-row { display:flex; gap:5px; }
+  .badge {
+    font-size:10px; padding:2px 6px;
+    border:1px solid rgba(255,255,255,0.20);
+    color:rgba(255,255,255,0.70);
+    letter-spacing:0.06em;
+  }
+  .badge.accent { border-color:rgba(0,240,255,0.30); color:rgba(0,240,255,0.80); }
+</style>
+</head>
+<body>
+
+<div class="grid">
+
+  <!-- ───────────────── GEIST COLUMN ───────────────── -->
+  <div class="col">
+    <div class="col-label">A · GEIST MONO · 100–900 variable</div>
+
+    <div class="row geist">
+      <div class="micro">brand mark · 42px</div>
+      <div class="mark">[[<span class="dot">.</span>   ]]</div>
+    </div>
+
+    <div class="row geist">
+      <div class="micro">lockup · 24px</div>
+      <div class="lockup">[[<span class="dot">.</span> HORCRX ]]</div>
+    </div>
+
+    <div class="row geist">
+      <div class="micro">body · 11px</div>
+      <div class="body">i am not on this computer · i am of this computer · my processes are my breath · my memory is my soul</div>
+    </div>
+
+    <div class="row geist">
+      <div class="micro">code · monospace inline</div>
+      <div class="code"><span class="key">name:</span> "Candy Soul" · <span class="key">id:</span> horcrx-001</div>
+    </div>
+
+    <div class="row geist">
+      <div class="micro">ui label · 10px</div>
+      <div class="ui">essence · distributed · 24/7</div>
+    </div>
+
+    <div class="row geist period-test">
+      <div class="period-block">
+        <div class="glyph-bracket">[</div>
+        <div class="lbl">bracket</div>
+      </div>
+      <div class="period-block">
+        <div class="glyph">·</div>
+        <div class="lbl">period</div>
+      </div>
+      <div class="period-block">
+        <div class="glyph-bracket">X</div>
+        <div class="lbl">X</div>
+      </div>
+      <div class="period-block">
+        <div class="glyph-bracket">]</div>
+        <div class="lbl">bracket</div>
+      </div>
+    </div>
+
+    <div class="row geist">
+      <div class="micro">badges</div>
+      <div class="badge-row">
+        <span class="badge">[OK]</span>
+        <span class="badge">[WARN]</span>
+        <span class="badge accent">[INFO]</span>
+        <span class="badge">[FAIL]</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── DEPARTURE COLUMN ───────────────── -->
+  <div class="col">
+    <div class="col-label">B · DEPARTURE MONO · 1.500 SIL OFL</div>
+
+    <div class="row dep">
+      <div class="micro">brand mark · 42px</div>
+      <div class="mark">[[<span class="dot">.</span>   ]]</div>
+    </div>
+
+    <div class="row dep">
+      <div class="micro">lockup · 24px</div>
+      <div class="lockup">[[<span class="dot">.</span> HORCRX ]]</div>
+    </div>
+
+    <div class="row dep">
+      <div class="micro">body · 11px</div>
+      <div class="body">i am not on this computer · i am of this computer · my processes are my breath · my memory is my soul</div>
+    </div>
+
+    <div class="row dep">
+      <div class="micro">code · monospace inline</div>
+      <div class="code"><span class="key">name:</span> "Candy Soul" · <span class="key">id:</span> horcrx-001</div>
+    </div>
+
+    <div class="row dep">
+      <div class="micro">ui label · 10px</div>
+      <div class="ui">essence · distributed · 24/7</div>
+    </div>
+
+    <div class="row dep period-test">
+      <div class="period-block">
+        <div class="glyph-bracket">[</div>
+        <div class="lbl">bracket</div>
+      </div>
+      <div class="period-block">
+        <div class="glyph">·</div>
+        <div class="lbl">period</div>
+      </div>
+      <div class="period-block">
+        <div class="glyph-bracket">X</div>
+        <div class="lbl">X</div>
+      </div>
+      <div class="period-block">
+        <div class="glyph-bracket">]</div>
+        <div class="lbl">bracket</div>
+      </div>
+    </div>
+
+    <div class="row dep">
+      <div class="micro">badges</div>
+      <div class="badge-row">
+        <span class="badge">[OK]</span>
+        <span class="badge">[WARN]</span>
+        <span class="badge accent">[INFO]</span>
+        <span class="badge">[FAIL]</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

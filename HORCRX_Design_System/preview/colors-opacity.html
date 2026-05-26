@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400; font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    background:#050505;
+    font-family:"Departure","Courier New",monospace;
+    padding:18px;
+    min-height:100vh;
+    color:#e0e0e0;
+  }
+
+  .title {
+    font-size:9px;
+    color:#a0a0a0;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+
+  .row {
+    display:grid;
+    grid-template-columns: 56px 40px 1fr;
+    gap:14px;
+    align-items:center;
+    padding:5px 0;
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+  .row:first-of-type { border-top:0; }
+
+  .bar-wrap {
+    height:14px;
+    background:rgba(255,255,255,0.04);
+    position:relative;
+    overflow:hidden;
+  }
+  .bar {
+    position:absolute; left:0; top:0; bottom:0;
+    background:#e0e0e0;
+  }
+
+  .label {
+    font-size:11px;
+    color:#a0a0a0;        /* always readable */
+    letter-spacing:0.04em;
+  }
+
+  .sample {
+    font-size:12px;
+    letter-spacing:0.02em;
+    color:#e0e0e0;        /* base white, opacity applied via .o-N classes */
+  }
+  /* opacity levels */
+  .o-100 { opacity:1.00; }
+  .o-85  { opacity:0.85; }
+  .o-70  { opacity:0.70; }
+  .o-55  { opacity:0.55; }
+  .o-40  { opacity:0.40; }
+  .o-25  { opacity:0.25; }
+  .o-15  { opacity:0.15; }
+
+  .group { margin-bottom:16px; }
+
+  /* CRT scanlines */
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none;
+    background: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.16) 2px, rgba(0,0,0,0.16) 3px);
+    mix-blend-mode:multiply; opacity:0.30; z-index:99;
+  }
+</style>
+</head>
+<body>
+
+  <div class="group">
+    <div class="title">opacity scale · text on #050505</div>
+
+    <div class="row">
+      <span class="label">--text-1</span>
+      <span class="label">100</span>
+      <div>
+        <div class="bar-wrap"><div class="bar" style="width:100%;"></div></div>
+        <div class="sample o-100" style="margin-top:2px;">the vessel speaks · primary brand text</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="label">--text-2</span>
+      <span class="label">85</span>
+      <div>
+        <div class="bar-wrap"><div class="bar" style="width:85%;"></div></div>
+        <div class="sample o-85"  style="margin-top:2px;">body copy · paragraph default · readable</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="label">--text-3</span>
+      <span class="label">70</span>
+      <div>
+        <div class="bar-wrap"><div class="bar" style="width:70%;"></div></div>
+        <div class="sample o-70"  style="margin-top:2px;">secondary text · captions · supporting detail</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="label">--text-4</span>
+      <span class="label">55</span>
+      <div>
+        <div class="bar-wrap"><div class="bar" style="width:55%;"></div></div>
+        <div class="sample o-55"  style="margin-top:2px;">metadata · timestamps · author lines</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="label">--text-5</span>
+      <span class="label">40</span>
+      <div>
+        <div class="bar-wrap"><div class="bar" style="width:40%;"></div></div>
+        <div class="sample o-40"  style="margin-top:2px;">labels · ui chrome · inert states</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="label">--text-6</span>
+      <span class="label">25</span>
+      <div>
+        <div class="bar-wrap"><div class="bar" style="width:25%;"></div></div>
+        <div class="sample o-25"  style="margin-top:2px;">placeholder · disabled · ghost interface</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="label">--text-7</span>
+      <span class="label">15</span>
+      <div>
+        <div class="bar-wrap"><div class="bar" style="width:15%;"></div></div>
+        <div class="sample o-15"  style="margin-top:2px;">edge of perception · barely there · 15%</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:9px; color:#707070; letter-spacing:0.06em; line-height:1.7; padding-top:6px; border-top:1px solid rgba(255,255,255,0.06);">
+    seven steps · use named tokens, not raw alpha · the bottom three rows<br>
+    are reserved for chrome and ambient texture, never primary content
+  </div>
+
+</body>
+</html>

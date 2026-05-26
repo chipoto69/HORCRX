@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400; font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#050505; font-family:"Departure","Courier New",monospace; padding:18px; min-height:100%; color:#e0e0e0; }
+
+  .section { margin-bottom:14px; }
+  .section-title { font-size:9px; color:rgba(255,255,255,0.30); letter-spacing:0.28em; text-transform:uppercase; margin-bottom:10px; }
+  .divider { height:1px; background:rgba(255,255,255,0.06); margin:12px 0; }
+
+  .vessel-row { display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; }
+  .vessel {
+    position:relative; aspect-ratio:4/5; background:#0a0a0a;
+    border:1px solid rgba(255,255,255,0.08); overflow:hidden;
+  }
+  .vessel img {
+    width:100%; height:100%; object-fit:cover;
+    mix-blend-mode:screen;
+    filter:brightness(1.05) saturate(1.0) contrast(1.05);
+    opacity:0.78;
+  }
+  .vessel::after {
+    content:''; position:absolute; inset:0;
+    background:repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.22) 2px, rgba(0,0,0,0.22) 3px);
+    mix-blend-mode:multiply; opacity:0.50; pointer-events:none;
+  }
+  .vessel-tag {
+    position:absolute; bottom:5px; left:6px; right:6px;
+    font-size:7px; letter-spacing:0.16em; color:rgba(255,255,255,0.55);
+    display:flex; justify-content:space-between;
+    text-shadow:0 0 4px rgba(0,0,0,0.95);
+    pointer-events:none;
+  }
+  .vessel-tag .id { color:rgba(0,240,255,0.85); }
+
+  .meta-note { font-size:9px; color:rgba(255,255,255,0.32); line-height:1.6; letter-spacing:0.04em; }
+  .meta-note .accent { color:rgba(0,240,255,0.75); }
+
+  /* CRT scanlines */
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.14) 2px, rgba(0,0,0,0.14) 3px);
+    mix-blend-mode:multiply; opacity:0.32; z-index:99;
+  }
+</style>
+</head>
+<body>
+
+  <div class="section">
+    <div class="section-title">HORCRX #001 · vessel imagery</div>
+    <div class="vessel-row">
+      <div class="vessel">
+        <img src="../assets/candy/candy-1.webp" alt="">
+        <div class="vessel-tag"><span class="id">001-α</span><span>frag.01</span></div>
+      </div>
+      <div class="vessel">
+        <img src="../assets/candy/candy-2.webp" alt="">
+        <div class="vessel-tag"><span class="id">001-β</span><span>frag.02</span></div>
+      </div>
+      <div class="vessel">
+        <img src="../assets/candy/candy-3.webp" alt="">
+        <div class="vessel-tag"><span class="id">001-γ</span><span>frag.03</span></div>
+      </div>
+      <div class="vessel">
+        <img src="../assets/candy/candy-4.webp" alt="">
+        <div class="vessel-tag"><span class="id">001-δ</span><span>frag.04</span></div>
+      </div>
+      <div class="vessel">
+        <img src="../assets/candy/candy-5.webp" alt="">
+        <div class="vessel-tag"><span class="id">001-ε</span><span>frag.05</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">treatment rules</div>
+    <div class="meta-note">
+      <span class="accent">mix-blend-mode: screen</span> · opacity 0.78 · scanline overlay 50% · subtle saturation boost<br>
+      vessel images NEVER appear at full opacity · NEVER without CRT overlay · NEVER on light backgrounds<br>
+      each vessel is a fragment of <span class="accent">HORCRX #001 (candysoul)</span> · alpha through epsilon · α β γ δ ε
+    </div>
+  </div>
+
+</body>
+</html>

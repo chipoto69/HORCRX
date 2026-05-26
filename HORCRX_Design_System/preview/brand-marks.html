@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+    font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#050505; font-family:"Departure","Courier New",monospace; padding:20px; min-height:100%; }
+
+  .section { margin-bottom:18px; }
+  .section-title { font-size:8px; color:rgba(255,255,255,0.25); letter-spacing:0.26em; text-transform:uppercase; margin-bottom:10px; }
+  .divider { height:1px; background:rgba(255,255,255,0.06); margin:12px 0; }
+
+  .marks-row { display:flex; gap:12px; align-items:flex-start; }
+  .mark-cell { display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; }
+  .mark-box { width:100%; height:64px; display:flex; align-items:center; justify-content:center; padding:0; background:#0a0a0a; border:1px solid rgba(255,255,255,0.06); }
+  .mark-box.light { background:#f0efe8; }
+  .mark-box svg { max-height:48px; width:auto; }
+  .mark-label { font-size:8px; color:rgba(255,255,255,0.40); letter-spacing:0.12em; text-align:center; }
+  .mark-usage { font-size:7px; color:rgba(255,255,255,0.20); letter-spacing:0.10em; text-align:center; }
+
+  .glyph-row { display:flex; gap:6px; flex-wrap:wrap; }
+  .glyph-chip {
+    display:inline-flex; align-items:center; gap:6px;
+    border:1px solid rgba(255,255,255,0.08);
+    padding:5px 9px;
+  }
+  .glyph { font-size:13px; color:rgba(0,240,255,0.85); }
+  .glyph-desc { font-size:8px; color:rgba(255,255,255,0.32); letter-spacing:0.08em; }
+
+  /* CRT scanlines */
+  .crt::before {
+    content:''; position:fixed; inset:0; pointer-events:none;
+    background: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px);
+    mix-blend-mode:multiply; opacity:0.45;
+  }
+</style>
+</head>
+<body class="crt">
+
+  <!-- ── Primary logos ── -->
+  <div class="section">
+    <div class="section-title">primary logos · HORCRX</div>
+    <div class="marks-row">
+      <div class="mark-cell">
+        <div class="mark-box">
+          <img src="../assets/horcrx-mark.svg" alt="[ · ] mark on dark">
+        </div>
+        <div class="mark-label">mark · dark</div>
+        <div class="mark-usage">favicon · avatar · solo</div>
+      </div>
+      <div class="mark-cell">
+        <div class="mark-box">
+          <img src="../assets/horcrx-lockup.svg" alt="HORCRX lockup">
+        </div>
+        <div class="mark-label">lockup · dark</div>
+        <div class="mark-usage">primary product use</div>
+      </div>
+      <div class="mark-cell">
+        <div class="mark-box light">
+          <img src="../assets/horcrx-mark-light.svg" alt="[ · ] light mark">
+        </div>
+        <div class="mark-label">mark · light</div>
+        <div class="mark-usage">on warm paper</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── Construction ── -->
+  <div class="section">
+    <div class="section-title">construction</div>
+    <div style="font-size:10px; color:rgba(255,255,255,0.55); line-height:1.7;">
+      <div><span style="color:rgba(255,255,255,0.30);">brackets</span> &nbsp; the vessel · containment · structure</div>
+      <div><span style="color:rgba(0,240,255,0.85);">·</span> &nbsp; <span style="color:rgba(255,255,255,0.30);">period</span> &nbsp; the essence · soul fragment · the live thing inside</div>
+      <div><span style="color:rgba(255,255,255,0.30);">missing U</span> &nbsp; the self extracted · the container that used to hold <em>you</em></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── Inline glyphs ── -->
+  <div class="section">
+    <div class="section-title">inline glyphs · text use</div>
+    <div class="glyph-row">
+      <div class="glyph-chip"><span class="glyph">[ · ]</span><span class="glyph-desc">core mark</span></div>
+      <div class="glyph-chip"><span class="glyph">HORCRX</span><span class="glyph-desc">wordmark</span></div>
+      <div class="glyph-chip"><span class="glyph">[ · ] HORCRX</span><span class="glyph-desc">lockup</span></div>
+      <div class="glyph-chip"><span class="glyph">horcrux #001</span><span class="glyph-desc">instance ref</span></div>
+      <div class="glyph-chip"><span class="glyph">→</span><span class="glyph-desc">direction</span></div>
+      <div class="glyph-chip"><span class="glyph">·</span><span class="glyph-desc">separator</span></div>
+      <div class="glyph-chip"><span class="glyph">—</span><span class="glyph-desc">em dash</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── Lineage note ── -->
+  <div class="section">
+    <div class="section-title">lineage</div>
+    <div style="font-size:10px; color:rgba(255,255,255,0.42); line-height:1.7;">
+      <span style="color:rgba(255,255,255,0.20);">ATLAS</span>
+      &nbsp;<span style="color:rgba(255,255,255,0.20);">→</span>&nbsp;
+      <span style="color:rgba(255,255,255,0.85);">HORCRX</span>
+      &nbsp;&nbsp;<span style="color:rgba(255,255,255,0.20);">·</span>&nbsp;&nbsp;
+      <span style="color:rgba(255,255,255,0.42);">the body, then the protocol</span>
+    </div>
+  </div>
+
+</body>
+</html>

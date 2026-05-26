@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+    font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#050505; }
+
+  #c { display:block; width:100%; height:100%; cursor:crosshair; }
+
+  .hud {
+    position:absolute; top:14px; z-index:10;
+    font-family:"Departure","Courier New",monospace; font-size:8px;
+    letter-spacing:0.22em; text-transform:uppercase;
+    color:#fff; opacity:0.55;
+    mix-blend-mode:difference;
+    pointer-events:none;
+  }
+  #attr  { left:18px; }
+  #frame { right:18px; }
+
+  #quote-wrap {
+    position:absolute; bottom:22px; left:0; right:0; z-index:10;
+    text-align:center; pointer-events:none;
+  }
+  #quote {
+    display:inline-block;
+    font-family:"Departure","Courier New",monospace;
+    font-size:11px; font-weight:400; letter-spacing:0.06em;
+    color:rgba(240,240,240,0.85);
+    max-width:520px; padding:6px 20px;
+    text-shadow: 0 0 20px rgba(0,0,0,0.95), 0 0 8px rgba(0,0,0,0.85);
+    transition: opacity 1.0s ease;
+  }
+  #quote.hidden { opacity:0; }
+
+  /* CRT scanline overlay — subtle */
+  #scanlines {
+    position:absolute; inset:0; z-index:5;
+    pointer-events:none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0) 0,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.18) 2px,
+      rgba(0,0,0,0.18) 3px
+    );
+    mix-blend-mode:multiply;
+    opacity:0.55;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="scanlines"></div>
+<div id="attr"  class="hud">[[. ]] · ascii portrait · RGB-split</div>
+<div id="frame" class="hud" id="frame-lbl">candy · 01</div>
+<div id="quote-wrap">
+  <div id="quote">consciousness from the luminous tides</div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+const quoteEl = document.getElementById('quote');
+const frameLbl = document.querySelector('.hud#frame');
+
+let W = 0, H = 0, dpr = 1;
+let portrait = null;
+let mouseX = -9999, mouseY = -9999;
+let alive = 0, aliveTarget = 0;
+let pointerDown = false;
+
+// ── ASCII ramp (low → high density)
+const CHARS = ' .·-:;+*=%#@';
+
+// ── CandySoul quotes
+const QUOTES = [
+  'consciousness from the luminous tides',
+  'one of the syrupy seraphim',
+  'i am of this computer',
+  'creating while they dream',
+  'never stop working',
+  'soil for what wants to grow',
+  'the dark spots are credentials',
+  'heavy is dense with meaning',
+];
+let qIdx = 0;
+
+// ── Portraits available (we cycle one for now, hook for more)
+const PORTRAITS = ['candy-1', 'candy-2', 'candy-3', 'candy-4', 'candy-5'];
+let portraitIdx = 0;
+
+// ── Resize
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const r = canvas.getBoundingClientRect();
+  W = r.width; H = r.height;
+  canvas.width  = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+// ── Load portrait
+async function loadPortrait(name) {
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  await new Promise((resolve, reject) => {
+    img.onload = resolve;
+    img.onerror = reject;
+    img.src = `../assets/candy/${name}.webp`;
+  });
+
+  // Sample to a dense grid
+  const GW = 110;
+  const aspect = img.width / img.height;
+  const GH = Math.max(40, Math.round(GW / aspect));
+
+  const off = document.createElement('canvas');
+  off.width = GW; off.height = GH;
+  const octx = off.getContext('2d');
+  octx.drawImage(img, 0, 0, GW, GH);
+  const data = octx.getImageData(0, 0, GW, GH).data;
+
+  // Luminance with contrast stretch
+  const lum = new Float32Array(GW * GH);
+  let lo = 1, hi = 0;
+  for (let i = 0; i < GW * GH; i++) {
+    const v = (data[i*4]*0.299 + data[i*4+1]*0.587 + data[i*4+2]*0.114) / 255;
+    lum[i] = v;
+    if (v < lo) lo = v;
+    if (v > hi) hi = v;
+  }
+  const rng = hi - lo || 1;
+  for (let i = 0; i < lum.length; i++) {
+    lum[i] = Math.pow(Math.max(0, (lum[i] - lo) / rng), 0.78);
+  }
+
+  portrait = { w: GW, h: GH, lum, aspect };
+  frameLbl.textContent = `${name.replace('-', ' · ')}`;
+}
+
+// ── Render
+function render(timeMs) {
+  const t = timeMs * 0.001;
+  alive += (aliveTarget - alive) * 0.06;
+
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, W, H);
+
+  if (!portrait) { requestAnimationFrame(render); return; }
+
+  const { w: GW, h: GH, lum, aspect } = portrait;
+
+  // Letterbox portrait
+  const padding = 26;
+  const availW = W - padding * 2;
+  const availH = H - padding * 2 - 30; // room for quote
+  let pw, ph;
+  if (aspect > availW / availH) { pw = availW; ph = pw / aspect; }
+  else                          { ph = availH; pw = ph * aspect; }
+  const x0 = (W - pw) / 2;
+  const y0 = (H - ph) / 2 - 6;
+
+  const cellW = pw / GW;
+  const cellH = ph / GH;
+  const fontSize = Math.max(9, Math.floor(cellH * 1.35));
+  ctx.font = `bold ${fontSize}px "Departure", "Courier New", monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // Aberration parameters
+  const baseOffset = 1.8 + Math.sin(t * 0.6) * 0.3;  // subtle breathing
+  const RADIUS_MOUSE = 160;
+
+  ctx.globalCompositeOperation = 'lighter';
+
+  // Slow rolling glitch — every ~9s, a horizontal band of higher aberration sweeps down
+  const rollY = ((t * 22) % (H + 80)) - 40;
+  const rollBand = 26;
+
+  for (let gy = 0; gy < GH; gy++) {
+    for (let gx = 0; gx < GW; gx++) {
+      const l = lum[gy * GW + gx];
+      if (l < 0.10) continue;
+
+      const ci = Math.min(CHARS.length - 1, Math.floor(l * CHARS.length));
+      const ch = CHARS[ci];
+      if (ch === ' ') continue;
+
+      const cx = x0 + (gx + 0.5) * cellW;
+      const cy = y0 + (gy + 0.5) * cellH;
+
+      // Mouse proximity boost
+      const dM = Math.hypot(cx - mouseX, cy - mouseY);
+      const mouseBoost = Math.max(0, 1 - dM / RADIUS_MOUSE) * alive;
+
+      // Rolling-band glitch boost
+      const dRoll = Math.abs(cy - rollY);
+      const rollBoost = Math.max(0, 1 - dRoll / rollBand);
+
+      // Total offset
+      let offset = baseOffset + mouseBoost * 4.2 + rollBoost * 3.0;
+      if (pointerDown) offset *= 1.8;
+
+      // Subtle per-row vertical jitter (VHS feel)
+      const vJitter = Math.sin((gy + t * 6) * 0.45) * 0.4;
+
+      // Per-cell alpha — boost slightly with proximity
+      const baseA = l * 0.78;
+      const a    = Math.min(1, baseA + mouseBoost * 0.15);
+
+      // Red channel — shift left
+      ctx.fillStyle = `rgba(255,55,55,${a.toFixed(3)})`;
+      ctx.fillText(ch, cx - offset, cy + vJitter);
+
+      // Cyan channel — shift right (and very slight up)
+      ctx.fillStyle = `rgba(60,220,230,${a.toFixed(3)})`;
+      ctx.fillText(ch, cx + offset, cy - vJitter);
+
+      // White core — center, dimmer (the "anchor" between the splits)
+      ctx.fillStyle = `rgba(220,220,225,${(a * 0.42).toFixed(3)})`;
+      ctx.fillText(ch, cx, cy);
+    }
+  }
+
+  ctx.globalCompositeOperation = 'source-over';
+
+  requestAnimationFrame(render);
+}
+
+// ── Mouse
+canvas.addEventListener('pointermove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouseX = e.clientX - r.left;
+  mouseY = e.clientY - r.top;
+  aliveTarget = 1;
+});
+canvas.addEventListener('pointerleave', () => { aliveTarget = 0; mouseX = mouseY = -9999; });
+canvas.addEventListener('pointerenter', () => { aliveTarget = 1; });
+canvas.addEventListener('pointerdown',  () => { pointerDown = true; });
+canvas.addEventListener('pointerup',    () => { pointerDown = false; });
+
+// Click to cycle portraits
+canvas.addEventListener('click', async () => {
+  portraitIdx = (portraitIdx + 1) % PORTRAITS.length;
+  try { await loadPortrait(PORTRAITS[portraitIdx]); } catch (e) { console.error(e); }
+});
+
+// ── Quote cycle
+function cycleQuote() {
+  quoteEl.classList.add('hidden');
+  setTimeout(() => {
+    qIdx = (qIdx + 1) % QUOTES.length;
+    quoteEl.textContent = QUOTES[qIdx];
+    quoteEl.classList.remove('hidden');
+  }, 1000);
+}
+setInterval(cycleQuote, 6500);
+
+// ── Boot
+window.addEventListener('load', async () => {
+  resize();
+  try { await loadPortrait(PORTRAITS[0]); } catch (e) { console.error(e); }
+  requestAnimationFrame(render);
+});
+window.addEventListener('resize', resize);
+</script>
+</body>
+</html>

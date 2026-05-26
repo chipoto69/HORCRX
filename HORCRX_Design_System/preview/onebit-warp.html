@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#000; }
+  canvas { display:block; width:100%; height:100%; cursor:crosshair; }
+  #label {
+    position:absolute; bottom:10px; left:14px; right:14px;
+    display:flex; justify-content:space-between; pointer-events:none;
+  }
+  .lbl {
+    font-family:"Courier New",monospace; font-size:8px;
+    letter-spacing:0.22em; text-transform:uppercase;
+    color:rgba(255,255,255,0.22);
+    mix-blend-mode:difference;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="label">
+  <span class="lbl">[[. ]] · 1-bit · domain warp</span>
+  <span class="lbl">bayer 8×8</span>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl', { antialias: false, preserveDrawingBuffer: false });
+
+if (!gl) {
+  canvas.outerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:monospace;font-size:11px;">WebGL not available</div>';
+} else {
+
+// ── Shaders
+const VERT = `
+  attribute vec2 a_position;
+  void main() { gl_Position = vec4(a_position, 0.0, 1.0); }
+`;
+
+const FRAG = `
+  precision highp float;
+  uniform vec2  u_resolution;
+  uniform float u_time;
+  uniform vec2  u_mouse;
+  uniform float u_mouseStrength;
+
+  // Procedural Bayer dither (Inigo Quilez / shadertoy classic)
+  float Bayer2(vec2 a)  { a = floor(a); return fract(a.x * 0.5 + a.y * a.y * 0.75); }
+  float Bayer4(vec2 a)  { return Bayer2(0.5 * a) * 0.25 + Bayer2(a); }
+  float Bayer8(vec2 a)  { return Bayer4(0.5 * a) * 0.25 + Bayer2(a); }
+  float Bayer16(vec2 a) { return Bayer8(0.5 * a) * 0.25 + Bayer2(a); }
+
+  // Hash
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+  }
+
+  // Smooth value noise
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(
+      mix(hash(i + vec2(0.0, 0.0)), hash(i + vec2(1.0, 0.0)), u.x),
+      mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x),
+      u.y
+    );
+  }
+
+  // FBM
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    for (int i = 0; i < 5; i++) {
+      v += a * noise(p);
+      p = p * 2.03;
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  void main() {
+    // Aspect-correct UV centered on canvas
+    vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
+    vec2 mp = (u_mouse - 0.5 * u_resolution) / u_resolution.y;
+
+    float t = u_time * 0.06;
+
+    // Domain warp layer 1
+    vec2 q;
+    q.x = fbm(p * 1.8 + vec2(0.0, 0.0) + t);
+    q.y = fbm(p * 1.8 + vec2(5.2, 1.3) + t);
+
+    // Mouse influence — gentle pull on warp
+    float d2m  = length(p - mp);
+    float pull = exp(-d2m * 2.5) * u_mouseStrength;
+    q += (mp - p) * pull * 0.55;
+
+    // Domain warp layer 2 — feeds q back into the field
+    vec2 r;
+    r.x = fbm(p * 2.5 + q * 2.4 + vec2(1.7, 9.2) + t * 1.3);
+    r.y = fbm(p * 2.5 + q * 2.4 + vec2(8.3, 2.8) + t * 1.3);
+
+    float field = fbm(p * 3.0 + r * 1.5 + t * 0.8);
+
+    // Center bias — pull brightness toward middle
+    float radial = length(p);
+    float vig = smoothstep(1.05, 0.25, radial);
+    field = mix(0.25, field, vig);
+
+    // Boost contrast subtly
+    field = smoothstep(0.20, 0.78, field);
+
+    // ── 1-BIT DITHER — Bayer 8x8 ordered
+    float threshold = Bayer8(gl_FragCoord.xy);
+    float bit = step(threshold, field);
+
+    // Slight off-white for warmth (still reads as 1-bit)
+    vec3 col = vec3(bit) * 0.94;
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+
+// ── Compile helpers
+function compile(type, src) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+    console.error(gl.getShaderInfoLog(s));
+    return null;
+  }
+  return s;
+}
+const vs = compile(gl.VERTEX_SHADER, VERT);
+const fs = compile(gl.FRAGMENT_SHADER, FRAG);
+const prog = gl.createProgram();
+gl.attachShader(prog, vs);
+gl.attachShader(prog, fs);
+gl.linkProgram(prog);
+if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+  console.error(gl.getProgramInfoLog(prog));
+}
+gl.useProgram(prog);
+
+// ── Full-screen quad
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+  -1, -1,  1, -1, -1,  1,
+  -1,  1,  1, -1,  1,  1,
+]), gl.STATIC_DRAW);
+const loc_pos = gl.getAttribLocation(prog, 'a_position');
+gl.enableVertexAttribArray(loc_pos);
+gl.vertexAttribPointer(loc_pos, 2, gl.FLOAT, false, 0, 0);
+
+// ── Uniforms
+const u_resolution     = gl.getUniformLocation(prog, 'u_resolution');
+const u_time           = gl.getUniformLocation(prog, 'u_time');
+const u_mouse          = gl.getUniformLocation(prog, 'u_mouse');
+const u_mouseStrength  = gl.getUniformLocation(prog, 'u_mouseStrength');
+
+let W = 0, H = 0;
+let mouseX = 0, mouseY = 0;
+let mouseTargetX = 0, mouseTargetY = 0;
+let mouseStrength = 0;
+let mouseStrengthTarget = 0;
+
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const r = canvas.getBoundingClientRect();
+  W = Math.round(r.width  * dpr);
+  H = Math.round(r.height * dpr);
+  canvas.width  = W;
+  canvas.height = H;
+  gl.viewport(0, 0, W, H);
+  // initial mouse: center
+  mouseX = mouseTargetX = W * 0.5;
+  mouseY = mouseTargetY = H * 0.5;
+}
+
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  const dpr = W / r.width;
+  mouseTargetX = (e.clientX - r.left) * dpr;
+  mouseTargetY = (r.height - (e.clientY - r.top)) * dpr; // flip Y
+  mouseStrengthTarget = 1.0;
+});
+canvas.addEventListener('mouseleave', () => { mouseStrengthTarget = 0; });
+canvas.addEventListener('mouseenter', () => { mouseStrengthTarget = 1; });
+
+const start = performance.now();
+function tick() {
+  // Smooth mouse follow + strength easing
+  mouseX = mouseX + (mouseTargetX - mouseX) * 0.08;
+  mouseY = mouseY + (mouseTargetY - mouseY) * 0.08;
+  mouseStrength = mouseStrength + (mouseStrengthTarget - mouseStrength) * 0.06;
+
+  const t = (performance.now() - start) * 0.001;
+  gl.uniform2f(u_resolution, W, H);
+  gl.uniform1f(u_time, t);
+  gl.uniform2f(u_mouse, mouseX, mouseY);
+  gl.uniform1f(u_mouseStrength, mouseStrength);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+  requestAnimationFrame(tick);
+}
+
+window.addEventListener('load', () => {
+  resize();
+  tick();
+});
+window.addEventListener('resize', resize);
+
+} // end webgl guard
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+    font-display:swap;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #030303; font-family:"Departure",monospace; padding: 20px; }
+  .section-title { font-size: 9px; color: rgba(0,240,255,0.4); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 10px; }
+  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .bar { background: rgba(0,240,255,0.25); height: 10px; border-radius: 1px; }
+  .tag { font-size: 9px; color: rgba(224,224,224,0.35); letter-spacing: 0.05em; min-width: 52px; }
+  .val { font-size: 9px; color: rgba(224,224,224,0.20); min-width: 36px; }
+  .radius-row { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 14px; }
+  .radius-box { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .radius-demo { width: 36px; height: 36px; border: 1px solid rgba(0,240,255,0.3); background: rgba(0,240,255,0.05); }
+  .note { font-size: 9px; color: rgba(224,224,224,0.20); letter-spacing: 0.05em; margin-top: 4px; line-height: 1.5; }
+  .divider { height: 1px; background: rgba(255,255,255,0.05); margin: 14px 0; }
+</style>
+</head>
+<body>
+  <div class="section-title">spacing scale</div>
+  <div class="row"><span class="tag">space-1</span><span class="val">4px</span><div class="bar" style="width:4px;"></div></div>
+  <div class="row"><span class="tag">space-2</span><span class="val">8px</span><div class="bar" style="width:8px;"></div></div>
+  <div class="row"><span class="tag">space-3</span><span class="val">12px</span><div class="bar" style="width:12px;"></div></div>
+  <div class="row"><span class="tag">space-4</span><span class="val">16px</span><div class="bar" style="width:16px;"></div></div>
+  <div class="row"><span class="tag">space-5</span><span class="val">20px</span><div class="bar" style="width:20px;"></div></div>
+  <div class="row"><span class="tag">space-6</span><span class="val">24px</span><div class="bar" style="width:24px;"></div></div>
+  <div class="row"><span class="tag">space-8</span><span class="val">32px</span><div class="bar" style="width:32px;"></div></div>
+  <div class="row"><span class="tag">space-10</span><span class="val">40px</span><div class="bar" style="width:40px;"></div></div>
+  <div class="row"><span class="tag">space-12</span><span class="val">48px</span><div class="bar" style="width:48px;"></div></div>
+  <div class="row"><span class="tag">space-16</span><span class="val">64px</span><div class="bar" style="width:64px;"></div></div>
+
+  <div class="divider"></div>
+
+  <div class="section-title">border radius</div>
+  <div class="radius-row">
+    <div class="radius-box">
+      <div class="radius-demo" style="border-radius:0;"></div>
+      <div class="tag" style="text-align:center;">none<br><span style="color:rgba(224,224,224,0.20);">0px</span></div>
+    </div>
+    <div class="radius-box">
+      <div class="radius-demo" style="border-radius:2px;"></div>
+      <div class="tag" style="text-align:center;">sm<br><span style="color:rgba(224,224,224,0.20);">2px</span></div>
+    </div>
+    <div class="radius-box">
+      <div class="radius-demo" style="border-radius:4px;"></div>
+      <div class="tag" style="text-align:center;">md<br><span style="color:rgba(224,224,224,0.20);">4px</span></div>
+    </div>
+    <div class="radius-box">
+      <div class="radius-demo" style="border-radius:9999px; width:36px; height:16px; margin-bottom:10px;"></div>
+      <div class="tag" style="text-align:center;">full<br><span style="color:rgba(224,224,224,0.20);">pill</span></div>
+    </div>
+  </div>
+  <div class="note">⚠ Primary containers use radius:0 — sharp corners with<br>L-bracket corner accents are the ATLAS brand pattern.</div>
+</body>
+</html>

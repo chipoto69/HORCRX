@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+    font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#050505; }
+
+  #c { display:block; width:100%; height:100%; cursor:crosshair; }
+
+  #scanlines {
+    position:absolute; inset:0; z-index:5; pointer-events:none;
+    background: repeating-linear-gradient(
+      0deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px
+    );
+    mix-blend-mode:multiply; opacity:0.45;
+  }
+
+  .hud {
+    position:absolute; z-index:10; pointer-events:none;
+    font-family:"Departure","Courier New",monospace; font-size:8px;
+    letter-spacing:0.24em; text-transform:uppercase;
+    color:#fff; opacity:0.4; mix-blend-mode:difference;
+  }
+  #attr  { top:14px; left:18px; }
+  #frame { top:14px; right:18px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="scanlines"></div>
+<div id="attr"  class="hud">type · GeistMono · variable 100–900</div>
+<div id="frame" class="hud">specimen</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+
+let W = 0, H = 0, dpr = 1;
+let mouseX = -9999, mouseY = -9999;
+let alive = 0, aliveTarget = 0;
+
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const r = canvas.getBoundingClientRect();
+  W = r.width; H = r.height;
+  canvas.width  = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+canvas.addEventListener('pointermove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouseX = e.clientX - r.left;
+  mouseY = e.clientY - r.top;
+  aliveTarget = 1;
+});
+canvas.addEventListener('pointerleave', () => { aliveTarget = 0; mouseX = mouseY = -9999; });
+canvas.addEventListener('pointerenter', () => { aliveTarget = 1; });
+
+// ──────────────────────────────────────────────────────────
+// Type specimen blocks — text, size, weight, role label
+// ──────────────────────────────────────────────────────────
+const BLOCKS = [
+  { role: 'display',  size: 64, weight: 600, text: '[[. ATLAS ]]',  letterSp: 0.02, gap: 14 },
+  { role: 'hero',     size: 36, weight: 300, text: 'corpus',         letterSp: 0.05, gap: 28 },
+  { role: 'heading',  size: 18, weight: 400, text: 'an experiment in autonomous intelligence', letterSp: 0.01, gap: 8 },
+  { role: 'lead',     size: 13, weight: 400, text: 'Heal through presence. Create through code. Trade through intuition.', letterSp: 0.02, gap: 26 },
+  { role: 'caption',  size: 9,  weight: 400, text: 'candysoul-corpus-001 · ~/.corpus-mind · OTDA loop · ralph verify',  letterSp: 0.20, upper: true, gap: 0 },
+];
+
+// ── Render
+function render(timeMs) {
+  const t = timeMs * 0.001;
+  alive += (aliveTarget - alive) * 0.06;
+
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.globalCompositeOperation = 'lighter';
+
+  // Layout — left-aligned with comfortable gutter
+  const padL = 42, padR = 42;
+  const padT = 56, padB = 36;
+
+  // Compute total content height to vertically center
+  const totalH = BLOCKS.reduce((sum, b) => sum + b.size + b.gap, 0) - BLOCKS[BLOCKS.length-1].gap;
+  let y = padT + (H - padT - padB - totalH) * 0.35; // bias upward for breathing
+
+  // Sweep beam — slow vertical scan, ~12s period
+  const sweepY = ((t * 35) % (H + 120)) - 60;
+  const sweepBand = 32;
+
+  for (let bIdx = 0; bIdx < BLOCKS.length; bIdx++) {
+    const b = BLOCKS[bIdx];
+    y += b.size;
+    const baseline = y;
+
+    ctx.font = `${b.weight} ${b.size}px "Departure","Courier New",monospace`;
+    // Letter spacing not supported in canvas font shorthand — emulate via manual positioning if needed
+    const text = b.upper ? b.text.toUpperCase() : b.text;
+
+    // Per-block label on the left margin (very faint role tag)
+    ctx.font = `400 8px "Departure","Courier New",monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    const roleLabel = b.role.toUpperCase() + ' · ' + b.size + 'px';
+    ctx.fillText(roleLabel, padL, baseline - b.size + 2);
+
+    // Restore font for the text
+    ctx.font = `${b.weight} ${b.size}px "Departure","Courier New",monospace`;
+
+    // Compute aberration — scales with type size
+    const baseAbb = Math.max(0.6, b.size * 0.030);
+
+    // Sweep modulation — line is in the band → stronger
+    const dSweep = Math.abs(baseline - b.size * 0.5 - sweepY);
+    const sweepBoost = Math.max(0, 1 - dSweep / sweepBand);
+
+    // Mouse focus — if mouse is near this line, sharpen aberration (less split)
+    const lineMidY = baseline - b.size * 0.5;
+    const mDy = Math.abs(mouseY - lineMidY);
+    const focusF = Math.max(0, 1 - mDy / 60) * alive;
+
+    let aberration = baseAbb + sweepBoost * baseAbb * 1.4 - focusF * baseAbb * 0.6;
+    aberration = Math.max(0.2, aberration);
+
+    // Vertical jitter — subtler at larger sizes
+    const vJ = Math.sin((bIdx + t * 1.8) * 0.7) * (b.size > 20 ? 0.3 : 0.15);
+
+    // Alpha — larger text slightly brighter
+    const baseA = b.size > 40 ? 0.92 : b.size > 18 ? 0.78 : 0.65;
+    const a = Math.min(1, baseA + sweepBoost * 0.15 + focusF * 0.12);
+
+    // Render the text — three layers per character to honor monospace metrics
+    // Walk char by char so letter spacing can be respected
+    let x = padL + 100; // start after the role label
+    const trackingExtra = b.letterSp * b.size * 0.7;
+
+    for (let ci = 0; ci < text.length; ci++) {
+      const ch = text[ci];
+      if (ch === ' ') { x += b.size * 0.5 + trackingExtra; continue; }
+
+      // Red — left
+      ctx.fillStyle = `rgba(255,55,55,${a.toFixed(3)})`;
+      ctx.fillText(ch, x - aberration, baseline + vJ);
+      // Cyan — right
+      ctx.fillStyle = `rgba(60,220,230,${a.toFixed(3)})`;
+      ctx.fillText(ch, x + aberration, baseline - vJ);
+      // White core
+      ctx.fillStyle = `rgba(225,225,230,${(a * 0.42).toFixed(3)})`;
+      ctx.fillText(ch, x, baseline);
+
+      // Advance — use measureText for accurate spacing
+      const advance = ctx.measureText(ch).width;
+      x += advance + trackingExtra;
+    }
+
+    y += b.gap;
+  }
+
+  ctx.globalCompositeOperation = 'source-over';
+
+  // Cyan beam line — thin
+  const grd = ctx.createLinearGradient(0, sweepY - 6, 0, sweepY + 6);
+  grd.addColorStop(0,   'rgba(0,240,255,0)');
+  grd.addColorStop(0.5, 'rgba(0,240,255,0.08)');
+  grd.addColorStop(1,   'rgba(0,240,255,0)');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, sweepY - 6, W, 12);
+
+  requestAnimationFrame(render);
+}
+
+window.addEventListener('load', () => { resize(); requestAnimationFrame(render); });
+window.addEventListener('resize', resize);
+</script>
+</body>
+</html>

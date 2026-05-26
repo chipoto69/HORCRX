@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="3" fill="#050505"></rect>
+  <text x="4" y="22" font-family="&#39;Departure&#39;, ui-monospace, monospace" font-size="20" font-weight="600">
+    <tspan fill="#e0e0e0">[[</tspan>
+    <tspan dx="-2" fill="#00f0ff">.</tspan>
+    <tspan dx="6" fill="#e0e0e0">]]</tspan>
+  </text>
+</svg>

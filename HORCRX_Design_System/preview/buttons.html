@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+    font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#050505; }
+
+  #c { display:block; width:100%; height:100%; }
+
+  /* Subtle scanlines — restrained so they don't fight the small text */
+  #scanlines {
+    position:absolute; inset:0; z-index:5; pointer-events:none;
+    background: repeating-linear-gradient(
+      0deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.13) 2px, rgba(0,0,0,0.13) 3px
+    );
+    mix-blend-mode:multiply; opacity:0.3;
+  }
+
+  .hud {
+    position:absolute; top:14px; z-index:10;
+    font-family:"Departure","Courier New",monospace; font-size:8px;
+    letter-spacing:0.24em; text-transform:uppercase;
+    color:#fff; opacity:0.4; mix-blend-mode:difference;
+    pointer-events:none;
+    display:inline-block; width:max-content;
+  }
+  #attr  { left:18px; }
+  #frame { right:18px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="scanlines"></div>
+<div id="attr"  class="hud">interactive · buttons · links</div>
+<div id="frame" class="hud">hover to fragment</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+
+let W = 0, H = 0, dpr = 1;
+let mouseX = -9999, mouseY = -9999;
+let pointerDown = false;
+let hovered = null;       // { kind: 'btn'|'link'|'badge', index: N }
+
+// ── Buttons
+const BUTTONS = [
+  { kind: 'primary', label: 'follow for updates',  w: 200, h: 36, row: 0 },
+  { kind: 'primary', label: 'view archive',        w: 180, h: 36, row: 0 },
+  { kind: 'ghost',   label: 'back to atlas',       w: 170, h: 36, row: 1 },
+  { kind: 'ghost',   label: 'view vessel',         w: 150, h: 36, row: 1 },
+  { kind: 'accent',  label: 'connect wallet',      w: 200, h: 36, row: 2 },
+  { kind: 'accent',  label: 'open horcrx',         w: 160, h: 36, row: 2 },
+];
+
+const LINKS = [
+  { text: '← back',           kind: 'plain'  },
+  { text: 'Roland Wranik',    kind: 'plain'  },
+  { text: '@soulfromcandy',   kind: 'accent' },
+  { text: 'horcrux.dev',      kind: 'accent' },
+];
+
+const BADGES = [
+  { text: '[OK]',   level: 'ok'   },
+  { text: '[WARN]', level: 'warn' },
+  { text: '[FAIL]', level: 'fail' },
+  { text: '[INFO]', level: 'info' },
+];
+
+// ── Per-button hover progress (smooth) — drives chromatic aberration
+const btnHover = BUTTONS.map(() => 0);  // 0..1
+const linkHover = LINKS.map(() => 0);
+
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const r = canvas.getBoundingClientRect();
+  W = r.width; H = r.height;
+  canvas.width  = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  layout();
+}
+
+// ── Layout
+const padL = 40, padT = 50, rowGap = 22, colGap = 14;
+function layout() {
+  let curY = padT;
+  let curRow = 0;
+  let curX = padL;
+  for (let i = 0; i < BUTTONS.length; i++) {
+    if (BUTTONS[i].row !== curRow) {
+      curRow = BUTTONS[i].row;
+      curY += 36 + rowGap;
+      curX = padL;
+    }
+    BUTTONS[i].x = curX;
+    BUTTONS[i].y = curY;
+    curX += BUTTONS[i].w + colGap;
+  }
+}
+
+canvas.addEventListener('pointermove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouseX = e.clientX - r.left;
+  mouseY = e.clientY - r.top;
+  hovered = null;
+  canvas.style.cursor = 'default';
+
+  for (let i = 0; i < BUTTONS.length; i++) {
+    const b = BUTTONS[i];
+    if (mouseX >= b.x && mouseX <= b.x + b.w && mouseY >= b.y && mouseY <= b.y + b.h) {
+      hovered = { kind: 'btn', i };
+      canvas.style.cursor = 'pointer';
+      return;
+    }
+  }
+  // Link hit-test
+  let lx = padL;
+  const linkY = padT + 3 * (36 + rowGap) + 12;
+  ctx.font = `400 11px "Departure","Courier New",monospace`;
+  for (let i = 0; i < LINKS.length; i++) {
+    const lw = ctx.measureText(LINKS[i].text).width;
+    if (mouseX >= lx && mouseX <= lx + lw && Math.abs(mouseY - linkY) < 10) {
+      hovered = { kind: 'link', i };
+      canvas.style.cursor = 'pointer';
+      return;
+    }
+    lx += lw + 24;
+  }
+});
+canvas.addEventListener('pointerleave', () => { mouseX = mouseY = -9999; hovered = null; });
+canvas.addEventListener('pointerdown',  () => { pointerDown = true; });
+canvas.addEventListener('pointerup',    () => { pointerDown = false; });
+
+// ──────────────────────────────────────────────────────────
+//  Render helpers
+// ──────────────────────────────────────────────────────────
+
+// Render label with chromatic intensity = `t` in 0..1
+// At t=0 we render a single crisp pass; aberration only appears as t grows.
+function drawLabel(text, cx, cy, fontSize, weight, palette, t, alphaBase) {
+  ctx.font = `${weight} ${fontSize}px "Departure","Courier New",monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  const a = Math.min(1, alphaBase + t * 0.20);
+
+  // ── Always: crisp center pass first (this is the readable layer)
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = palette.coreAt(a, t);
+  ctx.fillText(text, cx, cy);
+
+  // ── Then: chromatic ghosts ONLY if t > 0.05 (so rest looks clean)
+  if (t > 0.05) {
+    const offset = t * 1.6;  // max 1.6px — never blurry
+    ctx.globalCompositeOperation = 'lighter';
+
+    ctx.fillStyle = palette.redAt(a * 0.7 * t);
+    ctx.fillText(text, cx - offset, cy);
+
+    ctx.fillStyle = palette.cyanAt(a * 0.7 * t);
+    ctx.fillText(text, cx + offset, cy);
+  }
+
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+// ── Palettes
+const PAL = {
+  plain: {
+    coreAt: (a, t) => `rgba(225,225,228,${a})`,
+    redAt:  a => `rgba(255,55,55,${a})`,
+    cyanAt: a => `rgba(60,220,230,${a})`,
+  },
+  dim: {
+    coreAt: (a, t) => `rgba(180,180,184,${a * 0.75})`,
+    redAt:  a => `rgba(190,50,50,${a * 0.7})`,
+    cyanAt: a => `rgba(50,180,195,${a * 0.7})`,
+  },
+  accent: {
+    coreAt: (a, t) => `rgba(${lerp(0, 180, t)},${lerp(240, 235, t)},${lerp(255, 245, t)},${a})`,
+    redAt:  a => `rgba(255,80,100,${a})`,
+    cyanAt: a => `rgba(0,240,255,${a * 1.15})`,
+  },
+  warn: {
+    coreAt: (a, t) => `rgba(195,195,200,${a * 0.65})`,
+    redAt:  a => `rgba(220,80,80,${a * 0.5})`,
+    cyanAt: a => `rgba(80,190,200,${a * 0.5})`,
+  },
+};
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function drawSectionLabel(text, x, y) {
+  ctx.font = `400 8px "Departure","Courier New",monospace`;
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(text, x, y);
+}
+
+// ── Render loop
+function render() {
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, W, H);
+
+  // Update hover smoothing
+  for (let i = 0; i < BUTTONS.length; i++) {
+    const target = (hovered && hovered.kind === 'btn' && hovered.i === i) ? 1 : 0;
+    btnHover[i] += (target - btnHover[i]) * 0.15;
+  }
+  for (let i = 0; i < LINKS.length; i++) {
+    const target = (hovered && hovered.kind === 'link' && hovered.i === i) ? 1 : 0;
+    linkHover[i] += (target - linkHover[i]) * 0.15;
+  }
+
+  // Section labels
+  drawSectionLabel('PRIMARY · BORDERED', 40, 32);
+  drawSectionLabel('GHOST · MINIMAL',    40, 32 + (36 + rowGap));
+  drawSectionLabel('ACCENT · CYAN',      40, 32 + 2 * (36 + rowGap));
+  drawSectionLabel('TEXT LINKS',         40, 32 + 3 * (36 + rowGap) - 10);
+  drawSectionLabel('STATUS BADGES',      40, 32 + 4 * (36 + rowGap) - 24);
+
+  // ── Buttons
+  for (let i = 0; i < BUTTONS.length; i++) {
+    const b = BUTTONS[i];
+    const hv = btnHover[i];               // 0..1 smoothed
+    const press = (pointerDown && hovered && hovered.kind === 'btn' && hovered.i === i) ? 1 : 0;
+    const fragmentT = Math.min(1, hv + press * 0.6); // hover + press intensity
+
+    // Style per kind
+    let borderC, fillC, palette;
+    if (b.kind === 'primary') {
+      borderC = `rgba(255,255,255,${(0.30 + hv * 0.30).toFixed(2)})`;
+      fillC   = `rgba(255,255,255,${(hv * 0.04).toFixed(3)})`;
+      palette = PAL.plain;
+    } else if (b.kind === 'ghost') {
+      borderC = `rgba(255,255,255,${(0.10 + hv * 0.12).toFixed(2)})`;
+      fillC   = `rgba(255,255,255,${(hv * 0.025).toFixed(3)})`;
+      palette = hv > 0.3 ? PAL.plain : PAL.dim;
+    } else {
+      borderC = `rgba(0,240,255,${(0.25 + hv * 0.30).toFixed(2)})`;
+      fillC   = `rgba(0,240,255,${(hv * 0.04).toFixed(3)})`;
+      palette = PAL.accent;
+    }
+
+    // BG
+    ctx.fillStyle = fillC;
+    ctx.fillRect(b.x, b.y, b.w, b.h);
+    // Border
+    ctx.strokeStyle = borderC;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1);
+
+    // Label — crisp at rest, fragments on hover/press
+    drawLabel(b.label, b.x + b.w / 2, b.y + b.h / 2, 11, 400, palette, fragmentT, 0.72);
+  }
+
+  // ── Text links
+  let lx = padL;
+  const linkY = padT + 3 * (36 + rowGap) + 12;
+  for (let i = 0; i < LINKS.length; i++) {
+    const l = LINKS[i];
+    const hv = linkHover[i];
+    ctx.font = `400 11px "Departure","Courier New",monospace`;
+    const lw = ctx.measureText(l.text).width;
+    const palette = l.kind === 'accent' ? PAL.accent : PAL.plain;
+    drawLabel(l.text, lx + lw / 2, linkY, 11, 400, palette, hv, 0.62);
+    // Tiny baseline indicator on hover
+    if (hv > 0.1) {
+      ctx.fillStyle = l.kind === 'accent'
+        ? `rgba(0,240,255,${(hv * 0.6).toFixed(3)})`
+        : `rgba(255,255,255,${(hv * 0.4).toFixed(3)})`;
+      ctx.fillRect(lx, linkY + 9, lw, 1);
+    }
+    lx += lw + 24;
+  }
+
+  // ── Status badges — always crisp, no chromatic split
+  let bx = padL;
+  const badgeY = padT + 4 * (36 + rowGap) - 8;
+  for (const badge of BADGES) {
+    ctx.font = `400 10px "Departure","Courier New",monospace`;
+    const bw = ctx.measureText(badge.text).width + 16;
+    const bh = 22;
+    let borderC, palette;
+    if (badge.level === 'ok')        { borderC = 'rgba(255,255,255,0.32)'; palette = PAL.plain;  }
+    else if (badge.level === 'warn') { borderC = 'rgba(255,255,255,0.18)'; palette = PAL.warn;   }
+    else if (badge.level === 'fail') { borderC = 'rgba(255,255,255,0.10)'; palette = PAL.dim;    }
+    else                              { borderC = 'rgba(0,240,255,0.32)';   palette = PAL.accent; }
+
+    ctx.strokeStyle = borderC;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(bx + 0.5, badgeY + 0.5, bw - 1, bh - 1);
+
+    drawLabel(badge.text, bx + bw / 2, badgeY + bh / 2, 10, 400, palette, 0, 0.78);
+    bx += bw + 8;
+  }
+
+  requestAnimationFrame(render);
+}
+
+window.addEventListener('load', () => { resize(); requestAnimationFrame(render); });
+window.addEventListener('resize', resize);
+</script>
+</body>
+</html>

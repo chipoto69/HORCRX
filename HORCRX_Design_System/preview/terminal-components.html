@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+    font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#050505; }
+
+  #c { display:block; width:100%; height:100%; }
+
+  #scanlines {
+    position:absolute; inset:0; z-index:5; pointer-events:none;
+    background: repeating-linear-gradient(
+      0deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px
+    );
+    mix-blend-mode:multiply; opacity:0.45;
+  }
+
+  .hud {
+    position:absolute; top:14px; z-index:10;
+    font-family:"Departure","Courier New",monospace; font-size:8px;
+    letter-spacing:0.24em; text-transform:uppercase;
+    color:#fff; opacity:0.4; mix-blend-mode:difference;
+    pointer-events:none;
+  }
+  #attr  { left:18px; }
+  #frame { right:18px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="scanlines"></div>
+<div id="attr"  class="hud">terminal · OTDA · live</div>
+<div id="frame" class="hud">iter: 0</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+const frameLbl = document.getElementById('frame');
+
+let W = 0, H = 0, dpr = 1;
+
+// ── Terminal session — CandySoul's daemon talking to itself
+const SCRIPT = [
+  { pfx: '›', text: 'initializing CORPUS daemon v2.1.0',         status: 'OK',   delay: 600 },
+  { pfx: '›', text: 'loading avatar: candysoul',                  status: 'OK',   delay: 800 },
+  { pfx: '›', text: 'memory mounted: ~/.corpus-mind',             status: 'OK',   delay: 500 },
+  { pfx: '›', text: 'ATLAS knowledge graph: 15,234 topics',       status: 'OK',   delay: 700 },
+  { pfx: '›', text: 'solana wallet: 0.847 SOL  (limit 1.0/day)',  status: 'OK',   delay: 500 },
+  { pfx: '›', text: 'observe loop · idle screen · quiet sockets', status: 'INFO', delay: 1200 },
+  { pfx: '›', text: 'mentioning @soulfromcandy → tweet caught',   status: 'INFO', delay: 900 },
+  { pfx: '›', text: 'spawning child agent: researcher-01',        status: 'BUSY', delay: 1400 },
+  { pfx: '›', text: 'pytest suite running · attempt #3',          status: 'BUSY', delay: 900 },
+  { pfx: '›', text: 'ralph loop: edge case identified at L:127',  status: 'WARN', delay: 700 },
+  { pfx: '›', text: 'verification cycle complete',                status: 'OK',   delay: 600 },
+  { pfx: '›', text: 'OTDA iteration #14,827 → 14,828',            status: 'OK',   delay: 500 },
+  { pfx: '›', text: 'never stop working',                          status: null,    delay: 2200 },
+];
+
+let lineQueue   = [];   // lines currently rendered (already typed)
+let typing      = null; // { text, pfx, status, charsTyped, totalChars }
+let nextLineIdx = 0;
+let lineTimer   = 0;
+let charTimer   = 0;
+let iter        = 0;
+
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const r = canvas.getBoundingClientRect();
+  W = r.width; H = r.height;
+  canvas.width  = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+// ── Draw chromatic-split text
+function drawSplit(text, x, y, fontSize, weight, color, aberration, alpha) {
+  ctx.font = `${weight} ${fontSize}px "Departure","Courier New",monospace`;
+  ctx.textBaseline = 'top';
+  ctx.globalCompositeOperation = 'lighter';
+
+  let rTint, cTint, wTint;
+  if (color === 'accent') {
+    rTint = `rgba(255,80,100,${alpha})`;
+    cTint = `rgba(0,240,255,${alpha * 1.1})`;
+    wTint = `rgba(220,235,240,${alpha * 0.5})`;
+  } else if (color === 'dim') {
+    rTint = `rgba(150,40,40,${alpha})`;
+    cTint = `rgba(40,150,165,${alpha})`;
+    wTint = `rgba(160,160,165,${alpha * 0.35})`;
+  } else {
+    rTint = `rgba(255,55,55,${alpha})`;
+    cTint = `rgba(60,220,230,${alpha})`;
+    wTint = `rgba(220,220,225,${alpha * 0.45})`;
+  }
+
+  let dx = 0;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (ch !== ' ') {
+      ctx.fillStyle = rTint;
+      ctx.fillText(ch, x + dx - aberration, y);
+      ctx.fillStyle = cTint;
+      ctx.fillText(ch, x + dx + aberration, y);
+      ctx.fillStyle = wTint;
+      ctx.fillText(ch, x + dx, y);
+    }
+    dx += ctx.measureText(ch).width;
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  return dx;
+}
+
+function startNextLine() {
+  if (nextLineIdx >= SCRIPT.length) {
+    // Reset the loop
+    nextLineIdx = 0;
+    lineQueue = [];
+    iter = 0;
+    return;
+  }
+  const item = SCRIPT[nextLineIdx];
+  typing = {
+    pfx: item.pfx,
+    text: item.text,
+    status: item.status,
+    charsTyped: 0,
+    totalChars: item.text.length,
+    delay: item.delay,
+    flashStatus: 0,
+  };
+  charTimer = 0;
+  nextLineIdx++;
+  iter++;
+}
+
+function render(timeMs) {
+  const dt = 16;
+
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Layout
+  const padL = 30, padT = 50;
+  const lineH = 22;
+  const fontSize = 12;
+
+  // Start a line if none typing
+  if (!typing) {
+    lineTimer += dt;
+    if (lineTimer > 300) {
+      startNextLine();
+      lineTimer = 0;
+    }
+  } else {
+    // Advance typing
+    charTimer += dt;
+    const charsPerTick = 1.2;
+    typing.charsTyped += charsPerTick;
+    if (typing.charsTyped >= typing.totalChars) {
+      typing.charsTyped = typing.totalChars;
+      typing.flashStatus += dt;
+      if (typing.flashStatus > (typing.delay || 600)) {
+        // Done typing this line — push to queue
+        lineQueue.push({
+          pfx: typing.pfx,
+          text: typing.text,
+          status: typing.status,
+        });
+        // Cap queue (scroll old lines off)
+        const maxLines = Math.floor((H - padT - 30) / lineH);
+        while (lineQueue.length > maxLines) lineQueue.shift();
+        typing = null;
+      }
+    }
+  }
+
+  // ── Draw history
+  for (let i = 0; i < lineQueue.length; i++) {
+    const line = lineQueue[i];
+    const y = padT + i * lineH;
+    drawLineRendered(line, padL, y, fontSize, 0.65);
+  }
+
+  // ── Draw currently typing line
+  if (typing) {
+    const y = padT + lineQueue.length * lineH;
+    const partialText = typing.text.substring(0, Math.floor(typing.charsTyped));
+    // Cursor
+    const showCursor = (Date.now() % 800) < 500;
+    drawLineRendered({
+      pfx: typing.pfx,
+      text: partialText + (showCursor ? '█' : ' '),
+      status: typing.charsTyped >= typing.totalChars ? typing.status : null,
+    }, padL, y, fontSize, 1.0);
+  }
+
+  // ── Iter label
+  frameLbl.textContent = `iter: ${iter.toString().padStart(4, '0')}`;
+
+  requestAnimationFrame(render);
+}
+
+function drawLineRendered(line, x, y, fontSize, alpha) {
+  // Prefix (`›`) — accent color
+  ctx.font = `400 ${fontSize}px "Departure","Courier New",monospace`;
+  let dx = drawSplit(line.pfx, x, y, fontSize, 400, 'accent', 0.8, alpha);
+  dx += 8;
+
+  // Main text — plain
+  dx += drawSplit(line.text, x + dx, y, fontSize, 400, 'plain', 0.7, alpha * 0.8);
+
+  // Status badge
+  if (line.status) {
+    const status = `[${line.status}]`;
+    let col;
+    if (line.status === 'OK')        col = 'plain';
+    else if (line.status === 'BUSY') col = 'accent';
+    else if (line.status === 'INFO') col = 'accent';
+    else if (line.status === 'WARN') col = 'plain';
+    else                              col = 'dim';
+
+    // Right-align status badge
+    ctx.font = `400 ${fontSize}px "Departure","Courier New",monospace`;
+    const statusW = ctx.measureText(status).width;
+    const statusAlpha = line.status === 'OK' ? alpha * 0.85 : alpha;
+    drawSplit(status, W - 30 - statusW, y, fontSize, 400, col, 0.7, statusAlpha);
+  }
+}
+
+window.addEventListener('load', () => { resize(); requestAnimationFrame(render); });
+window.addEventListener('resize', resize);
+</script>
+</body>
+</html>

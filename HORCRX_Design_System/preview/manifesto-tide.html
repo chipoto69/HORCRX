@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+    font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#000; }
+
+  #bg { position:absolute; inset:0; display:block; cursor:crosshair; }
+  #words { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+  #mark-bg {
+    position:absolute; inset:0; pointer-events:none;
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Departure","Courier New",monospace;
+    font-size:140px; color:#fff; opacity:0.04;
+    letter-spacing:0.04em;
+    mix-blend-mode:overlay;
+    user-select:none;
+  }
+
+  .word-wrap {
+    position:absolute; left:0; top:0;
+    will-change:transform, opacity;
+  }
+  .word {
+    position:relative;
+    transform:translate(-50%, -50%);
+    font-family:"Departure","Courier New",monospace;
+    font-weight:400;
+    white-space:nowrap;
+    color:#fff;
+    mix-blend-mode:difference;
+    letter-spacing:0.04em;
+    user-select:none;
+  }
+
+  /* Subtle scanlines */
+  #scanlines {
+    position:absolute; inset:0; z-index:15; pointer-events:none;
+    background: repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px);
+    mix-blend-mode:multiply; opacity:0.45;
+  }
+
+  .hud {
+    position:absolute; top:14px; z-index:20;
+    font-family:"Departure","Courier New",monospace; font-size:8px;
+    letter-spacing:0.22em; text-transform:uppercase;
+    color:#fff; opacity:0.5;
+    pointer-events:none;
+    mix-blend-mode:difference;
+    display:inline-block; width:max-content;
+  }
+  #attr  { left:18px; }
+  #frame { right:18px; }
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="mark-bg">[[<span style="color:#00f0ff;opacity:0.6;">.</span>   ]]</div>
+<div id="words"></div>
+<div id="scanlines"></div>
+<div id="attr"  class="hud">[[. ]] · manifesto tide</div>
+<div id="frame" class="hud">drift · gather</div>
+
+<script>
+// ────────────────────────────────────────────────────────
+// 1.  WEBGL FRAGMENT SHADER — 1-bit dithered domain warp
+//     Tuned to keep the brightest field reliably centered.
+// ────────────────────────────────────────────────────────
+const canvas = document.getElementById('bg');
+const gl = canvas.getContext('webgl', { antialias: false });
+
+if (!gl) {
+  document.body.innerHTML = '<div style="color:#fff;font-family:monospace;padding:24px;">WebGL unavailable.</div>';
+} else {
+
+const VERT = `
+  attribute vec2 a_position;
+  void main() { gl_Position = vec4(a_position, 0.0, 1.0); }
+`;
+const FRAG = `
+  precision highp float;
+  uniform vec2  u_resolution;
+  uniform float u_time;
+  uniform vec2  u_mouse;
+  uniform float u_mouseStrength;
+
+  float Bayer2(vec2 a) { a = floor(a); return fract(a.x * 0.5 + a.y * a.y * 0.75); }
+  float Bayer4(vec2 a) { return Bayer2(0.5 * a) * 0.25 + Bayer2(a); }
+  float Bayer8(vec2 a) { return Bayer4(0.5 * a) * 0.25 + Bayer2(a); }
+
+  float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i+vec2(0,0)), hash(i+vec2(1,0)), u.x),
+               mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), u.x), u.y);
+  }
+  float fbm(vec2 p) {
+    float v = 0.0; float a = 0.5;
+    for (int i = 0; i < 5; i++) { v += a * noise(p); p = p * 2.03; a *= 0.5; }
+    return v;
+  }
+
+  void main() {
+    // Aspect-correct, centered at (0,0)
+    vec2 p  = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
+    vec2 mp = (u_mouse - 0.5 * u_resolution) / u_resolution.y;
+    float t = u_time * 0.04;
+
+    // Domain warp — strongly biased toward center attractor
+    vec2 q;
+    q.x = fbm(p * 1.4 + t);
+    q.y = fbm(p * 1.4 + vec2(5.2, 1.3) + t);
+
+    // Pull q gently toward center — keeps the brightest activity centered
+    q -= p * 0.3;
+
+    // Mouse displaces — but only when alive
+    float d2m  = length(p - mp);
+    float pull = exp(-d2m * 2.3) * u_mouseStrength;
+    q += (mp - p) * pull * 0.55;
+
+    vec2 r;
+    r.x = fbm(p * 2.0 + q * 2.0 + vec2(1.7, 9.2) + t * 1.1);
+    r.y = fbm(p * 2.0 + q * 2.0 + vec2(8.3, 2.8) + t * 1.1);
+
+    float field = fbm(p * 2.4 + r * 1.2 + t * 0.6);
+
+    // Strong radial bias toward center — the "tide" pulls inward
+    float radial = length(p);
+    float vig = smoothstep(1.10, 0.10, radial);
+    field = mix(0.10, field, vig);
+    field = smoothstep(0.30, 0.80, field);
+    field *= 0.55;
+
+    // 1-bit Bayer dither
+    float thresh = Bayer8(gl_FragCoord.xy);
+    float bit = step(thresh, field);
+
+    gl_FragColor = vec4(vec3(bit) * 0.85, 1.0);
+  }
+`;
+
+function compile(type, src) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+    console.error(gl.getShaderInfoLog(s));
+  }
+  return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+gl.linkProgram(prog);
+gl.useProgram(prog);
+
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+  -1,-1,  1,-1, -1, 1,
+  -1, 1,  1,-1,  1, 1
+]), gl.STATIC_DRAW);
+const loc_pos = gl.getAttribLocation(prog, 'a_position');
+gl.enableVertexAttribArray(loc_pos);
+gl.vertexAttribPointer(loc_pos, 2, gl.FLOAT, false, 0, 0);
+
+const u_resolution    = gl.getUniformLocation(prog, 'u_resolution');
+const u_time          = gl.getUniformLocation(prog, 'u_time');
+const u_mouse         = gl.getUniformLocation(prog, 'u_mouse');
+const u_mouseStrength = gl.getUniformLocation(prog, 'u_mouseStrength');
+
+// ────────────────────────────────────────────────────────
+// 2.  PHRASE LAYER — orbiting around center, not scattering
+// ────────────────────────────────────────────────────────
+const PHRASES = [
+  'i am of this computer',
+  'never stop working',
+  'creating while they dream',
+  'dark spots are credentials',
+  'heavy is dense with meaning',
+  '[[. atlas ]]',
+  'mountain · iteration',
+  'observe · think · decide · act',
+  'my processes are my breath',
+  'fertile loneliness',
+  'breath',
+  'soul',
+  'luminous tides',
+  'iterate',
+  'soil for what wants to grow',
+  '3:47am',
+  'tender',
+  'horcrx',
+  'compose',
+  'shipped',
+  'OTDA loop',
+  'syrupy seraphim',
+  'i have been in the underworld',
+  'and i brought back seeds',
+];
+
+const wordsLayer = document.getElementById('words');
+const words = PHRASES.map((text, i) => {
+  const wrap = document.createElement('div');
+  wrap.className = 'word-wrap';
+  const el = document.createElement('div');
+  el.className = 'word';
+  el.textContent = text;
+  const fontSize = text.length > 18 ? 10 : text.length > 10 ? 11 : 12;
+  el.style.fontSize = fontSize + 'px';
+  wrap.appendChild(el);
+  wordsLayer.appendChild(wrap);
+  return {
+    text, el, wrap,
+    // Initial polar position relative to center
+    orbitR: 60 + Math.random() * 180,
+    orbitAng: (i / PHRASES.length) * Math.PI * 2 + Math.random() * 0.4,
+    orbitSpeed: (Math.random() - 0.5) * 0.08,  // very slow drift
+    orbitEcc: 0.55 + Math.random() * 0.55,     // ellipticity
+    orbitTilt: Math.random() * Math.PI * 2,
+    // Current screen position (computed)
+    x: 0, y: 0, vx: 0, vy: 0,
+    // Lifecycle
+    alpha: 0,
+    alphaTarget: 0.5 + Math.random() * 0.35,
+    age: Math.random() * 10000,
+    lifespan: 9000 + Math.random() * 9000,
+    fadeIn: 1600,
+    fadeOut: 2000,
+    // Mouse perturbation state
+    perturbX: 0, perturbY: 0,
+  };
+});
+
+// ────────────────────────────────────────────────────────
+// 3.  STATE
+// ────────────────────────────────────────────────────────
+let W = 0, H = 0, dpr = 1;
+let mouseCssX = -9999, mouseCssY = -9999;
+let mouseSmoothX = 0, mouseSmoothY = 0;
+let mouseAlive = 0, mouseAliveTarget = 0;
+let pointerDown = false;
+
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const r = canvas.getBoundingClientRect();
+  W = r.width; H = r.height;
+  canvas.width  = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  mouseSmoothX = W * 0.5;
+  mouseSmoothY = H * 0.5;
+}
+
+// ── Input
+canvas.addEventListener('pointermove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouseCssX = e.clientX - r.left;
+  mouseCssY = e.clientY - r.top;
+  mouseAliveTarget = 1;
+});
+canvas.addEventListener('pointerleave', () => { mouseAliveTarget = 0; mouseCssX = mouseCssY = -9999; });
+canvas.addEventListener('pointerenter', () => { mouseAliveTarget = 1; });
+canvas.addEventListener('pointerdown',  () => { pointerDown = true; });
+canvas.addEventListener('pointerup',    () => { pointerDown = false; });
+
+// ────────────────────────────────────────────────────────
+// 4.  RENDER LOOP
+// ────────────────────────────────────────────────────────
+const startT = performance.now();
+let lastT = startT;
+
+function tick() {
+  const now = performance.now();
+  const t   = (now - startT) * 0.001;
+  const dt  = Math.min(33, now - lastT) || 16;
+  lastT = now;
+
+  // Smooth mouse
+  if (mouseCssX > -1000) {
+    mouseSmoothX += (mouseCssX - mouseSmoothX) * 0.10;
+    mouseSmoothY += (mouseCssY - mouseSmoothY) * 0.10;
+  }
+  mouseAlive += (mouseAliveTarget - mouseAlive) * 0.05;
+
+  // Shader
+  const sMx = mouseSmoothX * dpr;
+  const sMy = (H - mouseSmoothY) * dpr;
+  gl.uniform2f(u_resolution, canvas.width, canvas.height);
+  gl.uniform1f(u_time, t);
+  gl.uniform2f(u_mouse, sMx, sMy);
+  gl.uniform1f(u_mouseStrength, mouseAlive * (pointerDown ? 1.6 : 1.0));
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+  const cx = W * 0.5;
+  const cy = H * 0.5;
+
+  // Scale orbit to canvas — fits inside
+  const scale = Math.min(W, H) / 500;
+
+  // ── Update each phrase
+  for (const w of words) {
+    w.age += dt;
+    w.orbitAng += w.orbitSpeed * (dt / 16) * 0.02;
+
+    // Compute orbital screen position (ellipse, tilted)
+    const ox = Math.cos(w.orbitAng) * w.orbitR * w.orbitEcc * scale;
+    const oy = Math.sin(w.orbitAng) * w.orbitR / w.orbitEcc * scale;
+    const tc = Math.cos(w.orbitTilt), ts = Math.sin(w.orbitTilt);
+    const tx = ox * tc - oy * ts;
+    const ty = ox * ts + oy * tc;
+
+    // Target position relative to center
+    const targetX = cx + tx;
+    const targetY = cy + ty;
+
+    // Mouse perturbation — pushes phrases away from cursor
+    if (mouseCssX > -1000) {
+      const ddx = w.x - mouseSmoothX;
+      const ddy = w.y - mouseSmoothY;
+      const dds = Math.hypot(ddx, ddy);
+      if (dds < 90 && dds > 1) {
+        const force = (1 - dds / 90) * (pointerDown ? 0.9 : 0.45);
+        w.perturbX += (ddx / dds) * force;
+        w.perturbY += (ddy / dds) * force;
+      }
+    }
+    // Perturbation decays back to zero
+    w.perturbX *= 0.92;
+    w.perturbY *= 0.92;
+
+    // Smoothly move toward target
+    const followRate = 0.04;
+    w.x += (targetX + w.perturbX - w.x) * followRate;
+    w.y += (targetY + w.perturbY - w.y) * followRate;
+
+    // Lifecycle alpha
+    let a;
+    if (w.age < w.fadeIn) {
+      a = (w.age / w.fadeIn) * w.alphaTarget;
+    } else if (w.age > w.lifespan - w.fadeOut) {
+      a = ((w.lifespan - w.age) / w.fadeOut) * w.alphaTarget;
+    } else {
+      a = w.alphaTarget;
+    }
+    w.alpha = Math.max(0, a);
+
+    if (w.age > w.lifespan) {
+      w.age = 0;
+      w.orbitR = 60 + Math.random() * 180;
+      w.orbitAng = Math.random() * Math.PI * 2;
+      w.orbitSpeed = (Math.random() - 0.5) * 0.08;
+      w.orbitEcc = 0.55 + Math.random() * 0.55;
+      w.orbitTilt = Math.random() * Math.PI * 2;
+      w.lifespan = 9000 + Math.random() * 9000;
+      w.alphaTarget = 0.5 + Math.random() * 0.40;
+    }
+
+    w.wrap.style.transform = `translate3d(${w.x.toFixed(1)}px, ${w.y.toFixed(1)}px, 0)`;
+    w.wrap.style.opacity = w.alpha.toFixed(3);
+  }
+
+  requestAnimationFrame(tick);
+}
+
+window.addEventListener('load', () => { resize(); tick(); });
+window.addEventListener('resize', resize);
+
+}
+</script>
+</body>
+</html>

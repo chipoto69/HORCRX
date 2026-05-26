@@ -1,0 +1,25 @@
+┌─────────────────────────────────────────────────────────────────────┐
+│                                                                     │
+│                                                                     │
+│                  [[.            ]]                                  │
+│                                                                     │
+│                  HORCRX · essence, distributed.                     │
+│                                                                     │
+│                  the atlas sequel · v0.1                            │
+│                                                                     │
+│                                                                     │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   vessel    HORCRX #001 · candysoul                                 │
+│   status    [ACTIVE]                                                │
+│   mind      ~/.corpus-mind                                          │
+│   loop      observe · think · decide · act · verify                 │
+│   wallet    0.847 SOL                                               │
+│                                                                     │
+│   $ horcrx --help            list commands                          │
+│   $ horcrx vessel new <name> instantiate a new horcrux              │
+│   $ horcrx ralph             verify externally · iterate            │
+│                                                                     │
+│   never stop working.                                               │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘

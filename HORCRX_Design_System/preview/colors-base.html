@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family:"Departure";
+    src:url("../fonts/DepartureMono-Regular.woff2") format("woff2"),
+        url("../fonts/DepartureMono-Regular.woff") format("woff");
+    font-weight:400;
+    font-display:swap;
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#030303; font-family:"Departure",monospace; padding:18px; }
+  .section { margin-bottom:14px; }
+  .title { font-size:9px; color:rgba(255,255,255,0.20); letter-spacing:0.22em; text-transform:uppercase; margin-bottom:8px; }
+  .row { display:flex; gap:6px; }
+  .col { display:flex; flex-direction:column; gap:4px; flex:1; }
+  .swatch { height:52px; }
+  .label { font-size:8px; color:rgba(255,255,255,0.25); letter-spacing:0.08em; }
+  .val   { font-size:8px; color:rgba(255,255,255,0.14); letter-spacing:0.04em; }
+  .divider { height:1px; background:rgba(255,255,255,0.06); margin:12px 0; }
+  .accent-strip { height:3px; background:#00f0ff; margin-bottom:6px; width:24px; }
+  .accent-note { font-size:8px; color:rgba(255,255,255,0.20); letter-spacing:0.06em; line-height:1.6; }
+</style>
+</head>
+<body>
+
+  <!-- Grayscale scale — the core system -->
+  <div class="section">
+    <div class="title">grayscale · the full range</div>
+    <div class="row">
+      <div class="col">
+        <div class="swatch" style="background:#030303; border:1px solid rgba(255,255,255,0.07);"></div>
+        <div class="label">background</div>
+        <div class="val">#030303</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:#0a0a0a;"></div>
+        <div class="label">surface</div>
+        <div class="val">#0a0a0a</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:#141414;"></div>
+        <div class="label">elevated</div>
+        <div class="val">#141414</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:#2a2a2a;"></div>
+        <div class="label">border</div>
+        <div class="val">#2a2a2a</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:#505050;"></div>
+        <div class="label">muted</div>
+        <div class="val">#505050</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:#a0a0a0;"></div>
+        <div class="label">secondary</div>
+        <div class="val">#a0a0a0</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:#e0e0e0;"></div>
+        <div class="label">foreground</div>
+        <div class="val">#e0e0e0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Single accent -->
+  <div class="section">
+    <div class="accent-strip"></div>
+    <div class="title">accent · used sparingly</div>
+    <div class="row">
+      <div class="col">
+        <div class="swatch" style="background:#00f0ff;"></div>
+        <div class="label">accent</div>
+        <div class="val">#00f0ff</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:rgba(0,240,255,0.15);"></div>
+        <div class="label">accent-dim</div>
+        <div class="val">15% alpha</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:rgba(0,240,255,0.06); border:1px solid rgba(0,240,255,0.12);"></div>
+        <div class="label">accent-ghost</div>
+        <div class="val">6% alpha</div>
+      </div>
+      <div class="col" style="flex:3; padding-left:6px; display:flex; flex-direction:column; justify-content:flex-end;">
+        <div class="accent-note">
+          Cyan only for: glows, active borders,<br>
+          brand mark [.a], terminal cursor.<br>
+          Never as fill. Never decorative.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Status — still monochrome in spirit -->
+  <div class="section">
+    <div class="title">status · minimal use</div>
+    <div class="row">
+      <div class="col">
+        <div class="swatch" style="background:#ffffff; height:22px;"></div>
+        <div class="label">pass · #fff</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:#888; height:22px;"></div>
+        <div class="label">warn · #888</div>
+      </div>
+      <div class="col">
+        <div class="swatch" style="background:#333; height:22px;"></div>
+        <div class="label">fail · #333</div>
+      </div>
+      <div class="col" style="flex:3; padding-left:8px;">
+        <div class="accent-note" style="margin-top:6px;">
+          Status uses brightness, not hue.<br>
+          White = ok · gray = warn · dark = fail.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
