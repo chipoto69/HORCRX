@@ -1,0 +1,17 @@
+{
+  "name": "@horcrx/design-system",
+  "version": "0.1.0-foundation",
+  "private": true,
+  "description": "HORCRX brand identity, voice, fonts, and reference patterns.",
+  "files": [
+    "README.md",
+    "SKILL.md",
+    "VOICE.md",
+    "LICENSE",
+    "colors_and_type.css",
+    "assets/",
+    "fonts/",
+    "preview/",
+    "applications/"
+  ]
+}
