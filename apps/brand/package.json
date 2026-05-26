@@ -1,0 +1,13 @@
+{
+  "name": "@horcrx/brand",
+  "version": "0.1.0-foundation",
+  "private": true,
+  "description": "Static wrapper for the inherited HORCRX landing page and preview surfaces.",
+  "dependencies": {
+    "@horcrx/design-system": "workspace:*"
+  },
+  "scripts": {
+    "dev": "python3 -m http.server 4173 --directory .",
+    "serve": "python3 -m http.server 4173 --directory ."
+  }
+}

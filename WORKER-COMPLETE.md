@@ -1,53 +1,58 @@
-# Worker F05 — infrastructure-plan — Completion Report
+# Worker F06 — brand-integration — Completion Report
 
 ## Branch
-foundation/infra
+foundation/brand
 
 ## Changed files (absolute paths)
-- /Users/rudlord/HORCRX/docs/infrastructure/services.md
-- /Users/rudlord/HORCRX/docs/infrastructure/hosting.md
-- /Users/rudlord/HORCRX/docs/infrastructure/local-dev.md
-- /Users/rudlord/HORCRX/docs/infrastructure/observability.md
-- /Users/rudlord/HORCRX/docs/infrastructure/security.md
+- /Users/rudlord/HORCRX/HORCRX_Design_System
+- /Users/rudlord/HORCRX/packages/design-system/
+- /Users/rudlord/HORCRX/packages/design-system/package.json
+- /Users/rudlord/HORCRX/apps/brand/README.md
+- /Users/rudlord/HORCRX/apps/brand/applications
+- /Users/rudlord/HORCRX/apps/brand/assets
+- /Users/rudlord/HORCRX/apps/brand/colors_and_type.css
+- /Users/rudlord/HORCRX/apps/brand/fonts
+- /Users/rudlord/HORCRX/apps/brand/index.html
+- /Users/rudlord/HORCRX/apps/brand/package.json
+- /Users/rudlord/HORCRX/apps/brand/preview
+- /Users/rudlord/HORCRX/AGENTS.md
 - /Users/rudlord/HORCRX/WORKER-COMPLETE.md
 
 ## Assertions claimed
-- VAL-INFRA-01
-- VAL-INFRA-02
-- VAL-INFRA-03
-- VAL-INFRA-04
-- VAL-INFRA-05
-- VAL-INFRA-06
+- VAL-BRAND-01
+- VAL-BRAND-02
+- VAL-BRAND-03
+- VAL-BRAND-04
+- VAL-BRAND-05
+- VAL-BRAND-06
 
 ## Acceptance criteria met
-- [x] Authored `docs/infrastructure/services.md` covering registry indexer, content gateway, signing service, IPFS pinning, Arweave bundler, x402 facilitator, search/embedding index, and CESS evaluation.
-- [x] Authored `docs/infrastructure/hosting.md` covering Hetzner, Vercel, Cloudflare Pages/R2, Helius, Alchemy, and QuickNode with rough cost envelopes and pricing review date.
-- [x] Authored `docs/infrastructure/local-dev.md` covering anvil, solana-test-validator, local IPFS or mock, sqlite registry, local-mode x402 facilitator, and a non-runnable compose sketch.
-- [x] Authored `docs/infrastructure/observability.md` covering NDJSON logs, metrics, traces, dashboards, and Hermes `dispatch()` audit integration.
-- [x] Authored `docs/infrastructure/security.md` covering the required six threats plus additional marketplace threats and the mind-vs-secrets trust-domain separation.
+- [x] Moved the inherited `HORCRX_Design_System/` canon into `packages/design-system/` with git history preserved.
+- [x] Replaced the original `HORCRX_Design_System` path with a symlink to `packages/design-system` for backwards compatibility.
+- [x] Added `packages/design-system/package.json` exposing the inherited design system as `@horcrx/design-system`.
+- [x] Added `apps/brand/` as a static wrapper around the inherited landing page and preview surfaces using symlinks instead of copies.
+- [x] Referenced the inherited voice doctrine from root `AGENTS.md`.
 
 ## Known risks / unresolved
-- Hosting envelopes remain intentionally rough because the mission is still planning-only and production traffic is unknown.
-- Exact vendor plan selection for IPFS pinning and Base RPC should remain open until Phase 1 or Phase 2 implementation benchmarks exist.
+- Root monorepo workspace files are not present yet because F07 is still pending, so `apps/brand/package.json` is ready for workspace wiring but not yet part of a root workspace manifest.
+- The inherited design-system tree includes extra canon directories (`uploads/`, `website/`) beyond the minimum assertion set; they were preserved verbatim as part of the move.
 
 ## HITL required before next stage
-- Confirm whether the first public web surface should favor Vercel or Cloudflare Pages as the default frontend hosting path.
-- Confirm whether CESS is a roadmap-only mirror candidate or should be explicitly tested in the first storage implementation wave.
+- None.
 
 ## Blocking findings (if any)
 - None.
 
 ## Source dossier read
-- /Users/rudlord/HORCRX/research/02-prior-art.md
-- /Users/rudlord/HORCRX/research/05-risks-and-tensions.md
-- /Users/rudlord/HORCRX/specs/marketplace/ARCHITECTURE.md
-- /Users/rudlord/HORCRX/specs/protocol/payment-layer.md
-- /Users/rudlord/HORCRX/specs/hermes-binding/BINDING.md
-- /Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-D-prior-art.md
-- /Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md
-- /Users/rudlord/wiki/raw/downloads/2026-04-10/root/system-map.md
-- /Users/rudlord/wiki/_meta/hermes-stack/hermes-content-os.md
+- /Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/AGENTS.md
+- /Users/rudlord/HORCRX/packages/design-system/README.md
+- /Users/rudlord/HORCRX/packages/design-system/SKILL.md
+- /Users/rudlord/HORCRX/packages/design-system/VOICE.md
+- /Users/rudlord/HORCRX/packages/design-system/colors_and_type.css
+- /Users/rudlord/HORCRX/packages/design-system/applications/landing.html
+- /Users/rudlord/HORCRX/packages/design-system/applications/welcome-banner.txt
+- /Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-A-local-codebases.md
 
 ## Next worker hand-off
-- F07 should link `docs/infrastructure/*` from repo-level navigation and include these files in cross-area validation.
-- Future implementation workers should preserve the signing-service isolation and Hermes audit correlation fields described in `docs/infrastructure/security.md` and `docs/infrastructure/observability.md`.
+- F07 should add root workspace plumbing (`package.json`, `pnpm-workspace.yaml`, `turbo.json`) so `@horcrx/design-system` and `@horcrx/brand` are discoverable in the monorepo graph.
+- Cross-area validation should treat the design-system move as canonical and ensure no follow-on worker edits inherited files in `packages/design-system/`.
