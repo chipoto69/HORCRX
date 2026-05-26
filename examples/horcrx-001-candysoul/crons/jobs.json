@@ -1,0 +1,13 @@
+[
+  {
+    "id": "dream-cycle-daily",
+    "name": "daily dream cycle",
+    "skill": "presence-market",
+    "schedule": {
+      "kind": "cron",
+      "expr": "0 5 * * *"
+    },
+    "enabled": false,
+    "deliver": "operator-review"
+  }
+]

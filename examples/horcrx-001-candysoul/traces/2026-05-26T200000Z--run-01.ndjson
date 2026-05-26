@@ -1,0 +1,2 @@
+{"ts": "2026-05-26T20:00:00Z", "run_id": "run_01", "event_id": "evt_01", "stage": "observe", "actor": "vessel", "summary": "observed that portable canon and host secrets must remain separate", "artifacts": [], "redaction": "none", "provenance": {"source": "manual", "host": "foundation-spec"}}
+{"ts": "2026-05-26T20:05:00Z", "run_id": "run_01", "event_id": "evt_02", "stage": "result", "actor": "vessel", "summary": "recorded first candysoul reference trace", "artifacts": [], "redaction": "none", "provenance": {"source": "manual", "host": "foundation-spec"}}

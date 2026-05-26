@@ -1,0 +1,71 @@
+{
+  "id": "orbel-researcher",
+  "version": "0.1.0",
+  "manifest_version": "0.1",
+  "kind": "vessel",
+  "representation": "folder",
+  "catalog_number": 2,
+  "parent_cids": [],
+  "slots": {
+    "soul": {
+      "role": "identity",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:23c4e89939b5ce95eb99afb626558ded1551e73b49eab29c3200c08e6e78fe99",
+          "path": "horcrx-002-orbel-pack/orbel-researcher/soul.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:23c4e89939b5ce95eb99afb626558ded1551e73b49eab29c3200c08e6e78fe99",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "agents": {
+      "role": "operations",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:7cf2781853c98f0e09f856cac46d762e7cb40d3037fe292117fc0de43e2dff6a",
+          "path": "horcrx-002-orbel-pack/orbel-researcher/agents.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:7cf2781853c98f0e09f856cac46d762e7cb40d3037fe292117fc0de43e2dff6a",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "principles": {
+      "role": "doctrine",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:f95c54a4346e94bcd06c91f4c55c676c18a0b3038161b99c0aecfdb09e8acf61",
+          "path": "horcrx-002-orbel-pack/orbel-researcher/principles.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:f95c54a4346e94bcd06c91f4c55c676c18a0b3038161b99c0aecfdb09e8acf61",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    }
+  },
+  "author_keys": [
+    {
+      "key_id": "key_ed25519_orbel_pack",
+      "algorithm": "Ed25519",
+      "public_key_multibase": "z6MkhG8r1vBvNfQ7d8J8HxQj6S6cAqY9wYq3C1r4nF1uP3dL",
+      "scope": "manifest+slots"
+    }
+  ],
+  "capabilities": [
+    "researcher"
+  ],
+  "royalty_target": {
+    "scheme": "x402+lineage",
+    "destination": "orbel-researcher"
+  },
+  "license": {
+    "code": "MIT OR Apache-2.0",
+    "content": "CC-BY-NC-4.0"
+  },
+  "agent_card": {
+    "protocol_version": "0.3.0",
+    "name": "orbel-researcher",
+    "description": "orbel-researcher child vessel in the ORBEL pack."
+  }
+}

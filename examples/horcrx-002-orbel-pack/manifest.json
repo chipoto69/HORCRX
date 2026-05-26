@@ -1,0 +1,121 @@
+{
+  "id": "horcrx-002-orbel-pack",
+  "version": "0.1.0",
+  "manifest_version": "0.1",
+  "kind": "pack",
+  "representation": "folder",
+  "catalog_number": 2,
+  "parent_cids": [],
+  "slots": {
+    "multi_agent": {
+      "role": "task-graph",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:19ea8dba16e6b0d1e394b876823773a1e78ee59c0a8d866639d5c6b61f12a80b",
+          "path": "horcrx-002-orbel-pack/multi-agent.yaml",
+          "media_type": "application/yaml",
+          "digest": "sha256:19ea8dba16e6b0d1e394b876823773a1e78ee59c0a8d866639d5c6b61f12a80b",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "mark": {
+      "role": "visual-mark",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:f0dee795eee945f2d3dc134e5680465788ffea3829feb72115acb3d40dfbdbe3",
+          "path": "horcrx-002-orbel-pack/mark.svg",
+          "media_type": "image/svg+xml",
+          "digest": "sha256:f0dee795eee945f2d3dc134e5680465788ffea3829feb72115acb3d40dfbdbe3",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    }
+  },
+  "author_keys": [
+    {
+      "key_id": "key_ed25519_orbel_pack",
+      "algorithm": "Ed25519",
+      "public_key_multibase": "z6MkhG8r1vBvNfQ7d8J8HxQj6S6cAqY9wYq3C1r4nF1uP3dL",
+      "scope": "manifest+pack"
+    }
+  ],
+  "capabilities": [
+    "multi-vessel-pack",
+    "role-routed-orchestration"
+  ],
+  "royalty_target": {
+    "scheme": "x402+lineage",
+    "destination": "orbel-pack-primary",
+    "split_bps": [
+      7000,
+      2000,
+      1000
+    ]
+  },
+  "license": {
+    "code": "MIT OR Apache-2.0",
+    "content": "CC-BY-NC-4.0"
+  },
+  "agent_card": {
+    "protocol_version": "0.3.0",
+    "name": "orbel-pack",
+    "description": "Reference five-role multi-vessel pack for HORCRX #002."
+  },
+  "pack": {
+    "entrypoint": "orbel-orchestrator",
+    "members": [
+      {
+        "id": "orbel-orchestrator",
+        "role": "orchestrator",
+        "manifest_cid": "cid:sha256:bc1e3ef18fcf5d4c03bc366f6767b4d3803602202c4359fa395720e3b88d5fb2"
+      },
+      {
+        "id": "orbel-researcher",
+        "role": "researcher",
+        "manifest_cid": "cid:sha256:f6a66bf42fae9511412f798bbf2cf223695f3bbfe84b2366931ad03fc8308470"
+      },
+      {
+        "id": "orbel-builder",
+        "role": "builder",
+        "manifest_cid": "cid:sha256:7186466fa557d15a1d669b48945c162a9f22f12e802e0fb01a5ca55e522f2958"
+      },
+      {
+        "id": "orbel-evaluator-evolver",
+        "role": "evaluator-evolver",
+        "manifest_cid": "cid:sha256:ce87cb077c7f09d24fe731a31d0fb5c39cbd7b2d1f2c006a227c3ad51b059c92"
+      },
+      {
+        "id": "orbel-librarian",
+        "role": "librarian",
+        "manifest_cid": "cid:sha256:da9665b26498e1afa560e5b8c9259aab517853965c48869ed7e8ab003de083e3"
+      }
+    ],
+    "task_graph": [
+      {
+        "from": "orbel-orchestrator",
+        "to": "orbel-researcher",
+        "contract": "ResearchPacket"
+      },
+      {
+        "from": "orbel-orchestrator",
+        "to": "orbel-builder",
+        "contract": "BuildBrief"
+      },
+      {
+        "from": "orbel-orchestrator",
+        "to": "orbel-evaluator-evolver",
+        "contract": "EvaluationReport"
+      },
+      {
+        "from": "orbel-orchestrator",
+        "to": "orbel-librarian",
+        "contract": "LearningRecord"
+      }
+    ]
+  },
+  "source_paths": [
+    "/Users/rudlord/wiki/_meta/orbel-framework/profile-templates/README.md",
+    "/Users/rudlord/HORCRX/research/08-knowledge-graph-context.md"
+  ]
+}

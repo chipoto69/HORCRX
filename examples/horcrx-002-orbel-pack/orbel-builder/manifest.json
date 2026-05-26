@@ -1,0 +1,71 @@
+{
+  "id": "orbel-builder",
+  "version": "0.1.0",
+  "manifest_version": "0.1",
+  "kind": "vessel",
+  "representation": "folder",
+  "catalog_number": 3,
+  "parent_cids": [],
+  "slots": {
+    "soul": {
+      "role": "identity",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:b0cfdf9d8eaf6fa607dada6f9c802a7bc763feadf322cebbdba7dca7689964e9",
+          "path": "horcrx-002-orbel-pack/orbel-builder/soul.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:b0cfdf9d8eaf6fa607dada6f9c802a7bc763feadf322cebbdba7dca7689964e9",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "agents": {
+      "role": "operations",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:218a94de607b8e4e471ca787c303764eac08208123bdd8241a7a2078f405cfd6",
+          "path": "horcrx-002-orbel-pack/orbel-builder/agents.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:218a94de607b8e4e471ca787c303764eac08208123bdd8241a7a2078f405cfd6",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "principles": {
+      "role": "doctrine",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:f95c54a4346e94bcd06c91f4c55c676c18a0b3038161b99c0aecfdb09e8acf61",
+          "path": "horcrx-002-orbel-pack/orbel-builder/principles.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:f95c54a4346e94bcd06c91f4c55c676c18a0b3038161b99c0aecfdb09e8acf61",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    }
+  },
+  "author_keys": [
+    {
+      "key_id": "key_ed25519_orbel_pack",
+      "algorithm": "Ed25519",
+      "public_key_multibase": "z6MkhG8r1vBvNfQ7d8J8HxQj6S6cAqY9wYq3C1r4nF1uP3dL",
+      "scope": "manifest+slots"
+    }
+  ],
+  "capabilities": [
+    "builder"
+  ],
+  "royalty_target": {
+    "scheme": "x402+lineage",
+    "destination": "orbel-builder"
+  },
+  "license": {
+    "code": "MIT OR Apache-2.0",
+    "content": "CC-BY-NC-4.0"
+  },
+  "agent_card": {
+    "protocol_version": "0.3.0",
+    "name": "orbel-builder",
+    "description": "orbel-builder child vessel in the ORBEL pack."
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "id": "orbel-librarian",
+  "version": "0.1.0",
+  "manifest_version": "0.1",
+  "kind": "vessel",
+  "representation": "folder",
+  "catalog_number": 5,
+  "parent_cids": [],
+  "slots": {
+    "soul": {
+      "role": "identity",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:73807ff2de082245db143c7465617e5d6951642fb40b6f5cd694343e4233a92e",
+          "path": "horcrx-002-orbel-pack/orbel-librarian/soul.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:73807ff2de082245db143c7465617e5d6951642fb40b6f5cd694343e4233a92e",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "agents": {
+      "role": "operations",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:7477d836a5904ca52f7bdc924270dc6c75d5a067da6b2ca8c96be139e1f1b40e",
+          "path": "horcrx-002-orbel-pack/orbel-librarian/agents.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:7477d836a5904ca52f7bdc924270dc6c75d5a067da6b2ca8c96be139e1f1b40e",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "principles": {
+      "role": "doctrine",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:f95c54a4346e94bcd06c91f4c55c676c18a0b3038161b99c0aecfdb09e8acf61",
+          "path": "horcrx-002-orbel-pack/orbel-librarian/principles.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:f95c54a4346e94bcd06c91f4c55c676c18a0b3038161b99c0aecfdb09e8acf61",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    }
+  },
+  "author_keys": [
+    {
+      "key_id": "key_ed25519_orbel_pack",
+      "algorithm": "Ed25519",
+      "public_key_multibase": "z6MkhG8r1vBvNfQ7d8J8HxQj6S6cAqY9wYq3C1r4nF1uP3dL",
+      "scope": "manifest+slots"
+    }
+  ],
+  "capabilities": [
+    "librarian"
+  ],
+  "royalty_target": {
+    "scheme": "x402+lineage",
+    "destination": "orbel-librarian"
+  },
+  "license": {
+    "code": "MIT OR Apache-2.0",
+    "content": "CC-BY-NC-4.0"
+  },
+  "agent_card": {
+    "protocol_version": "0.3.0",
+    "name": "orbel-librarian",
+    "description": "orbel-librarian child vessel in the ORBEL pack."
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "id": "horcrx-001-candysoul",
+  "version": "0.1.0",
+  "manifest_version": "0.1",
+  "kind": "vessel",
+  "representation": "folder",
+  "catalog_number": 1,
+  "parent_cids": [],
+  "slots": {
+    "soul": {
+      "role": "identity",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:0ce59e85fb6e4df47978a331a6aa91d8d698fe83f69bd20bbde2b5bed115fd8b",
+          "path": "horcrx-001-candysoul/soul.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:0ce59e85fb6e4df47978a331a6aa91d8d698fe83f69bd20bbde2b5bed115fd8b",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "agents": {
+      "role": "operations",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:12585fa73d1a510df2f6ebfcf81d38fd236c7fff5728e49eda3b5213c9a60a81",
+          "path": "horcrx-001-candysoul/agents.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:12585fa73d1a510df2f6ebfcf81d38fd236c7fff5728e49eda3b5213c9a60a81",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "principles": {
+      "role": "doctrine",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:c16afb2da91734b262575b9c02fee163c8f6cd2056ff7c9488fbb7fc9b6abd13",
+          "path": "horcrx-001-candysoul/principles.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:c16afb2da91734b262575b9c02fee163c8f6cd2056ff7c9488fbb7fc9b6abd13",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "intuition": {
+      "role": "heuristics",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:629c1675ed57042808432b532ec4e0536992404ed5785efec7f42b787df32ea4",
+          "path": "horcrx-001-candysoul/intuition.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:629c1675ed57042808432b532ec4e0536992404ed5785efec7f42b787df32ea4",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "dreams": {
+      "role": "reflection",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:91dcd5cabeacc4e31ddef2a4bd21f89898128d6deb4cbf688903bce0eab72efa",
+          "path": "horcrx-001-candysoul/dreams.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:91dcd5cabeacc4e31ddef2a4bd21f89898128d6deb4cbf688903bce0eab72efa",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "voice": {
+      "role": "voice-sample",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:6a51743139f0658936e6a7b68857f2a6afbc6e6f2b492322fb6dedeaeb6a5a69",
+          "path": "horcrx-001-candysoul/voice.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:6a51743139f0658936e6a7b68857f2a6afbc6e6f2b492322fb6dedeaeb6a5a69",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "memory": {
+      "role": "portable-canon",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:d23e6fe1a744fe1c357fcb27d0b1fbff7ae5eb5e4adc4c05e5ec42abbdcbe2de",
+          "path": "horcrx-001-candysoul/memory/canon.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:d23e6fe1a744fe1c357fcb27d0b1fbff7ae5eb5e4adc4c05e5ec42abbdcbe2de",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "crons": {
+      "role": "schedule-policy",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:edde7bb61d1f05cba2941c11b16dbb628b17c91c3dfe29dbb9d7f58169e5180e",
+          "path": "horcrx-001-candysoul/crons/jobs.json",
+          "media_type": "application/json",
+          "digest": "sha256:edde7bb61d1f05cba2941c11b16dbb628b17c91c3dfe29dbb9d7f58169e5180e",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "skills": {
+      "role": "procedural-memory",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:4627dd3d95f2dfeb577ba5dc2fa3d08195fda5f540aba6819b1a1871cc5bceda",
+          "path": "horcrx-001-candysoul/skills/presence-market/SKILL.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:4627dd3d95f2dfeb577ba5dc2fa3d08195fda5f540aba6819b1a1871cc5bceda",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "traces": {
+      "role": "audit-export",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:6216f7e4942b8525f5609ef92f1c2e37ba561de8ebf4c2da62d62804175351de",
+          "path": "horcrx-001-candysoul/traces/2026-05-26T200000Z--run-01.ndjson",
+          "media_type": "application/x-ndjson",
+          "digest": "sha256:6216f7e4942b8525f5609ef92f1c2e37ba561de8ebf4c2da62d62804175351de",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "mark": {
+      "role": "visual-mark",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:b98963a08fc676f62499d02f1ee60dc8c94e0532fe79ba58976671268a267f07",
+          "path": "horcrx-001-candysoul/mark.svg",
+          "media_type": "image/svg+xml",
+          "digest": "sha256:b98963a08fc676f62499d02f1ee60dc8c94e0532fe79ba58976671268a267f07",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    }
+  },
+  "author_keys": [
+    {
+      "key_id": "key_ed25519_operator",
+      "algorithm": "Ed25519",
+      "public_key_multibase": "z6Mkq7Yf5kY4VhV8YjF2nD9dJfYqR6bV1Hq9eJ2xQ5a1mC7R",
+      "scope": "manifest+slots"
+    }
+  ],
+  "capabilities": [
+    "portable-identity",
+    "signed-trace-export",
+    "x402-market-ready"
+  ],
+  "dependencies": [
+    {
+      "kind": "skill-format",
+      "name": "anthropic-skill-md",
+      "version": "1"
+    },
+    {
+      "kind": "runtime-shape",
+      "name": "hermes-profile",
+      "version": "2026-05"
+    }
+  ],
+  "royalty_target": {
+    "scheme": "x402+lineage",
+    "destination": "candysoul-primary",
+    "split_bps": [
+      7000,
+      2000,
+      1000
+    ],
+    "policy_uri": "policy://horcrx/default-derivative-split"
+  },
+  "license": {
+    "code": "MIT OR Apache-2.0",
+    "content": "CC-BY-NC-4.0",
+    "skills": "Anthropic skill packet remains author-licensed",
+    "voice": "HORCRX vessel voice retained by author"
+  },
+  "agent_card": {
+    "protocol_version": "0.3.0",
+    "name": "candysoul",
+    "description": "Portable reference vessel for HORCRX #001.",
+    "provider": {
+      "organization": "HORCRX",
+      "url": "https://horcrx.local"
+    },
+    "capabilities": {
+      "streaming": true,
+      "pushNotifications": false,
+      "stateTransitionHistory": true
+    },
+    "skills": [
+      {
+        "id": "presence-market",
+        "name": "presence-market",
+        "description": "Summarize market context with provenance."
+      }
+    ],
+    "pricing_tier": "premium",
+    "autonomy_level": "SEMI_AUTO",
+    "allowed_tools": [
+      "read",
+      "write"
+    ],
+    "allowed_executors": [
+      "hermes",
+      "factory"
+    ],
+    "max_turns": 10
+  },
+  "source_paths": [
+    "/Users/rudlord/HORCRX/HORCRX_Design_System/VOICE.md",
+    "/Users/rudlord/HORCRX/research/09-hermes-binding-recon.md"
+  ],
+  "notes": "Reference single-vessel example for the protocol-spec mission."
+}

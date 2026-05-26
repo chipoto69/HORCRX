@@ -1,0 +1,384 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://horcrx.dev/schemas/vessel-manifest.schema.json",
+  "title": "HORCRX Vessel Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "kind",
+    "parent_cids",
+    "slots",
+    "author_keys",
+    "capabilities",
+    "royalty_target",
+    "license",
+    "agent_card"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v?\\d+\\.\\d+\\.\\d+(?:[-+][A-Za-z0-9.-]+)?$"
+    },
+    "manifest_version": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "vessel",
+        "pack"
+      ]
+    },
+    "representation": {
+      "type": "string",
+      "enum": [
+        "folder",
+        "bundle"
+      ]
+    },
+    "catalog_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "parent_cids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cidString"
+      }
+    },
+    "slots": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/slotBinding"
+      }
+    },
+    "author_keys": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/authorKey"
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/dependency"
+      }
+    },
+    "royalty_target": {
+      "$ref": "#/$defs/royaltyTarget"
+    },
+    "license": {
+      "$ref": "#/$defs/licenseBundle"
+    },
+    "agent_card": {
+      "$ref": "#/$defs/agentCardExtension"
+    },
+    "pack": {
+      "$ref": "#/$defs/packDescriptor"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "source_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "cidString": {
+      "type": "string",
+      "pattern": "^(cid:sha256:[a-f0-9]{64}|bafy[a-z0-9]{20,})$"
+    },
+    "slotRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cid",
+        "path",
+        "media_type"
+      ],
+      "properties": {
+        "cid": {
+          "$ref": "#/$defs/cidString"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "digest": {
+          "type": "string"
+        },
+        "encrypted": {
+          "type": "boolean"
+        },
+        "signer_key_id": {
+          "type": "string"
+        },
+        "optional": {
+          "type": "boolean"
+        }
+      }
+    },
+    "slotBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "artifacts"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/slotRef"
+          }
+        },
+        "policy": {
+          "type": "string"
+        }
+      }
+    },
+    "authorKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key_id",
+        "algorithm",
+        "public_key_multibase",
+        "scope"
+      ],
+      "properties": {
+        "key_id": {
+          "type": "string"
+        },
+        "algorithm": {
+          "type": "string",
+          "enum": [
+            "Ed25519",
+            "secp256k1"
+          ]
+        },
+        "public_key_multibase": {
+          "type": "string",
+          "minLength": 10
+        },
+        "scope": {
+          "type": "string"
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "optional": {
+          "type": "boolean"
+        }
+      }
+    },
+    "royaltyTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scheme",
+        "destination"
+      ],
+      "properties": {
+        "scheme": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "split_bps": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
+          }
+        },
+        "policy_uri": {
+          "type": "string"
+        }
+      }
+    },
+    "licenseBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "content"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "skills": {
+          "type": "string"
+        },
+        "voice": {
+          "type": "string"
+        }
+      }
+    },
+    "agentCardExtension": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "protocol_version",
+        "name",
+        "description"
+      ],
+      "properties": {
+        "protocol_version": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "object"
+        },
+        "capabilities": {
+          "type": "object"
+        },
+        "skills": {
+          "type": "array"
+        },
+        "pricing_tier": {
+          "type": "string"
+        },
+        "autonomy_level": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "allowed_tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allowed_executors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "max_turns": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "packDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entrypoint",
+        "members",
+        "task_graph"
+      ],
+      "properties": {
+        "entrypoint": {
+          "type": "string"
+        },
+        "members": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "role",
+              "manifest_cid"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "manifest_cid": {
+                "$ref": "#/$defs/cidString"
+              }
+            }
+          }
+        },
+        "task_graph": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to",
+              "contract"
+            ],
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "contract": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+pack_id: horcrx-002-orbel-pack
+entrypoint: orbel-orchestrator
+task_graph:
+  - from: orbel-orchestrator
+    to: orbel-researcher
+    contract: ResearchPacket
+  - from: orbel-orchestrator
+    to: orbel-builder
+    contract: BuildBrief
+  - from: orbel-orchestrator
+    to: orbel-evaluator-evolver
+    contract: EvaluationReport
+  - from: orbel-orchestrator
+    to: orbel-librarian
+    contract: LearningRecord

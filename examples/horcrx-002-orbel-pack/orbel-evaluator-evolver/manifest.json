@@ -1,0 +1,71 @@
+{
+  "id": "orbel-evaluator-evolver",
+  "version": "0.1.0",
+  "manifest_version": "0.1",
+  "kind": "vessel",
+  "representation": "folder",
+  "catalog_number": 4,
+  "parent_cids": [],
+  "slots": {
+    "soul": {
+      "role": "identity",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:53c292ce753c6281880c6feb855a230fab23514555f96c57d9e488ff49d9e37e",
+          "path": "horcrx-002-orbel-pack/orbel-evaluator-evolver/soul.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:53c292ce753c6281880c6feb855a230fab23514555f96c57d9e488ff49d9e37e",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "agents": {
+      "role": "operations",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:e5f6dfe988cbef3d7680dcfc720bffa900b45fed0621873ca184c545da033c7b",
+          "path": "horcrx-002-orbel-pack/orbel-evaluator-evolver/agents.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:e5f6dfe988cbef3d7680dcfc720bffa900b45fed0621873ca184c545da033c7b",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    },
+    "principles": {
+      "role": "doctrine",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:f95c54a4346e94bcd06c91f4c55c676c18a0b3038161b99c0aecfdb09e8acf61",
+          "path": "horcrx-002-orbel-pack/orbel-evaluator-evolver/principles.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:f95c54a4346e94bcd06c91f4c55c676c18a0b3038161b99c0aecfdb09e8acf61",
+          "signer_key_id": "key_ed25519_operator"
+        }
+      ]
+    }
+  },
+  "author_keys": [
+    {
+      "key_id": "key_ed25519_orbel_pack",
+      "algorithm": "Ed25519",
+      "public_key_multibase": "z6MkhG8r1vBvNfQ7d8J8HxQj6S6cAqY9wYq3C1r4nF1uP3dL",
+      "scope": "manifest+slots"
+    }
+  ],
+  "capabilities": [
+    "evaluator-evolver"
+  ],
+  "royalty_target": {
+    "scheme": "x402+lineage",
+    "destination": "orbel-evaluator-evolver"
+  },
+  "license": {
+    "code": "MIT OR Apache-2.0",
+    "content": "CC-BY-NC-4.0"
+  },
+  "agent_card": {
+    "protocol_version": "0.3.0",
+    "name": "orbel-evaluator-evolver",
+    "description": "orbel-evaluator-evolver child vessel in the ORBEL pack."
+  }
+}
