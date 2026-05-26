@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-05-27
+### Changed
+- Bumped `softprops/action-gh-release` from 2 to 3 (#2)
+- Bumped `actions/checkout` from 4 to 6 (#3)
+- Bumped `actions/setup-node` from 4 to 6 (#4)
+
 ## [0.1.0-foundation] - 2026-05-26
 ### Added
 - Initial monorepo scaffold (pnpm + turbo)
@@ -30,5 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Foundation only — no production code, no contracts deployed, no marketplace UI built
 - Open binding questions resolved as ADRs but pending operator HITL confirmation on production-bound ones (see `specs/hermes-binding/open-questions-resolved.md`)
 
-[Unreleased]: https://github.com/chipoto69/HORCRX/compare/v0.1.0-foundation...HEAD
+[Unreleased]: https://github.com/chipoto69/HORCRX/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/chipoto69/HORCRX/compare/v0.1.0-foundation...v0.1.1
 [0.1.0-foundation]: https://github.com/chipoto69/HORCRX/releases/tag/v0.1.0-foundation
