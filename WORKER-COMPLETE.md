@@ -1,7 +1,7 @@
 # Worker F09 — github-publisher — Completion Report
 
 ## Branch
-foundation/github → PR #1 → main; final report branch foundation/github-report → PR #2 → main before tag.
+foundation/github → PR #1 → main; final report branch foundation/github-report → PR #5 → main before tag.
 
 ## HITL / operator decision record
 
@@ -49,7 +49,7 @@ Non-interactive Exec Mode prevented an interactive prompt. The assigned feature 
 - [x] GitHub repository `chipoto69/HORCRX` created as public.
 - [x] Description and topics set.
 - [x] `origin` remote points to `https://github.com/chipoto69/HORCRX.git`.
-- [x] Baseline `main` was pushed, F09 changes went through PR #1 with CI green, and the report went through PR #2 with CI green.
+- [x] Baseline `main` was pushed, F09 changes went through PR #1 with CI green, and the report went through PR #5 with CI green.
 - [x] `.github/` CODEOWNERS, issue templates, PR template, dependabot, CI, release workflow, and branch-protection spec authored.
 - [x] `CHANGELOG.md` authored in Keep-a-Changelog format with `0.1.0-foundation`.
 - [x] `SECURITY.md` authored with disclosure policy and signing-key placeholder.
@@ -68,7 +68,7 @@ Non-interactive Exec Mode prevented an interactive prompt. The assigned feature 
 - `pnpm test` → PASS (`schema json OK`).
 - `pnpm lint` → PASS (`commits OK`).
 - PR #1 GitHub Actions checks → PASS: `ci/commitlint`, `ci/schema-validate`, `ci/markdown-link-check`, `ci/voice-lint`.
-- PR #2 GitHub Actions checks → PASS: `ci/commitlint`, `ci/schema-validate`, `ci/markdown-link-check`, `ci/voice-lint`.
+- PR #5 GitHub Actions checks → PASS: `ci/commitlint`, `ci/schema-validate`, `ci/markdown-link-check`, `ci/voice-lint`.
 - `gh repo view chipoto69/HORCRX --json ...` → PASS; description, visibility, topics verified.
 - `git ls-remote --tags origin` → PASS; includes `v0.1.0-foundation`.
 
