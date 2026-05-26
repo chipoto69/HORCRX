@@ -2,6 +2,8 @@
 
 HORCRX is valuable precisely because it makes agent state portable. That same portability creates the main failure modes.
 
+The minimum threat set this mission has to keep visible is: soul theft, replay, signature forgery, deepfake personas, regulatory exposure, trust-domain separation failure, and IP enforcement weakness.
+
 | Risk | Why it matters | Mitigation sketch | Sources |
 |---|---|---|---|
 | Soul theft | a vessel bundle can leak identity, tone, and hard-won behavioral patterns | require signed manifests, per-slot signatures, and host-controlled secret rehydration | `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`, `/Users/rudlord/wiki/raw/downloads/2026-04-10/root/system-map.md` |
