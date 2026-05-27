@@ -17,7 +17,7 @@ Version: `v0.1-draft`
 | `hitl_ladder` | array of `{action_class, autonomy_level}` entries where `autonomy_level` is one of `auto`, `propose`, `propose_then_hitl`, `forbidden` |
 | `kill_switch_contract` | object carrying `halt_marker_path`, `audit_marker`, `operator_dead_man_timer_days` |
 | `asi_rung` | one of `single_call`, `workflow`, `read_only_agent`, `reversible_write_agent`, `production_impacting` |
-| `forbidden_actions` | array of strings; founder vessels MUST include "take directional positions on price as a primary earning strategy" |
+| `forbidden_actions` | array of strings; this is the canonical no-trading invariant encoding for founder vessels and MUST include "take directional positions on price as a primary earning strategy" |
 | `signed_off_by` | operator HITL stamp, or a placeholder showing that HITL is still pending |
 
 ## Optional fields
@@ -32,7 +32,7 @@ Version: `v0.1-draft`
 1. `hitl_ladder` MUST classify each action class once; duplicate classes create ambiguous control posture.
 2. `kill_switch_contract` MUST stay declarative — file paths, marker shape, and timer only; no shell recipes.
 3. `halt_marker_path` SHOULD be vessel-relative or policy-relative, never a host-local absolute path.
-4. Founder vessels MUST include the no-trading invariant inside `forbidden_actions`.
+4. Founder vessels MUST encode the no-trading invariant inside `forbidden_actions`; do not add a parallel `no_trading_invariant` field.
 5. `signed_off_by` MAY remain a placeholder at authoring time, but the placeholder must make the missing HITL state obvious.
 
 ## Minimal outline
