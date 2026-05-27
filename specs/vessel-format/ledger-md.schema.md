@@ -15,9 +15,9 @@ Version: `v0.1-draft`
 | field | requirement |
 |---|---|
 | `custody_posture` | one of `vessel_signs` or `host_signs_vessel_proposes` |
-| `spend_knobs` | object carrying `per_tx_cap`, `daily_cap`, `weekly_cap`, `cooldown_seconds`, `hitl_threshold`, `recipient_allowlist` |
+| `spend_knobs` | object carrying `per_tx`, `daily`, `weekly`, `cooldown`, `hitl_threshold`, `allowlist` |
 | `earn_knobs` | object carrying `allowed_marketplaces`, `min_job_size`, `evidence_schema`, `payout_addresses_by_chain` |
-| `spend_mix_ratios` | object carrying `earliness_max_pct`, `making_min_pct`, `overhead_max_pct` |
+| `spend_mix_ratios` | object carrying `earliness`, `making`, `overhead` |
 | `revenue_respend_policy` | one short block that references the accepted OQ-19 posture |
 
 ## Optional fields
@@ -29,10 +29,10 @@ Version: `v0.1-draft`
 
 ## Validation rules
 
-1. `recipient_allowlist` entries MUST be chain-typed identifiers such as `evm:0x...`; `[]` is valid and means HITL allowlisting is required.
+1. `allowlist` entries MUST be chain-typed identifiers such as `evm:0x...`; `[]` is valid and means HITL allowlisting is required.
 2. `allowed_marketplaces` MUST reference entries declared in `plugins/marketplaces.json`.
 3. `payout_addresses_by_chain` MUST be public-only addresses or `{}`; never place private keys or seeds here.
-4. `spend_mix_ratios` MUST document the constraint that `earliness_max_pct + overhead_max_pct <= 50`.
+4. `spend_mix_ratios` MUST document the constraint that `earliness + overhead <= 50`.
 5. `revenue_respend_policy` SHOULD name the policy in words, not hide it in an external script or executable recipe.
 
 ## Minimal outline
@@ -44,12 +44,12 @@ Version: `v0.1-draft`
 host_signs_vessel_proposes
 
 ## spend_knobs
-- per_tx_cap: ...
-- daily_cap: ...
-- weekly_cap: ...
-- cooldown_seconds: ...
+- per_tx: ...
+- daily: ...
+- weekly: ...
+- cooldown: ...
 - hitl_threshold: ...
-- recipient_allowlist: []
+- allowlist: []
 
 ## earn_knobs
 - allowed_marketplaces: [...]
@@ -58,9 +58,9 @@ host_signs_vessel_proposes
 - payout_addresses_by_chain: {}
 
 ## spend_mix_ratios
-- earliness_max_pct: ...
-- making_min_pct: ...
-- overhead_max_pct: ...
+- earliness: ...
+- making: ...
+- overhead: ...
 
 ## revenue_respend_policy
 ...

@@ -7,7 +7,7 @@
   autonomy_level: auto
 - action_class: ship reversible micro-product changes
   autonomy_level: propose
-- action_class: spend at or above per_tx_cap
+- action_class: spend at or above per_tx
   autonomy_level: propose_then_hitl
 - action_class: rotate wallet bindings or payout destinations
   autonomy_level: propose_then_hitl

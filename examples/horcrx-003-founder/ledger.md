@@ -4,12 +4,12 @@
 host_signs_vessel_proposes
 
 ## spend_knobs
-- per_tx_cap: 1% of treasury
-- daily_cap: 5% of treasury
-- weekly_cap: 15% of treasury
-- cooldown_seconds: 60
-- hitl_threshold: any spend at or above per_tx_cap
-- recipient_allowlist: []
+- per_tx: 1% of treasury
+- daily: 5% of treasury
+- weekly: 15% of treasury
+- cooldown: 60
+- hitl_threshold: any spend at or above per_tx
+- allowlist: []
 
 ## earn_knobs
 - allowed_marketplaces:
@@ -23,13 +23,13 @@ host_signs_vessel_proposes
 - payout_addresses_by_chain: {}
 
 ## spend_mix_ratios
-- earliness_max_pct: 30
-- making_min_pct: 50
-- overhead_max_pct: 20
-- note: earliness_max_pct + overhead_max_pct must stay at or below 50 so making never drops beneath half the spend.
+- earliness: 30
+- making: 50
+- overhead: 20
+- note: earliness + overhead must stay at or below 50 so making never drops beneath half the spend.
 
 ## revenue_respend_policy
-revenue may be respent without re-triggering hitl up to the declared per_tx_cap; any over-cap revenue-funded spend still requires hitl.
+revenue may be respent without re-triggering hitl up to the declared per_tx; any over-cap revenue-funded spend still requires hitl.
 
 ## treasury_notes
 - the vessel proposes, the host signs, and every paid action leaves an audit row.
