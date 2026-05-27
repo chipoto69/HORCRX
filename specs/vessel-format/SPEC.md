@@ -71,6 +71,7 @@ horcrx-<catalog-id>--<manifest-cid>.horcrx
 ### 3.1 Identity and control plane
 
 - `soul.md` — identity only; no commands, paths, or workflow instructions.
+- `voice.md` — required identity cadence: mission line, tone notes, and optional sample passages.
 - `agents.md` — operational contract, task routing, and safety gates.
 - `manifest.json` — canonical bundle index and capability declaration.
 - `mark.svg` — optional identity mark for catalog surfaces.
@@ -92,10 +93,17 @@ horcrx-<catalog-id>--<manifest-cid>.horcrx
 - `crons/jobs.json` — schedule policy, always disabled on import until approved.
 - `multi-agent.yaml` — pack-only role graph for multi-vessel systems.
 
+### 3.4 Founder-class slots (required for vessels with kind="founder", reserved otherwise)
+
+- `mission.md` — the vessel's mission arc, seed amount, success ladder, abort criteria, termination state.
+- `ledger.md` — declarative treasury posture: spend knobs, earn knobs, spend-mix ratios, custody posture.
+- `autonomy.md` — HITL ladder, kill-switch contract, ASI rung, no-trading invariant.
+- `constraints.md` — (optional) non-negotiable invariants beyond `autonomy.md`.
+
 ## 4. Folder invariants
 
 1. Paths are UTF-8, slash-separated, and case-sensitive.
-2. `soul.md` MUST remain identity only.
+2. Identity-only files (`soul.md`, `voice.md`) MUST remain identity only and MUST NOT contain shell commands, host paths, or executable strings.
 3. `agents.md` MAY contain commands, paths, and execution policy.
 4. `skills/` preserves Anthropic `SKILL.md` syntax exactly.
 5. `memory/canon.md` is portable; raw session stores are not.

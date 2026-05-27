@@ -32,8 +32,10 @@
     "kind": {
       "type": "string",
       "enum": [
-        "vessel",
-        "pack"
+        "single",
+        "pack",
+        "founder",
+        "vessel"
       ]
     },
     "representation": {
@@ -56,6 +58,62 @@
     "slots": {
       "type": "object",
       "minProperties": 1,
+      "properties": {
+        "soul": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "voice": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "agents": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "principles": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "intuition": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "dreams": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "mission": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "ledger": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "autonomy": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "constraints": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "memory": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "crons": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "skills": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "plugins": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "workflows": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "traces": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "mark": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "multi_agent": {
+          "$ref": "#/$defs/slotBinding"
+        }
+      },
       "additionalProperties": {
         "$ref": "#/$defs/slotBinding"
       }
@@ -102,6 +160,49 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "single"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "type": "object",
+            "required": [
+              "voice"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "founder"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "type": "object",
+            "required": [
+              "voice",
+              "mission",
+              "ledger",
+              "autonomy"
+            ]
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "cidString": {
       "type": "string",

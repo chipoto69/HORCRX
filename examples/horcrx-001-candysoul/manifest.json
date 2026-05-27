@@ -2,7 +2,7 @@
   "id": "horcrx-001-candysoul",
   "version": "0.1.0",
   "manifest_version": "0.1",
-  "kind": "vessel",
+  "kind": "single",
   "representation": "folder",
   "catalog_number": 1,
   "parent_cids": [],
