@@ -4,7 +4,7 @@ Version: `v0.1-draft`
 
 ATLAS → CORPUS → HORCRX.
 
-These ten ADRs resolve the open Hermes-binding questions identified in the Hermes recon. Because operator sign-off has not yet been captured inside this mission session, each ADR is currently marked `accepted-pending-HITL`.
+These ADRs resolve the open Hermes-binding questions identified across the Hermes recon and the founder-vessel mission packet. ADR 01..11 remain `accepted-pending-HITL`. ADR 12..19 land as founder-vessel resolutions; the HITL-sensitive rows carry explicit `Signed-off-by` placeholders so the operator review surface stays auditable.
 
 ## ADR 01 — Session memory mobility
 
@@ -160,10 +160,189 @@ The protocol remains conservative even if upstream Hermes currently permits larg
 **Status**  
 `accepted-pending-HITL`
 
+## ADR 12 — Vessel-as-proposer vs vessel-as-signer
+
+**Question**  
+Should the founder vessel hold signing credentials itself, or should it only propose payment intents while the host custody layer signs?
+
+**Options considered**
+- (a) the vessel owns the signing key and signs directly
+- (b) the vessel proposes payment intents and the host signing service signs
+
+**Decision**  
+Option (b). The vessel proposes; the host signs.
+
+**Rationale**  
+HORCRX doctrine keeps secrets with the host and ships only the mind. That makes the payment path auditable without bundling wallet custody into the portable vessel. Recon 10 §C.4 and recon 11's trust-domain split both point to host-held signing as the safer founder posture.
+
+**Status**  
+`accepted`
+
+**Signed-off-by**  
+founder-vessel doctrine authored from recon evidence; no additional operator stamp required
+
+## ADR 13 — Cap scale at the `$66.60` seed
+
+**Question**  
+How should founder-vessel spend caps scale when the initial treasury is only `$66.60`?
+
+**Options considered**
+- (a) copy the absolute ATLAS caps (`$1` / `$10` / `$50`)
+- (b) scale caps relative to treasury size
+- (c) use treasury-relative caps with an absolute floor
+
+**Decision**  
+Option (b). Outflow caps are treasury-relative: per-tx `≤ 1%`, daily `≤ 5%`, weekly `≤ 15%`.
+
+**Rationale**  
+At the seed stage, fixed absolute caps can burn most of the treasury in one bad approval path. Treasury-relative caps preserve the same control shape as the treasury grows and keep losses bounded from the first dollar onward.
+
+**Status**  
+`accepted`
+
+**Signed-off-by**  
+pending operator hitl on treasury-relative cap scale (`1% / 5% / 15%`); surfaced in commit and PR checklist
+
+## ADR 14 — Kill-switch contract shape
+
+**Question**  
+What concrete halt contract should the founder vessel expose before any later runtime activation?
+
+**Options considered**
+- (a) a narrative stop condition only
+- (b) a single local halt flag with no audit trail
+- (c) `state/halt.lock` presence + NDJSON audit marker + operator dead-man timer
+
+**Decision**  
+Option (c). The kill-switch contract is `state/halt.lock` plus an NDJSON audit marker plus an operator dead-man timer with a `14d` default.
+
+**Rationale**  
+File presence is cheap to check, append-only audit preserves provenance, and the dead-man timer closes the paperclip vector when the operator disappears. The three-part contract is more robust than any one mechanism on its own.
+
+**Status**  
+`accepted`
+
+**Signed-off-by**  
+founder-vessel doctrine authored from recon evidence; no additional operator stamp required
+
+## ADR 15 — Termination state criteria
+
+**Question**  
+Which criteria are allowed to terminate the founder mission once the vessel is live?
+
+**Options considered**
+- (a) treasury threshold only
+- (b) mission-line satisfaction only
+- (c) a conjunction drawn from `{treasury threshold met, mission-line satisfied, inactivity timeout > 14d}`
+
+**Decision**  
+Option (c). The termination contract is built from those three criteria, with the default founder posture allowing any of them to force a stop until the operator stamps the final conjunction shape.
+
+**Rationale**  
+A forced stop condition closes the paperclip vector, while keeping the conjunction operator-stamped makes the close rule explicit and auditable instead of letting runtime drift decide when the mission ends.
+
+**Status**  
+`accepted`
+
+**Signed-off-by**  
+pending operator hitl on final conjunction shape for termination criteria; surfaced in commit and PR checklist
+
+## ADR 16 — No-financial-trading off-limit
+
+**Question**  
+May the founder vessel take directional positions on price as a primary earning strategy?
+
+**Options considered**
+- (a) allow directional trading alongside building
+- (b) allow only signal products and forbid trading the vessel's own book
+- (c) ban all market-related work, including research resale
+
+**Decision**  
+Option (b). Selling synthesized signal is allowed where rights permit; directional positions on price as a primary earning strategy are forbidden.
+
+**Rationale**  
+The mission is maker-not-trader by design. Shipping too much mediocre work is recoverable; draining the seed on a bad position is not. This picks the recoverable failure mode and keeps the vessel's edge in product, speed, and signal rather than speculation.
+
+**Status**  
+`accepted`
+
+**Signed-off-by**  
+founder-vessel doctrine authored from recon evidence; no additional operator stamp required
+
+## ADR 17 — Spend-mix ratios
+
+**Question**  
+How should weekly spend be split between earliness, making, and overhead?
+
+**Options considered**
+- (a) no fixed mix; let the vessel improvise
+- (b) equal thirds across earliness, making, and overhead
+- (c) earliness `≤ 30%`, making `≥ 50%`, overhead `≤ 20%`
+
+**Decision**  
+Option (c). Set `earliness_max_pct = 30`, `making_min_pct = 50`, `overhead_max_pct = 20`, with the invariant `earliness_max + overhead_max ≤ 50`.
+
+**Rationale**  
+Earliness needs real spend — paid data, scraping, model upgrades — but it is a means, not the end. Making must stay dominant so the treasury compounds through shipped value instead of disappearing into research or tool overhead.
+
+**Status**  
+`accepted`
+
+**Signed-off-by**  
+pending operator hitl on spend-mix ratios (`≤30 / ≥50 / ≤20`); surfaced in commit and PR checklist
+
+## ADR 18 — Agentic-marketplace allowlist
+
+**Question**  
+Which earning surfaces are allowed by default for the founder vessel?
+
+**Options considered**
+- (a) open access to any new marketplace the vessel discovers
+- (b) a default allowlist of `agentic.market` plus operator-named bounty boards
+- (c) single-surface operation on `agentic.market` only
+
+**Decision**  
+Option (b). The default allowlist is `{agentic.market, operator-named bounty boards}`. Any new surface requires HITL before addition.
+
+**Rationale**  
+`agentic.market` is the clearest current agent-economy surface, but broad marketplace exposure increases supply-chain and account-risk quickly. Growing the allowlist one named surface at a time keeps the earning lane auditable.
+
+**Status**  
+`accepted`
+
+**Signed-off-by**  
+pending operator hitl on marketplace allowlist additions; surfaced in commit and PR checklist
+
+## ADR 19 — Revenue-respend posture
+
+**Question**  
+When revenue comes in, when may the founder vessel re-spend it without re-triggering HITL?
+
+**Options considered**
+- (a) all revenue auto-unlocks future spend
+- (b) every revenue-funded spend re-triggers HITL
+- (c) under-cap respends auto-clear; over-cap spend still requires HITL
+
+**Decision**  
+Option (c). Revenue may be respent without a new HITL step up to the active per-tx cap; any over-cap spend still requires HITL regardless of funding source.
+
+**Rationale**  
+This keeps routine reinvestment from stalling while preventing one large payday from turning into automatic permission for a large bet. The cap remains the invariant, not the source of funds.
+
+**Status**  
+`accepted`
+
+**Signed-off-by**  
+founder-vessel doctrine authored from recon evidence; no additional operator stamp required
+
 ## Source paths
 
 - `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`
 - `/Users/rudlord/HORCRX/research/09-hermes-binding-recon.md`
+- `/Users/rudlord/HORCRX/docs/roadmap/mission-A-horcrx-003-founder-vessel.md`
+- `/Users/rudlord/HORCRX/research/10-rags-to-riches-recon.md`
+- `/Users/rudlord/HORCRX/research/11-harness-landscape.md`
+- `/Users/rudlord/HORCRX/SOUL.md`
 - `/Users/rudlord/HORCRX/specs/hermes-binding/BINDING.md`
 - `/Users/rudlord/HORCRX/specs/hermes-binding/strip-and-rehydrate.md`
 - `/Users/rudlord/HORCRX/specs/vessel-format/SPEC.md`
