@@ -209,11 +209,11 @@ The local Hermes stack already contains the five profiles the binding should tre
 
 ## 7. Open questions are resolved as ADRs
 
-The ten open binding questions from the Hermes recon are resolved in:
+The Hermes-binding ADR ledger, including the founder-vessel additions, is resolved in:
 
 - `/Users/rudlord/HORCRX/specs/hermes-binding/open-questions-resolved.md`
 
-Until operator sign-off is captured, each ADR is marked `accepted-pending-HITL`. That keeps the contract concrete enough for downstream workers without pretending approval already happened. Sources: `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`, `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/mission.md`.
+ADRs 01..11 remain `accepted-pending-HITL`. ADRs 12..19 land as founder-vessel resolutions; the HITL-sensitive rows carry explicit `Signed-off-by` placeholders so operator review remains auditable. Sources: `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`, `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/mission.md`.
 
 ## 8. Hard constraints (verbatim, locked)
 
