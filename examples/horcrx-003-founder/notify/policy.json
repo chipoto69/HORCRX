@@ -1,0 +1,10 @@
+{
+  "quiet_hours": [
+    "22:00",
+    "07:00"
+  ],
+  "channels": [
+    "telegram"
+  ],
+  "daily_cap": 13
+}

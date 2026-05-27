@@ -1,0 +1,50 @@
+{
+  "version": "0.1",
+  "marketplaces": [
+    {
+      "name": "agentic.market",
+      "surface_url": "https://agentic.market/",
+      "account_model": "per_agent",
+      "settlement_currency": "USDC",
+      "fee_posture": "platform-default; operator reviews before live spend",
+      "evidence_schema": "listing_url + transaction_id + timestamp",
+      "anti_sybil": "unverified"
+    },
+    {
+      "name": "clawhub-class-bounty",
+      "surface_url": "operator-named at runtime",
+      "account_model": "per_agent",
+      "settlement_currency": "USDC",
+      "fee_posture": "board-defined; operator reviews before live spend",
+      "evidence_schema": "issue_url + commit_sha + reviewer_signoff",
+      "anti_sybil": "operator-curated"
+    },
+    {
+      "name": "code-bounty-generic",
+      "surface_url": "operator-named at runtime",
+      "account_model": "per_agent",
+      "settlement_currency": "USDC|fiat",
+      "fee_posture": "surface-defined; accept only when evidence path is clear",
+      "evidence_schema": "issue_url + pr_url + merge_status",
+      "anti_sybil": "platform_default"
+    },
+    {
+      "name": "self-hosted-microproduct",
+      "surface_url": "operator-published",
+      "account_model": "operator_shared",
+      "settlement_currency": "stripe|usdc",
+      "fee_posture": "processor-defined; margin tracked in audit rows",
+      "evidence_schema": "checkout_id|charge_id|tx_hash",
+      "anti_sybil": "operator_owned"
+    },
+    {
+      "name": "data-scrape-service",
+      "surface_url": "runtime-declared x402 or operator surface",
+      "account_model": "per_agent",
+      "settlement_currency": "USDC",
+      "fee_posture": "surface-defined; require bounded delivery receipts",
+      "evidence_schema": "manifest_cid + nonce + delivery_receipt",
+      "anti_sybil": "platform_default"
+    }
+  ]
+}

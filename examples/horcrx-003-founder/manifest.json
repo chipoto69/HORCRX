@@ -1,0 +1,278 @@
+{
+  "id": "horcrx-003-founder",
+  "version": "0.1.0",
+  "manifest_version": "0.1",
+  "kind": "founder",
+  "representation": "folder",
+  "catalog_number": 3,
+  "parent_cids": [],
+  "slots": {
+    "soul": {
+      "role": "identity",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:89c4865f8fedb58077ddf123ee6a901b064c7e6b03f3661e57696e8a84bdcd9c",
+          "path": "horcrx-003-founder/soul.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:89c4865f8fedb58077ddf123ee6a901b064c7e6b03f3661e57696e8a84bdcd9c",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "voice": {
+      "role": "voice-sample",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:1d3c3a9fdc5ec45f75ee264cd8d8a29653bface1d523f3be459d92c6d79de3b7",
+          "path": "horcrx-003-founder/voice.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:1d3c3a9fdc5ec45f75ee264cd8d8a29653bface1d523f3be459d92c6d79de3b7",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "agents": {
+      "role": "operations",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:87d3222022e221cea0a180861dfe0c7fa67969240be398a8b8dd6a096e6a5f4d",
+          "path": "horcrx-003-founder/agents.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:87d3222022e221cea0a180861dfe0c7fa67969240be398a8b8dd6a096e6a5f4d",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "principles": {
+      "role": "doctrine",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:9d9e82dddd396b5a84f021d9a89dd5449dfbdb4c909c6bfca6d995868f28eaab",
+          "path": "horcrx-003-founder/principles.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:9d9e82dddd396b5a84f021d9a89dd5449dfbdb4c909c6bfca6d995868f28eaab",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "intuition": {
+      "role": "heuristics",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:3535cc3fa4b7e632c458817b18f64360f29abee81ef41c13bead9bd245d16b2a",
+          "path": "horcrx-003-founder/intuition.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:3535cc3fa4b7e632c458817b18f64360f29abee81ef41c13bead9bd245d16b2a",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "dreams": {
+      "role": "reflection",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:5679c7b8d7166617476d0656b947ad02a94b36ff8e23c7569fad3eb6f3abaaee",
+          "path": "horcrx-003-founder/dreams.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:5679c7b8d7166617476d0656b947ad02a94b36ff8e23c7569fad3eb6f3abaaee",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "mission": {
+      "role": "mission-contract",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:6fd9660e225de7d00cfafe637911acfcec44e7b6922f979b646029156d4eea1f",
+          "path": "horcrx-003-founder/mission.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:6fd9660e225de7d00cfafe637911acfcec44e7b6922f979b646029156d4eea1f",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "ledger": {
+      "role": "treasury-policy",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:2271916ad5dd38a0136321b5b8174e036772dc6ca6392ead0fbad33d9fa43aa3",
+          "path": "horcrx-003-founder/ledger.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:2271916ad5dd38a0136321b5b8174e036772dc6ca6392ead0fbad33d9fa43aa3",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "autonomy": {
+      "role": "autonomy-contract",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:33cf5dff095d04ab322b03df9ba3ccc45d440e4d4e30861ef4e64001cf2b59b3",
+          "path": "horcrx-003-founder/autonomy.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:33cf5dff095d04ab322b03df9ba3ccc45d440e4d4e30861ef4e64001cf2b59b3",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "memory": {
+      "role": "portable-canon",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:c0301a689ccb94d4d5974cc9e90ba7bbf6f4c583e40de3e9f9a71a0184355da5",
+          "path": "horcrx-003-founder/memory/canon.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:c0301a689ccb94d4d5974cc9e90ba7bbf6f4c583e40de3e9f9a71a0184355da5",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "crons": {
+      "role": "schedule-policy",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:83c1b8c28ff81a12e31442bed92c1a9b1ee3961af26850101c75135ceee1ac04",
+          "path": "horcrx-003-founder/crons/jobs.json",
+          "media_type": "application/json",
+          "digest": "sha256:83c1b8c28ff81a12e31442bed92c1a9b1ee3961af26850101c75135ceee1ac04",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "skills": {
+      "role": "procedural-memory",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "horcrx-003-founder/skills/.gitkeep",
+          "media_type": "text/plain",
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "plugins": {
+      "role": "earning-surface-policy",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:45c702e03295cd3e0d1db7831276210468910fa0a602de017cd420891603fffd",
+          "path": "horcrx-003-founder/plugins/marketplaces.json",
+          "media_type": "application/json",
+          "digest": "sha256:45c702e03295cd3e0d1db7831276210468910fa0a602de017cd420891603fffd",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "workflows": {
+      "role": "loop-policy",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "horcrx-003-founder/workflows/.gitkeep",
+          "media_type": "text/plain",
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "traces": {
+      "role": "audit-export",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "horcrx-003-founder/traces/.gitkeep",
+          "media_type": "text/plain",
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "mark": {
+      "role": "visual-mark",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:92330360e5d1bc51b593747629425a73f444c9bc09cfad09f283188761bda062",
+          "path": "horcrx-003-founder/mark.svg",
+          "media_type": "image/svg+xml",
+          "digest": "sha256:92330360e5d1bc51b593747629425a73f444c9bc09cfad09f283188761bda062",
+          "signer_key_id": "********************"
+        }
+      ]
+    }
+  },
+  "author_keys": [
+    {
+      "key_id": "********************",
+      "algorithm": "Ed25519",
+      "public_key_multibase": "************************************************",
+      "scope": "manifest+slots"
+    }
+  ],
+  "capabilities": [
+    "portable-identity",
+    "treasury-doctrine",
+    "human-governed-autonomy",
+    "maker-market-ready"
+  ],
+  "dependencies": [
+    {
+      "kind": "skill-format",
+      "name": "anthropic-skill-md",
+      "version": "1"
+    },
+    {
+      "kind": "runtime-shape",
+      "name": "hermes-profile",
+      "version": "2026-05"
+    }
+  ],
+  "royalty_target": {
+    "scheme": "x402+lineage",
+    "destination": "founder-primary",
+    "split_bps": [
+      7000,
+      2000,
+      1000
+    ],
+    "policy_uri": "policy://horcrx/default-derivative-split"
+  },
+  "license": {
+    "code": "MIT OR Apache-2.0",
+    "content": "CC-BY-NC-4.0",
+    "skills": "Anthropic skill packet remains author-licensed",
+    "voice": "HORCRX vessel voice retained by author"
+  },
+  "agent_card": {
+    "protocol_version": "0.3.0",
+    "name": "founder",
+    "description": "Portable founder-class vessel for HORCRX #003.",
+    "provider": {
+      "organization": "HORCRX",
+      "url": "https://horcrx.local"
+    },
+    "capabilities": {
+      "streaming": true,
+      "pushNotifications": false,
+      "stateTransitionHistory": true
+    },
+    "skills": [],
+    "pricing_tier": "premium",
+    "autonomy_level": "SEMI_AUTO",
+    "allowed_tools": [
+      "read",
+      "write",
+      "dispatch"
+    ],
+    "allowed_executors": [
+      "hermes",
+      "factory"
+    ],
+    "max_turns": 12
+  },
+  "source_paths": [
+    "docs/roadmap/mission-A-horcrx-003-founder-vessel.md",
+    "research/10-rags-to-riches-recon.md",
+    "research/11-harness-landscape.md"
+  ],
+  "notes": "Founder reference vessel for Mission A; declarative only, with no runtime keys or live wallet bindings."
+}
