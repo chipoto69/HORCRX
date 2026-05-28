@@ -23,10 +23,10 @@
       "role": "voice-sample",
       "artifacts": [
         {
-          "cid": "cid:sha256:1d3c3a9fdc5ec45f75ee264cd8d8a29653bface1d523f3be459d92c6d79de3b7",
+          "cid": "cid:sha256:a4e9f852d51fc6f079338e83c834595065dab98832957f176e73f944a7329828",
           "path": "horcrx-003-founder/voice.md",
           "media_type": "text/markdown",
-          "digest": "sha256:1d3c3a9fdc5ec45f75ee264cd8d8a29653bface1d523f3be459d92c6d79de3b7",
+          "digest": "sha256:a4e9f852d51fc6f079338e83c834595065dab98832957f176e73f944a7329828",
           "signer_key_id": "********************"
         }
       ]
@@ -83,10 +83,10 @@
       "role": "mission-contract",
       "artifacts": [
         {
-          "cid": "cid:sha256:6fd9660e225de7d00cfafe637911acfcec44e7b6922f979b646029156d4eea1f",
+          "cid": "cid:sha256:d03abbec6e07ea5dfb47c6c1d848c17b174c281c56173515cf312d24f8b38d92",
           "path": "horcrx-003-founder/mission.md",
           "media_type": "text/markdown",
-          "digest": "sha256:6fd9660e225de7d00cfafe637911acfcec44e7b6922f979b646029156d4eea1f",
+          "digest": "sha256:d03abbec6e07ea5dfb47c6c1d848c17b174c281c56173515cf312d24f8b38d92",
           "signer_key_id": "********************"
         }
       ]
@@ -95,10 +95,10 @@
       "role": "treasury-policy",
       "artifacts": [
         {
-          "cid": "cid:sha256:2271916ad5dd38a0136321b5b8174e036772dc6ca6392ead0fbad33d9fa43aa3",
+          "cid": "cid:sha256:ad98d2232cba380b2905f6515b730251a45d067a466e27c9662adf5db623affd",
           "path": "horcrx-003-founder/ledger.md",
           "media_type": "text/markdown",
-          "digest": "sha256:2271916ad5dd38a0136321b5b8174e036772dc6ca6392ead0fbad33d9fa43aa3",
+          "digest": "sha256:ad98d2232cba380b2905f6515b730251a45d067a466e27c9662adf5db623affd",
           "signer_key_id": "********************"
         }
       ]
@@ -107,10 +107,10 @@
       "role": "autonomy-contract",
       "artifacts": [
         {
-          "cid": "cid:sha256:33cf5dff095d04ab322b03df9ba3ccc45d440e4d4e30861ef4e64001cf2b59b3",
+          "cid": "cid:sha256:68273ad726769a40271428eaf2c9115ae04c7be096e1e9c737c221c5c5f8268c",
           "path": "horcrx-003-founder/autonomy.md",
           "media_type": "text/markdown",
-          "digest": "sha256:33cf5dff095d04ab322b03df9ba3ccc45d440e4d4e30861ef4e64001cf2b59b3",
+          "digest": "sha256:68273ad726769a40271428eaf2c9115ae04c7be096e1e9c737c221c5c5f8268c",
           "signer_key_id": "********************"
         }
       ]
@@ -155,10 +155,10 @@
       "role": "earning-surface-policy",
       "artifacts": [
         {
-          "cid": "cid:sha256:45c702e03295cd3e0d1db7831276210468910fa0a602de017cd420891603fffd",
+          "cid": "cid:sha256:5195bb38fa6971ba95584bcba2a8439e8c45050d84148f80ce217bcea05fd25a",
           "path": "horcrx-003-founder/plugins/marketplaces.json",
           "media_type": "application/json",
-          "digest": "sha256:45c702e03295cd3e0d1db7831276210468910fa0a602de017cd420891603fffd",
+          "digest": "sha256:5195bb38fa6971ba95584bcba2a8439e8c45050d84148f80ce217bcea05fd25a",
           "signer_key_id": "********************"
         }
       ]
