@@ -70,6 +70,60 @@ HORCRX is still foundation-first. No live service in this document is deployed f
 - freeze bundle release for affected artifacts until integrity is re-confirmed,
 - preserve logs for cache key, manifest CID, slot CID, and upstream mirror used.
 
+## IPFS pinning surface
+
+### Deploy
+
+- keep provider-specific rollout changes separate from content-policy changes,
+- verify the retention policy and billing metadata mapping before enabling new pin classes,
+- stage provider migrations behind the content gateway so retrieval semantics stay CID-first.
+
+### Health-check
+
+- known bundle and slot CIDs remain pinned at the active provider,
+- provider object IDs map cleanly back to the intended manifest or slot CID,
+- retrieval hints returned to the content gateway still resolve the expected bytes.
+
+### Rollback
+
+- stop issuing new pins through the bad provider integration,
+- re-point the gateway to the last known-good provider routing,
+- preserve existing pin metadata so bundles can be re-hydrated or re-pinned without inventing new identifiers,
+- prefer temporary hot-cache service over weakening CID verification.
+
+### Incident posture
+
+- treat unexpected unpinning, retention drift, or provider byte mismatch as durability incidents,
+- capture the affected CID set, provider object IDs, and policy class before remediation starts,
+- escalate billing or quota exhaustion quickly because pin loss can cascade into preview and install failures.
+
+## Arweave bundler
+
+### Deploy
+
+- roll uploader and funding-state changes together so permanent-write receipts stay auditably linked,
+- isolate retry-policy edits from signing or manifest-generation changes,
+- validate Irys funding posture before widening any new preservation class.
+
+### Health-check
+
+- known signed bundles return permanent transaction references,
+- receipt metadata still binds the expected manifest CID and retention class,
+- failed uploads surface retryable versus terminal errors distinctly.
+
+### Rollback
+
+- freeze new permanent-storage writes first,
+- revert to the last uploader build that produced valid transaction receipts,
+- preserve the funding ledger and failed payload references for replay after recovery,
+- do not re-sign bundles just to work around a bad bundler rollout.
+
+### Incident posture
+
+- treat lost receipts, duplicate uploads, or funding-state drift as preservation-control incidents,
+- capture manifest CID, bundle hash, funder identity, and retry history for every affected upload,
+- prefer queueing signed bundles for later replay over improvising manual permanent writes.
+
 ## Signing service
 
 ### Deploy
@@ -148,3 +202,30 @@ HORCRX is still foundation-first. No live service in this document is deployed f
 - treat silent ranking drift, missing dispute flags, or badge mislabeling as trust incidents,
 - degrade gracefully to simpler ranking rather than showing misleading confidence,
 - capture the exact query, filters, ranking version, and listing IDs involved.
+
+## CESS evaluation lane
+
+### Deploy
+
+- keep CESS work behind an explicit experiment flag because it is not part of the first shipping path,
+- ship mirror-policy changes separately from any content-gateway routing changes,
+- document the retrieval SLO and legal-region assumptions before enabling a pilot.
+
+### Health-check
+
+- evaluation fixtures still produce a clear go / no-go recommendation,
+- cost and retrieval measurements remain comparable with the IPFS + Arweave baseline,
+- mirror-policy output stays traceable to the tested bundle size profile and durability target.
+
+### Rollback
+
+- disable any active CESS mirroring experiment before touching the primary gateway path,
+- fall back to the baseline IPFS hot path plus Arweave/Irys permanent anchor posture,
+- preserve experiment logs and recommendation artifacts for later review instead of deleting them,
+- do not let a failed CESS trial mutate canonical manifest or registry semantics.
+
+### Incident posture
+
+- treat retrieval instability, unverifiable mirror receipts, or policy ambiguity as evaluation failures, not production incidents,
+- capture bundle class, retrieval timings, region constraints, and operator decision context for the failed run,
+- keep CESS out of the default storage policy until a future worker can demonstrate stable, auditable behavior.
