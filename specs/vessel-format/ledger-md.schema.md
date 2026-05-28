@@ -32,7 +32,7 @@ Version: `v0.1-draft`
 1. `allowlist` entries MUST be chain-typed identifiers such as `evm:0x...`; `[]` is valid and means HITL allowlisting is required.
 2. `allowed_marketplaces` MUST reference entries declared in `plugins/marketplaces.json`.
 3. `payout_addresses_by_chain` MUST be public-only addresses or `{}`; never place private keys or seeds here.
-4. `spend_mix_ratios` MUST document the constraint that `earliness + overhead <= 50`.
+4. `spend_mix_ratios` MUST document the constraint that `earliness_max + overhead_max <= 60%; making_min >= 40%`.
 5. `revenue_respend_policy` SHOULD name the policy in words, not hide it in an external script or executable recipe.
 
 ## Minimal outline
