@@ -1,7 +1,22 @@
 #!/usr/bin/env bash
-while read local_ref local_sha remote_ref remote_sha; do
-  if [[ "$remote_ref" == "refs/heads/main" || "$remote_ref" == refs/heads/release/* || "$remote_ref" == refs/tags/* ]]; then
+set -euo pipefail
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [[ "$remote_ref" == "refs/heads/main" || "$remote_ref" == refs/heads/release/* ]]; then
     echo "ERROR: direct push to protected ref '$remote_ref' is forbidden. Open a PR."
     exit 1
+  fi
+
+  if [[ "$remote_ref" == refs/tags/* ]]; then
+    if [[ "$remote_ref" != refs/tags/v* ]]; then
+      echo "ERROR: direct push to tag '$remote_ref' is forbidden. Only annotated v* release tags are allowed."
+      exit 1
+    fi
+
+    object_type=$(git for-each-ref --format='%(objecttype)' "$local_ref")
+    if [[ "$object_type" != "tag" ]]; then
+      echo "ERROR: '$remote_ref' must be an annotated tag. Lightweight tags are forbidden."
+      exit 1
+    fi
   fi
 done

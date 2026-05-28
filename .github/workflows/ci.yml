@@ -40,6 +40,12 @@ jobs:
               echo "Invalid commit subject: $subject" >&2
               exit 1
             fi
+            scope=$(printf '%s\n' "$subject" | sed -nE 's/^[^(]+\(([^)]*)\): .+/\1/p')
+            lower_scope=$(printf '%s\n' "$scope" | tr '[:upper:]' '[:lower:]')
+            if [[ -n "$lower_scope" && "$lower_scope" =~ (^|[[:space:]_.:/-])(wip|tmp|temp|fixup)($|[[:space:]_.:/-]) ]]; then
+              echo "Deny-listed commit scope token: $subject" >&2
+              exit 1
+            fi
           done
 
   schema-validate:
@@ -90,8 +96,17 @@ jobs:
                   continue
               text = md.read_text(encoding='utf-8')
               if md.is_relative_to(root / 'docs'):
-                  for line_number, line in enumerate(text.splitlines(), start=1):
-                      if '~/wiki/' in line and '<!-- wiki source -->' not in line:
+                  lines = text.splitlines()
+                  for line_number, line in enumerate(lines, start=1):
+                      annotated = '<!-- wiki source -->' in line
+                      if not annotated:
+                          for previous_line in reversed(lines[: line_number - 1]):
+                              if not previous_line.strip():
+                                  break
+                              if '<!-- wiki source -->' in previous_line:
+                                  annotated = True
+                                  break
+                      if '~/wiki/' in line and not annotated:
                           unannotated_wiki_refs.append(f'{md.relative_to(root)}:{line_number}')
               for raw in link_re.findall(text):
                   target = raw.strip().split()[0].strip('<>')
@@ -268,8 +283,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Validate payout target fixtures against listing schema
-        run: ./validation/scripts/payout-target-format.py
+      - name: Validate payout target fixtures and royalty split totals
+        run: |
+          ./validation/scripts/payout-target-format.py
+          ./validation/scripts/royalty-split-sum.py
 
   revocation-never-deletes:
     name: ci/revocation-never-deletes

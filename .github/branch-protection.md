@@ -42,5 +42,6 @@ allow_deletions: false
 
 - All changes should arrive through pull requests.
 - CODEOWNERS approval is required for changes under `/specs/`, `/contracts/`, and `/.github/`.
+- Owner-opened PRs by `@chipoto69` use the documented operator bypass path (`bypass_pull_request_allowances: ["chipoto69"]`) or explicit admin override during merge review; the repo does not rely on self-approval to satisfy the single-CODEOWNER case.
 - Direct pushes to `main` are blocked locally by `.githooks/pre-push`; the remote rule above is the corresponding GitHub-side policy.
 - Mission B H1 applies the corresponding GitHub-side rule through `gh api repos/chipoto69/HORCRX/branches/main/protection --method PUT`.

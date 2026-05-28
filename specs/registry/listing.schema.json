@@ -41,7 +41,7 @@
       "items": {
         "$ref": "#/$defs/royaltyShare"
       },
-      "description": "Machine-readable split plan used by the royalty resolver."
+      "description": "Machine-readable split plan used by the royalty resolver. The aggregate split MUST total exactly 10000 basis points and is enforced by validation/scripts/royalty-split-sum.py."
     },
     "badges": {
       "type": "array",
