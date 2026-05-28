@@ -48,7 +48,9 @@ def main() -> None:
         pack = manifest.get('pack')
         if isinstance(pack, dict):
             for member in pack.get('members', []):
-                member_cid = member['manifest_cid']
+                member_cid = member.get('manifest_cid')
+                if not member_cid:
+                    fail(f"{path.relative_to(REPO)} pack.members entry is missing manifest_cid")
                 if member_cid not in cid_to_path:
                     fail(f"{path.relative_to(REPO)} references unresolved pack member manifest_cid {member_cid}")
                 pack_refs += 1

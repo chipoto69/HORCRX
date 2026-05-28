@@ -8,6 +8,7 @@ import json
 import sys
 from pathlib import Path
 
+from cryptography.exceptions import InvalidTag
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
@@ -63,7 +64,7 @@ def age_decrypt(ciphertext: bytes, key: bytes) -> bytes:
         nonce = bytes(counter)
         try:
             part = aead.decrypt(nonce, chunk, None)
-        except Exception:
+        except InvalidTag:
             last_nonce = bytearray(counter)
             last_nonce[-1] = 0x01
             part = aead.decrypt(bytes(last_nonce), chunk, None)

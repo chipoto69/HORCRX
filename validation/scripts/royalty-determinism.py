@@ -54,6 +54,8 @@ def build_plan(fixture: dict) -> dict:
     weighted_targets = []
     for depth, target in ancestors:
         weighted_targets.append((target, 1 / depth, f'ancestor-depth-{depth}'))
+    if resonator_amount and not weighted_targets:
+        fail('lineage has no ancestor payout targets for the resonator allocation slice')
     resonators = apportion(resonator_amount, weighted_targets) if weighted_targets else []
 
     allocations = resonators + [

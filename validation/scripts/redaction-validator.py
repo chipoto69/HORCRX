@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import itertools
 import json
 import re
 import sys
@@ -19,6 +21,7 @@ PHONE_RE = re.compile(r"(?:\+\d{1,3}[-\s]?)?(?:\(?\d{3}\)?[-\s]?)\d{3}[-\s]\d{4}
 SSN_RE = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
 BEARER_RE = re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._\-]{8,}")
 ASSIGNMENT_RE = re.compile(r"(?i)\b(api[_-]?key|token|secret)\b\s*[:=]\s*[A-Za-z0-9._\-]{8,}")
+SENSITIVE_KEY_RE = re.compile(r"(?i)(^|[_-])(api[_-]?key|token|secret|password|authorization|cookie)($|[_-])")
 
 
 def fail(message: str) -> None:
@@ -41,13 +44,15 @@ def redact_text(text: str) -> str:
     return text
 
 
-def redact_value(value: Any) -> Any:
+def redact_value(value: Any, key_name: str | None = None) -> Any:
     if isinstance(value, str):
+        if key_name and SENSITIVE_KEY_RE.search(key_name):
+            return "[REDACTED_SECRET]"
         return redact_text(value)
     if isinstance(value, list):
-        return [redact_value(item) for item in value]
+        return [redact_value(item, key_name) for item in value]
     if isinstance(value, dict):
-        return {key: redact_value(item) for key, item in value.items()}
+        return {key: redact_value(item, key) for key, item in value.items()}
     return value
 
 
@@ -69,6 +74,12 @@ def load_lines(path: Path) -> list[str]:
     return [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def digest_line(line: str | None) -> str:
+    if line is None:
+        return "missing"
+    return hashlib.sha256(line.encode("utf-8")).hexdigest()
+
+
 def main() -> None:
     input_path = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_INPUT
     expected_path = Path(sys.argv[2]) if len(sys.argv) > 2 else DEFAULT_EXPECTED
@@ -87,10 +98,18 @@ def main() -> None:
 
     expected_lines = load_lines(expected_path)
     if rendered_lines != expected_lines:
+        for index, (expected_line, rendered_line) in enumerate(
+            itertools.zip_longest(expected_lines, rendered_lines),
+            start=1,
+        ):
+            if expected_line != rendered_line:
+                fail(
+                    "redacted output did not match golden fixture "
+                    f"at line {index}: expected_sha256={digest_line(expected_line)} "
+                    f"rendered_sha256={digest_line(rendered_line)}"
+                )
         fail(
-            "redacted output did not match golden fixture\n"
-            f"EXPECTED: {expected_lines}\n"
-            f"RENDERED: {rendered_lines}"
+            "redacted output did not match golden fixture"
         )
 
     print(

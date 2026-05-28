@@ -4,6 +4,10 @@ set -euo pipefail
 
 repo_root=$(cd "$(dirname "$0")/../.." && pwd)
 fixture_dir="$repo_root/validation/fixtures/profile-fixture"
+if [ ! -d "$fixture_dir" ]; then
+  echo "GATE-HX-06 FAIL: missing fixture directory $fixture_dir" >&2
+  exit 1
+fi
 output_dir=$(mktemp -d)
 trap 'rm -rf "$output_dir"' EXIT
 
