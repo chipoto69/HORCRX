@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "**"
+    tags:
+      - "v*"
   pull_request:
 
 permissions:
@@ -302,3 +304,38 @@ jobs:
         run: python3 -m pip install cryptography pynacl
       - name: Validate marketplace envelope vectors
         run: ./validation/scripts/marketplace-envelope-kats.py
+
+  changelog-regression:
+    name: ci/changelog-regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Require matching CHANGELOG section for annotated release tags
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t annotated_tags < <(
+            git tag --points-at HEAD --list 'v*' | while IFS= read -r tag; do
+              [ -z "$tag" ] && continue
+              if [ "$(git cat-file -t "$tag")" = "tag" ]; then
+                printf '%s\n' "$tag"
+              fi
+            done
+          )
+
+          if [ "${#annotated_tags[@]}" -eq 0 ]; then
+            echo "No annotated v* tag points at HEAD; changelog regression check skipped."
+            exit 0
+          fi
+
+          for tag in "${annotated_tags[@]}"; do
+            version="${tag#v}"
+            if ! grep -Eq "^## \\[$version\\]( - .+)?$" CHANGELOG.md; then
+              echo "CHANGELOG.md is missing a matching section for $tag" >&2
+              exit 1
+            fi
+          done
+
+          printf 'Validated CHANGELOG sections for: %s\n' "${annotated_tags[*]}"

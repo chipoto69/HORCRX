@@ -30,6 +30,7 @@ required_status_checks:
     - ci/chain-adapter-symmetry
     - ci/preview-integrity
     - ci/marketplace-envelope-kats
+    - ci/changelog-regression
 required_linear_history: true
 restrict_pushes: admins_only
 enforce_admins: true
