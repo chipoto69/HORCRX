@@ -127,6 +127,54 @@
         }
       ]
     },
+    "notify": {
+      "role": "notification-policy",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:bdbce4f7e354b0ad3aa3d8ef44dc272eb49b786d6803e650b130c8abf9614077",
+          "path": "horcrx-003-founder/notify/policy.json",
+          "media_type": "application/json",
+          "digest": "sha256:bdbce4f7e354b0ad3aa3d8ef44dc272eb49b786d6803e650b130c8abf9614077",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "wallets": {
+      "role": "wallet-directory",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:95424c3e5def3d054b79e00b970d8259e0b226c63dc6de3d65b5ccb9b8ae41dc",
+          "path": "horcrx-003-founder/wallets/addresses.json",
+          "media_type": "application/json",
+          "digest": "sha256:95424c3e5def3d054b79e00b970d8259e0b226c63dc6de3d65b5ccb9b8ae41dc",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "observability": {
+      "role": "observability-policy",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:22fc25c1604c51c603cffc859d09af57f56bc3101d1d2190d9e0a3b74ecff77f",
+          "path": "horcrx-003-founder/observability/metrics-names.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:22fc25c1604c51c603cffc859d09af57f56bc3101d1d2190d9e0a3b74ecff77f",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
+    "governance": {
+      "role": "governance-policy",
+      "artifacts": [
+        {
+          "cid": "cid:sha256:8c351a01517e534739c153a919dbb4f51a238d69eb192c8b0aff54af790201ee",
+          "path": "horcrx-003-founder/governance/policies.md",
+          "media_type": "text/markdown",
+          "digest": "sha256:8c351a01517e534739c153a919dbb4f51a238d69eb192c8b0aff54af790201ee",
+          "signer_key_id": "********************"
+        }
+      ]
+    },
     "crons": {
       "role": "schedule-policy",
       "artifacts": [
