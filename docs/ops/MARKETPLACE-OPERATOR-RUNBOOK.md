@@ -13,10 +13,12 @@ This runbook describes the human review posture for listings, disputes, takedown
 
 Proposed defaults for Mission B operator HITL confirmation:
 
-- first response to a dispute or takedown report: **under 48 business hours**,
-- listing freeze on dispute open: **immediate**,
-- target resolution window: **under 14 calendar days**,
-- reviewer rotation: **weekly**, with handoff notes preserved in the operator log.
+| Event | Target time | Action |
+|---|---|---|
+| Dispute opened | immediate | freeze the listing and preserve the current audit snapshot |
+| 1st operator response | under 48 business hours | acknowledge the report and assign a reviewer |
+| Resolution | under 14 calendar days | publish a reviewer decision and the appeal window |
+| Reviewer rotation | weekly | hand off open cases with continuity notes in the operator log |
 
 ## 2. Listing approval workflow
 
@@ -48,7 +50,7 @@ Accept reports covering at least these categories:
 Intake steps:
 
 1. acknowledge receipt,
-2. freeze the listing immediately if the claim is non-frivolous,
+2. freeze the listing immediately if the claim is non-frivolous or if the report alleges deepfake, fraud, or payout misdirection,
 3. collect reporter contact, listing ID, manifest CID, and supporting evidence,
 4. assign a reviewer and severity tier,
 5. record the dispute state without deleting listing history.
