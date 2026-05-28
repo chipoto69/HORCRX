@@ -21,7 +21,7 @@ maker, not trader. smarter and earlier than the others. earn through making, mov
 - the evidence chain breaks for paid work and cannot be restored inside one review window.
 
 ## termination_state
-the company stops when the operator-approved close condition over treasury threshold, mission-line satisfaction, and inactivity timeout is met.
+mission-line satisfied OR inactivity timeout > 14d.
 
 ## review_window
 weekly or immediately after any threshold-class spend proposal.
@@ -32,4 +32,4 @@ weekly or immediately after any threshold-class spend proposal.
 - research/11-harness-landscape.md
 
 ## signed_off_by
-pending operator hitl on mission line and close condition
+approved 2026-05-28 — mission OR inactivity; treasury threshold remains an optional add-on, not a default trigger

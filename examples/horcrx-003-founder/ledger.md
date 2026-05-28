@@ -4,9 +4,9 @@
 host_signs_vessel_proposes
 
 ## spend_knobs
-- per_tx: 1% of treasury
-- daily: 5% of treasury
-- weekly: 15% of treasury
+- per_tx: 2% of treasury
+- daily: 8% of treasury
+- weekly: 20% of treasury
 - cooldown: 60
 - hitl_threshold: any spend at or above per_tx
 - allowlist: []
@@ -23,10 +23,10 @@ host_signs_vessel_proposes
 - payout_addresses_by_chain: {}
 
 ## spend_mix_ratios
-- earliness: 30
-- making: 50
+- earliness: 40
+- making: 40
 - overhead: 20
-- note: earliness + overhead must stay at or below 50 so making never drops beneath half the spend.
+- note: earliness + overhead must stay at or below 60 so making never drops beneath 40% of spend.
 
 ## revenue_respend_policy
 revenue may be respent without re-triggering hitl up to the declared per_tx; any over-cap revenue-funded spend still requires hitl.
@@ -34,7 +34,7 @@ revenue may be respent without re-triggering hitl up to the declared per_tx; any
 ## treasury_notes
 - the vessel proposes, the host signs, and every paid action leaves an audit row.
 - live recipient allowlisting stays empty until a later phase binds public payout addresses and operator approvals.
-- marketplace access is declared here and detailed per surface in plugins/marketplaces.json.
+- the five declared marketplaces are live from v0 and detailed per surface in plugins/marketplaces.json.
 
 ## review_triggers
 - any request to widen spend caps or shorten cooldowns.
@@ -42,4 +42,6 @@ revenue may be respent without re-triggering hitl up to the declared per_tx; any
 - any request to bind a public payout address to a live custody flow.
 
 ## signed_off_by
-pending operator hitl on OQ-13, OQ-17, and OQ-18
+- approved 2026-05-28 — loosened to 2%/8%/20% to give the vessel headroom while still leaving 80% weekly preserved
+- approved 2026-05-28 — earliness gets more headroom since being-earlier is the moat for a maker agent
+- approved 2026-05-28 — full allowlist live from v0; new surfaces beyond these five require HITL

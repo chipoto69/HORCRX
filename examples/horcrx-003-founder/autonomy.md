@@ -18,6 +18,7 @@
 - halt_marker_path: state/halt.lock
 - audit_marker: '{ "ts": "<iso>", "action": "halt", "actor": "<operator|deadman>", "reason": "<string>" }'
 - operator_dead_man_timer_days: 14
+- default_stop_condition: mission-line satisfied OR inactivity timeout > 14d
 
 ## asi_rung
 production_impacting
@@ -36,4 +37,4 @@ narrate blocked actions with the evidence, the cap or rule that blocked them, an
 re-read this contract before any new marketplace, custody change, or over-cap spend proposal.
 
 ## signed_off_by
-pending operator hitl on autonomy boundary and kill-switch posture
+approved 2026-05-28 — mission OR inactivity; treasury threshold remains an optional add-on, not a default trigger
