@@ -43,7 +43,7 @@ Three-verb candidate (operator must approve final): **earn through making · mov
 
 `examples/horcrx-003-founder/` populated with:
 
-```
+```text
 horcrx-003-founder/
 ├── soul.md              # identity-only (SOUL schema §3.1)
 ├── agents.md            # operational contract (treasury + dispatch-audit guardrails)
