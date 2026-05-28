@@ -1,0 +1,575 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://horcrx.dev/schemas/marketplace/mcp.schema.json",
+  "title": "HORCRX marketplace MCP contract",
+  "description": "Declarative JSON-RPC contract for the horcrx-marketplace MCP server.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "server",
+    "jsonrpc",
+    "approval_mode",
+    "tools",
+    "request_envelope",
+    "response_envelope"
+  ],
+  "properties": {
+    "server": {
+      "const": "horcrx-marketplace"
+    },
+    "jsonrpc": {
+      "const": "2.0"
+    },
+    "approval_mode": {
+      "type": "string",
+      "enum": [
+        "read-safe-by-default",
+        "purchase-intent-hitl"
+      ],
+      "description": "Read-only tools are runtime-safe; purchase intent requires host approval before dispatch."
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "search",
+        "view",
+        "preview",
+        "purchase_intent"
+      ],
+      "properties": {
+        "search": {
+          "$ref": "#/$defs/searchTool"
+        },
+        "view": {
+          "$ref": "#/$defs/viewTool"
+        },
+        "preview": {
+          "$ref": "#/$defs/previewTool"
+        },
+        "purchase_intent": {
+          "$ref": "#/$defs/purchaseIntentTool"
+        }
+      }
+    },
+    "request_envelope": {
+      "$ref": "#/$defs/requestEnvelope"
+    },
+    "response_envelope": {
+      "$ref": "#/$defs/responseEnvelope"
+    }
+  },
+  "$defs": {
+    "rpcId": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "typedIdentifier": {
+      "type": "string",
+      "pattern": "^(evm:0x[a-fA-F0-9]{40}|solana:[1-9A-HJ-NP-Za-km-z]{32,44})$",
+      "description": "Mirrors specs/registry/listing.schema.json#/$defs/chainTypedIdentifier."
+    },
+    "listingId": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+      "description": "Mirrors specs/registry/listing.schema.json#/properties/id."
+    },
+    "vesselCid": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Mirrors specs/registry/listing.schema.json#/properties/vessel_cid."
+    },
+    "listingBadges": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "signature_verified",
+          "lineage_verified",
+          "verified_purchase_volume",
+          "curator_reviewed",
+          "rights_holder_verified",
+          "preservation_dispute_resolved",
+          "kyc_light_verified",
+          "voice_likeness_high_risk_reviewed"
+        ]
+      },
+      "description": "Mirrors specs/registry/listing.schema.json#/properties/badges."
+    },
+    "listingState": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "listed",
+        "frozen",
+        "revoked"
+      ],
+      "description": "Mirrors specs/registry/listing.schema.json#/properties/state."
+    },
+    "royaltyShare": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recipient",
+        "basis_points"
+      ],
+      "properties": {
+        "recipient": {
+          "$ref": "#/$defs/typedIdentifier"
+        },
+        "basis_points": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        }
+      }
+    },
+    "listingRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "vessel_cid",
+        "owner",
+        "payout_target",
+        "royalty_split",
+        "badges",
+        "state",
+        "created_at",
+        "updated_at",
+        "lineage_ref"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/listingId"
+        },
+        "vessel_cid": {
+          "$ref": "#/$defs/vesselCid"
+        },
+        "owner": {
+          "$ref": "#/$defs/typedIdentifier"
+        },
+        "payout_target": {
+          "$ref": "#/$defs/typedIdentifier"
+        },
+        "royalty_split": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/royaltyShare"
+          }
+        },
+        "badges": {
+          "$ref": "#/$defs/listingBadges"
+        },
+        "state": {
+          "$ref": "#/$defs/listingState"
+        },
+        "created_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "updated_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "lineage_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "listingRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "vessel_cid",
+        "state",
+        "badges",
+        "payout_target"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/listingId"
+        },
+        "vessel_cid": {
+          "$ref": "#/$defs/vesselCid"
+        },
+        "state": {
+          "$ref": "#/$defs/listingState"
+        },
+        "badges": {
+          "$ref": "#/$defs/listingBadges"
+        },
+        "payout_target": {
+          "$ref": "#/$defs/typedIdentifier"
+        }
+      }
+    },
+    "searchFilters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "$ref": "#/$defs/listingState"
+        },
+        "payout_chain": {
+          "type": "string",
+          "enum": [
+            "evm",
+            "solana"
+          ]
+        },
+        "badges": {
+          "$ref": "#/$defs/listingBadges"
+        },
+        "signer_verified": {
+          "type": "boolean"
+        },
+        "lineage_depth_max": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "searchParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query"
+      ],
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "filters": {
+          "$ref": "#/$defs/searchFilters"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        }
+      }
+    },
+    "viewParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "listing_id"
+      ],
+      "properties": {
+        "listing_id": {
+          "$ref": "#/$defs/listingId"
+        }
+      }
+    },
+    "previewScope": {
+      "type": "string",
+      "enum": [
+        "listing-card",
+        "detail-page",
+        "bundle-outline",
+        "royalty-summary"
+      ]
+    },
+    "previewParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vessel_cid",
+        "scope"
+      ],
+      "properties": {
+        "vessel_cid": {
+          "$ref": "#/$defs/vesselCid"
+        },
+        "scope": {
+          "$ref": "#/$defs/previewScope"
+        }
+      }
+    },
+    "purchaseIntentParams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "listing_id",
+        "buyer_address"
+      ],
+      "properties": {
+        "listing_id": {
+          "$ref": "#/$defs/listingId"
+        },
+        "buyer_address": {
+          "$ref": "#/$defs/typedIdentifier"
+        }
+      }
+    },
+    "previewBlob": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preview_cid",
+        "scope",
+        "content_type",
+        "digest",
+        "expires_at"
+      ],
+      "properties": {
+        "preview_cid": {
+          "type": "string",
+          "minLength": 10
+        },
+        "scope": {
+          "$ref": "#/$defs/previewScope"
+        },
+        "content_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "expires_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        }
+      }
+    },
+    "intentRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intent_id",
+        "listing_id",
+        "buyer_address",
+        "approval_required",
+        "status"
+      ],
+      "properties": {
+        "intent_id": {
+          "type": "string",
+          "pattern": "^intent_[a-z0-9]{12,}$"
+        },
+        "listing_id": {
+          "$ref": "#/$defs/listingId"
+        },
+        "buyer_address": {
+          "$ref": "#/$defs/typedIdentifier"
+        },
+        "approval_required": {
+          "const": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending_approval",
+            "approved",
+            "expired",
+            "cancelled"
+          ]
+        }
+      }
+    },
+    "requestEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "$ref": "#/$defs/rpcId"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "search",
+            "view",
+            "preview",
+            "purchase_intent"
+          ]
+        },
+        "params": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/searchParams"
+            },
+            {
+              "$ref": "#/$defs/viewParams"
+            },
+            {
+              "$ref": "#/$defs/previewParams"
+            },
+            {
+              "$ref": "#/$defs/purchaseIntentParams"
+            }
+          ]
+        }
+      }
+    },
+    "responseEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jsonrpc",
+        "id",
+        "result"
+      ],
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "$ref": "#/$defs/rpcId"
+        },
+        "result": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/listingRef"
+              }
+            },
+            {
+              "$ref": "#/$defs/listingRow"
+            },
+            {
+              "$ref": "#/$defs/previewBlob"
+            },
+            {
+              "$ref": "#/$defs/intentRef"
+            }
+          ]
+        }
+      }
+    },
+    "searchTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "description",
+        "approval_required",
+        "inputSchema",
+        "outputSchema"
+      ],
+      "properties": {
+        "name": {
+          "const": "search"
+        },
+        "description": {
+          "const": "Search listings by free text plus optional filters."
+        },
+        "approval_required": {
+          "const": false
+        },
+        "inputSchema": {
+          "$ref": "#/$defs/searchParams"
+        },
+        "outputSchema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/listingRef"
+          }
+        }
+      }
+    },
+    "viewTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "description",
+        "approval_required",
+        "inputSchema",
+        "outputSchema"
+      ],
+      "properties": {
+        "name": {
+          "const": "view"
+        },
+        "description": {
+          "const": "Return the full listing row for one listing identifier."
+        },
+        "approval_required": {
+          "const": false
+        },
+        "inputSchema": {
+          "$ref": "#/$defs/viewParams"
+        },
+        "outputSchema": {
+          "$ref": "#/$defs/listingRow"
+        }
+      }
+    },
+    "previewTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "description",
+        "approval_required",
+        "inputSchema",
+        "outputSchema"
+      ],
+      "properties": {
+        "name": {
+          "const": "preview"
+        },
+        "description": {
+          "const": "Fetch a preview-safe blob for a vessel and disclosure scope."
+        },
+        "approval_required": {
+          "const": false
+        },
+        "inputSchema": {
+          "$ref": "#/$defs/previewParams"
+        },
+        "outputSchema": {
+          "$ref": "#/$defs/previewBlob"
+        }
+      }
+    },
+    "purchaseIntentTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "description",
+        "approval_required",
+        "inputSchema",
+        "outputSchema"
+      ],
+      "properties": {
+        "name": {
+          "const": "purchase_intent"
+        },
+        "description": {
+          "const": "Create a purchase-intent reference that must be approved by the host runtime before dispatch."
+        },
+        "approval_required": {
+          "const": true
+        },
+        "inputSchema": {
+          "$ref": "#/$defs/purchaseIntentParams"
+        },
+        "outputSchema": {
+          "$ref": "#/$defs/intentRef"
+        }
+      }
+    }
+  }
+}
