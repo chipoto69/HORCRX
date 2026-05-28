@@ -259,6 +259,39 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "not": {
+              "const": "founder"
+            }
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "$comment": "Only founder manifests may defer author public key publication during the spec-only pre-publication phase.",
+        "properties": {
+          "author_keys": {
+            "items": {
+              "not": {
+                "properties": {
+                  "key_status": {
+                    "const": "deferred-to-publication-phase"
+                  }
+                },
+                "required": [
+                  "key_status"
+                ]
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "$defs": {
