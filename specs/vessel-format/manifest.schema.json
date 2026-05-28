@@ -165,9 +165,16 @@
       "if": {
         "properties": {
           "kind": {
-            "const": "single"
+            "enum": [
+              "single",
+              "vessel",
+              "founder"
+            ]
           }
-        }
+        },
+        "required": [
+          "kind"
+        ]
       },
       "then": {
         "properties": {
@@ -186,7 +193,10 @@
           "kind": {
             "const": "founder"
           }
-        }
+        },
+        "required": [
+          "kind"
+        ]
       },
       "then": {
         "properties": {
@@ -198,6 +208,50 @@
               "ledger",
               "autonomy"
             ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "not": {
+              "const": "founder"
+            }
+          }
+        },
+        "required": [
+          "kind"
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "mission"
+                  ]
+                },
+                {
+                  "required": [
+                    "ledger"
+                  ]
+                },
+                {
+                  "required": [
+                    "autonomy"
+                  ]
+                },
+                {
+                  "required": [
+                    "constraints"
+                  ]
+                }
+              ]
+            }
           }
         }
       }
@@ -267,33 +321,73 @@
       }
     },
     "authorKey": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "key_id",
-        "algorithm",
-        "public_key_multibase",
-        "scope"
-      ],
-      "properties": {
-        "key_id": {
-          "type": "string"
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "key_id",
+            "algorithm",
+            "public_key_multibase",
+            "scope"
+          ],
+          "properties": {
+            "key_id": {
+              "type": "string"
+            },
+            "algorithm": {
+              "type": "string",
+              "enum": [
+                "Ed25519",
+                "secp256k1"
+              ]
+            },
+            "public_key_multibase": {
+              "type": "string",
+              "minLength": 10
+            },
+            "scope": {
+              "type": "string"
+            }
+          }
         },
-        "algorithm": {
-          "type": "string",
-          "enum": [
-            "Ed25519",
-            "secp256k1"
-          ]
-        },
-        "public_key_multibase": {
-          "type": "string",
-          "minLength": 10
-        },
-        "scope": {
-          "type": "string"
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "key_id",
+            "algorithm",
+            "public_key",
+            "key_status",
+            "scope"
+          ],
+          "properties": {
+            "key_id": {
+              "type": "string"
+            },
+            "algorithm": {
+              "type": "string",
+              "enum": [
+                "Ed25519",
+                "secp256k1"
+              ]
+            },
+            "public_key": {
+              "type": "null"
+            },
+            "key_status": {
+              "type": "string",
+              "const": "deferred-to-publication-phase"
+            },
+            "scope": {
+              "type": "string"
+            },
+            "note": {
+              "type": "string"
+            }
+          }
         }
-      }
+      ]
     },
     "dependency": {
       "type": "object",
