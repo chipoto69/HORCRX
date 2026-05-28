@@ -15,9 +15,11 @@ within 7 days.
 
 ## Vessel Signing Key
 
-No production vessel-signing key fingerprint is published yet. When the first
-operator-approved signing key exists, publish its fingerprint here and in
-`specs/vessel-format/signing-and-lineage.md`.
+**Status:** DEFERRED to Phase 1 of `docs/roadmap/next-missions.md` (vessel CLI
+and Hermes export). No production vessel-signing key exists in the foundation
+phase per `AGENTS.md`. The first operator-approved signing key fingerprint will
+be published here and in `specs/vessel-format/signing-and-lineage.md` when
+Phase 1 lands.
 
 ## Threat Model
 
