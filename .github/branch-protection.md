@@ -25,6 +25,11 @@ required_status_checks:
     - ci/gate-hx-08-voice-lint-extended
     - ci/x402-nonce-replay
     - ci/royalty-determinism
+    - ci/payout-target-format
+    - ci/revocation-never-deletes
+    - ci/chain-adapter-symmetry
+    - ci/preview-integrity
+    - ci/marketplace-envelope-kats
 required_linear_history: true
 restrict_pushes: admins_only
 enforce_admins: true

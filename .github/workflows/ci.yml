@@ -209,3 +209,45 @@ jobs:
         run: python3 -m pip install pynacl
       - name: Run age and libsodium AEAD known-answer tests
         run: ./validation/scripts/aead-kats.py
+
+  payout-target-format:
+    name: ci/payout-target-format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate payout target fixtures against listing schema
+        run: ./validation/scripts/payout-target-format.py
+
+  revocation-never-deletes:
+    name: ci/revocation-never-deletes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Enforce append-only revocation lineage
+        run: ./validation/scripts/revocation-never-deletes.py
+
+  chain-adapter-symmetry:
+    name: ci/chain-adapter-symmetry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Enforce Base and Solana adapter symmetry
+        run: ./validation/scripts/chain-adapter-symmetry.py
+
+  preview-integrity:
+    name: ci/preview-integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Reject tampered preview payloads on fetch
+        run: ./validation/scripts/preview-integrity.py
+
+  marketplace-envelope-kats:
+    name: ci/marketplace-envelope-kats
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install marketplace envelope validator dependencies
+        run: python3 -m pip install cryptography pynacl
+      - name: Validate marketplace envelope vectors
+        run: ./validation/scripts/marketplace-envelope-kats.py
