@@ -70,7 +70,7 @@ jobs:
           )
           while IFS= read -r child; do
             manifest_args+=( -d "$child" )
-          done < <(find examples -path 'examples/*/members/*/manifest.json' -print | sort)
+          done < <(find examples \( -path 'examples/*/members/*/manifest.json' -o -path 'examples/*/orbel-*/manifest.json' \) -print | sort)
           npx --yes ajv-cli@5 validate \
             --spec=draft2020 \
             -s specs/vessel-format/manifest.schema.json \
