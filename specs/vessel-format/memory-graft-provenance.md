@@ -25,7 +25,7 @@ Use this form when the export carries a machine-verifiable consent artifact.
 
 ```json
 {
-  "cipher_suite": "age|x25519-xsalsa20-poly1305",
+  "cipher_suite": "age",
   "recipient_key_ids": ["key_01"],
   "ciphertext_cid": "cid:sha256:..."
 }
@@ -33,7 +33,7 @@ Use this form when the export carries a machine-verifiable consent artifact.
 
 Rules:
 
-- `cipher_suite` MUST name one of the supported envelope suites.
+- `cipher_suite` MUST name one of the supported envelope suites (`"age"` or `"x25519-xsalsa20-poly1305"`).
 - `recipient_key_ids` MUST list the keys allowed to open the consent artifact.
 - `ciphertext_cid` MUST point to the encrypted consent record, not plaintext consent text.
 
@@ -43,12 +43,13 @@ Use this form when no encrypted consent artifact ships with the graft.
 
 ```json
 {
-  "consent_status": "explicit|implicit|denied"
+  "consent_status": "explicit"
 }
 ```
 
 Rules:
 
+- `consent_status` MUST be one of `"explicit"`, `"implicit"`, or `"denied"`.
 - `explicit` means the operator or human source directly approved export.
 - `implicit` means export is allowed by an already-declared policy boundary.
 - `denied` means the graft MUST NOT be exported, installed, or merged into portable canon.

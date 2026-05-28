@@ -394,31 +394,54 @@
           "$ref": "#/$defs/rpcId"
         },
         "method": {
-          "type": "string",
-          "enum": [
-            "search",
-            "view",
-            "preview",
-            "purchase_intent"
-          ]
+          "type": "string"
         },
         "params": {
-          "oneOf": [
-            {
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "method": {
+              "const": "search"
+            },
+            "params": {
               "$ref": "#/$defs/searchParams"
+            }
+          }
+        },
+        {
+          "properties": {
+            "method": {
+              "const": "view"
             },
-            {
+            "params": {
               "$ref": "#/$defs/viewParams"
+            }
+          }
+        },
+        {
+          "properties": {
+            "method": {
+              "const": "preview"
             },
-            {
+            "params": {
               "$ref": "#/$defs/previewParams"
+            }
+          }
+        },
+        {
+          "properties": {
+            "method": {
+              "const": "purchase_intent"
             },
-            {
+            "params": {
               "$ref": "#/$defs/purchaseIntentParams"
             }
-          ]
+          }
         }
-      }
+      ]
     },
     "responseEnvelope": {
       "type": "object",
