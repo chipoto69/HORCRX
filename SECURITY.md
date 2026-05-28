@@ -15,11 +15,12 @@ within 7 days.
 
 ## Vessel Signing Key
 
-**Status:** DEFERRED to Phase 1 of `docs/roadmap/next-missions.md` (vessel CLI
-and Hermes export). No production vessel-signing key exists in the foundation
-phase per `AGENTS.md`. The first operator-approved signing key fingerprint will
-be published here and in `specs/vessel-format/signing-and-lineage.md` when
-Phase 1 lands.
+**Status:** DEFERRED to
+[`Phase 1 — vessel CLI and Hermes export`](docs/roadmap/next-missions.md#phase-1--vessel-cli-and-hermes-export).
+No production vessel-signing key exists in the foundation phase per `AGENTS.md`.
+The first operator-approved signing key fingerprint will be published here and
+in `specs/vessel-format/signing-and-lineage.md` when that roadmap follow-up
+lands.
 
 ## Threat Model
 
