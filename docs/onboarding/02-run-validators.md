@@ -161,7 +161,110 @@ echo 'voice-lint OK'
 ./validation/scripts/royalty-determinism.py
 ```
 
-## 14. Recommended pre-push sequence
+## 14. `ci/docs-frontmatter`
+
+```bash
+python3 - <<'PY'
+import sys
+from pathlib import Path
+
+docs_root = Path('docs')
+required_fields = ('title', 'version', 'updated')
+
+for path in sorted(docs_root.rglob('*.md')):
+    lines = path.read_text(encoding='utf-8').splitlines()
+    if not lines or lines[0].strip() != '---':
+        print(f'MISSING FRONTMATTER: {path}')
+        sys.exit(1)
+    try:
+        closing_index = lines[1:].index('---') + 1
+    except ValueError:
+        print(f'UNTERMINATED FRONTMATTER: {path}')
+        sys.exit(1)
+    frontmatter = lines[1:closing_index]
+    for field in required_fields:
+        if not any(line.startswith(f'{field}:') for line in frontmatter):
+            print(f'MISSING {field}: {path}')
+            sys.exit(1)
+
+print('docs-frontmatter: PASS')
+PY
+```
+
+## 15. `ci/redaction-validator`
+
+```bash
+./validation/scripts/redaction-validator.py
+```
+
+## 16. `ci/aead-kats`
+
+```bash
+python3 -m pip install pynacl
+./validation/scripts/aead-kats.py
+```
+
+## 17. `ci/payout-target-format`
+
+```bash
+./validation/scripts/payout-target-format.py
+```
+
+## 18. `ci/revocation-never-deletes`
+
+```bash
+./validation/scripts/revocation-never-deletes.py
+```
+
+## 19. `ci/chain-adapter-symmetry`
+
+```bash
+./validation/scripts/chain-adapter-symmetry.py
+```
+
+## 20. `ci/preview-integrity`
+
+```bash
+./validation/scripts/preview-integrity.py
+```
+
+## 21. `ci/marketplace-envelope-kats`
+
+```bash
+python3 -m pip install cryptography pynacl
+./validation/scripts/marketplace-envelope-kats.py
+```
+
+## 22. `ci/changelog-regression`
+
+```bash
+set -euo pipefail
+mapfile -t annotated_tags < <(
+  git tag --points-at HEAD --list 'v*' | while IFS= read -r tag; do
+    [ -z "$tag" ] && continue
+    if [ "$(git cat-file -t "$tag")" = "tag" ]; then
+      printf '%s\n' "$tag"
+    fi
+  done
+)
+
+if [ "${#annotated_tags[@]}" -eq 0 ]; then
+  echo "No annotated v* tag points at HEAD; changelog regression check skipped."
+  exit 0
+fi
+
+for tag in "${annotated_tags[@]}"; do
+  version="${tag#v}"
+  if ! grep -Eq "^## \\[$version\\]( - .+)?$" CHANGELOG.md; then
+    echo "CHANGELOG.md is missing a matching section for $tag" >&2
+    exit 1
+  fi
+done
+
+printf 'Validated CHANGELOG sections for: %s\n' "${annotated_tags[*]}"
+```
+
+## 23. Recommended pre-push sequence
 
 For documentation-heavy changes, this order catches most mistakes quickly:
 
