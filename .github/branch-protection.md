@@ -16,6 +16,7 @@ required_status_checks:
     - ci/commitlint
     - ci/schema-validate
     - ci/markdown-link-check
+    - ci/docs-frontmatter
     - ci/voice-lint
     - ci/secret-scan
     - ci/gate-hx-04-signature-roundtrip
