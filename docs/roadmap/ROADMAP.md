@@ -4,7 +4,7 @@ ATLAS → CORPUS → HORCRX.
 
 This roadmap turns the foundation mission into nine execution phases. Phase 0 is the foundation close; Phases 1–8 are implementation missions that should be spawned from `docs/roadmap/next-missions.md`.
 
-## Phase 0 — foundation mission — complete on close
+## Phase 0 — foundation mission — complete
 
 Deliverables:
 
@@ -16,7 +16,15 @@ Deliverables:
 - Infrastructure plan in `docs/infrastructure/`.
 - Reference vessels in `examples/horcrx-001-candysoul/` and `examples/horcrx-002-orbel-pack/`.
 
-Status: complete when this worker's validation table is accepted for `v0.1.0-foundation`.
+Released `v0.1.0-foundation` 2026-05-26 and `v0.1.1` 2026-05-27.
+
+## Mission A — horcrx-003-founder · spec-complete
+
+Released as part of this mission. Adds the third numbered vessel (maker-not-trader, `$66.60` seed), extends vessel-format with `voice.md` / `mission.md` / `ledger.md` / `autonomy.md` slots, extends Hermes binding with the founder-vessel section, and resolves OQ-12..OQ-19. See:
+
+- packet: `docs/roadmap/mission-A-horcrx-003-founder-vessel.md`
+- vessel: `examples/horcrx-003-founder/`
+- binding: `specs/hermes-binding/BINDING.md` §10
 
 ## Phase 1 — vessel CLI and Hermes export
 

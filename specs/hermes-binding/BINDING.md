@@ -209,11 +209,11 @@ The local Hermes stack already contains the five profiles the binding should tre
 
 ## 7. Open questions are resolved as ADRs
 
-The ten open binding questions from the Hermes recon are resolved in:
+The Hermes-binding ADR ledger, including the founder-vessel additions, is resolved in:
 
 - `/Users/rudlord/HORCRX/specs/hermes-binding/open-questions-resolved.md`
 
-Until operator sign-off is captured, each ADR is marked `accepted-pending-HITL`. That keeps the contract concrete enough for downstream workers without pretending approval already happened. Sources: `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`, `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/mission.md`.
+ADRs 01..11 remain `accepted-pending-HITL`. ADRs 12..19 land as founder-vessel resolutions; the HITL-sensitive rows now carry explicit operator stamps so review remains auditable. Sources: `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`, `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/mission.md`.
 
 ## 8. Hard constraints (verbatim, locked)
 
@@ -258,15 +258,90 @@ The current vessel format spec is compatible with this binding contract. This ta
 | Iteration budget shared with subagents | `open-questions-resolved.md` ADR 11 sets shared effective cap as HORCRX policy and flags upstream-runtime divergence for Phase 1 verification. | compatible with policy; runtime divergence flagged |
 | Three-tier memory; Tier 3 single-provider-active | `memory-split.md` treats external providers as host-bound and keeps portable memory in markdown canon and optional redacted traces. | compatible |
 | Curator never deletes; archives only | `strip-and-rehydrate.md` requires namespaced grafts and non-destructive curator treatment for imported skill packs. | compatible |
+| `voice.md` remains identity-only | `SPEC.md` makes `voice.md` a required slot and keeps operational syntax out of identity files; Mission B extends voice-lint scope. | compatible |
+| `mission.md::termination_state` exists and is non-empty | `mission-md.schema.md` requires `termination_state`; `examples/horcrx-003-founder/mission.md` declares the founder close condition. | compatible |
+| `ledger.md::custody_posture` keeps signing on the host | `ledger-md.schema.md` requires custody posture; `examples/horcrx-003-founder/ledger.md` sets `host_signs_vessel_proposes`. | compatible |
+| `autonomy.md::kill_switch_contract` defines halt marker + dead-man timer | `autonomy-md.schema.md` requires kill-switch fields; `examples/horcrx-003-founder/autonomy.md` declares `state/halt.lock` and a 14-day operator timer. | compatible |
+| `autonomy.md::forbidden_actions` encodes the no-trading invariant | `autonomy-md.schema.md` requires forbidden-actions policy; `examples/horcrx-003-founder/autonomy.md` forbids directional price trading. | compatible |
 
 No current vessel-format decision in `specs/vessel-format/` requires HORCRX to violate a Hermes hard constraint. Cross-check sources: `specs/vessel-format/SPEC.md`, `specs/vessel-format/memory-split.md`, `specs/vessel-format/traces-format.md`, `specs/hermes-binding/strip-and-rehydrate.md`, `research/09-hermes-binding-recon.md`.
+
+## 10. Founder-vessel binding (HORCRX kind="founder")
+
+### 10.1 Profile target
+
+A founder vessel installs as a new Hermes profile at:
+
+```text
+~/.hermes/profiles/horcrx-founder/
+```
+
+This binding is SPEC ONLY. A later HORCRX implementation phase may authorize runtime activation, but this mission does not write anything into `~/.hermes/`. The install target is declared now so the vessel, manifest, and future runtime agree on one canonical founder profile name.
+
+### 10.2 New required slots (per `SPEC.md` §3.4)
+
+On a future authorized install, the founder-only slots mirror into profile-local read surfaces:
+
+- `mission.md` → `<profile>/MISSION.md`
+- `ledger.md` → `<profile>/LEDGER.md`
+- `autonomy.md` → `<profile>/AUTONOMY.md`
+- `constraints.md` (optional) → `<profile>/CONSTRAINTS.md`
+
+`MISSION.md` carries the seed amount, earning posture, success ladder, abort criteria, and termination state. `LEDGER.md` is a read-only manifest of spend and earn knobs; any live runtime ledger remains append-only host state under `<profile>/state/ledger/<YYYY-MM>.ndjson` when a later runtime phase exists. `AUTONOMY.md` carries the HITL ladder, kill-switch contract, and founder-class forbidden actions. `CONSTRAINTS.md` stays optional because founder doctrine may tighten over time without changing the minimum install contract.
+
+### 10.3 Earning surfaces (declarative only; no live integration in v0)
+
+The founder vessel may declare earning surfaces, and the five canonical surfaces below are default-allowed from v0 per ADR 18. Any surface beyond these five still requires HITL before it joins the allowlist in a later runtime phase.
+
+| Surface | Class | Doc |
+|---|---|---|
+| `agentic.market` | hosted agent-economy marketplace | `https://agentic.market/` |
+| `ClawHub-class bounty boards` | operator-named bounty boards | runtime allowlist |
+| `code-bounty-generic` | issue-and-PR bounty markets | per-board manifest |
+| `self-hosted-microproduct` | operator-owned sites, APIs, or hosted tools | per-product manifest |
+| `data-scrape-service` | bounded pay-per-task delivery surfaces | per-task manifest |
+
+The canonical declaration surface is `examples/horcrx-003-founder/plugins/marketplaces.json`, where each marketplace entry records `name`, `surface_url`, `account_model`, `settlement_currency`, `fee_posture`, `evidence_schema`, and `anti_sybil`. This section authorizes the categories declaratively only; it does not authorize live accounts, live payouts, live scraping, or live market actions.
+
+### 10.4 Money-aware constraints
+
+- Every paid action respects `ledger.md::spend_knobs` before execution is even eligible for approval.
+- Iteration budget remains shared across subagents, matching the §8 hard constraint that parent and child work draw down the same budget surface.
+- Any cap breach drops the founder vessel into read-only mode and triggers the operator dead-man path declared in `autonomy.md::kill_switch_contract`.
+- Paid actions still emit one audit row per §8 hard constraint #2, extended for founder work with `action`, `manifest_cid`, `listing_id`, `nonce`, `recipient_addr`, and `tx_signature` fields when those concepts exist.
+- Revenue reuse remains bounded by `ledger.md::revenue_respend_policy`; crossing the declared cap still requires HITL even when funds were earned rather than seeded.
+
+### 10.5 Maker-not-trader invariant (OQ-16)
+
+The founder vessel MUST NOT take directional positions on price as a primary earning strategy. It may sell software, services, bounties, research, or synthesized signal where rights permit. It may not use its own signal to run a trading book, warehouse speculative inventory, or treat price exposure as the core business model. This invariant is declared in `autonomy.md::forbidden_actions` and is expected to be re-checked at dispatch time in a future runtime phase.
+
+### 10.6 Wallet posture
+
+- The vessel carries `wallets/addresses.json` with PUBLIC addresses only, or remains explicitly empty until operator-approved addresses exist.
+- Private keys, seeds, and signing authority stay outside the vessel on a separate host vault surface.
+- The vessel proposes payment intents; the host signs only after budget checks, allowlist checks, and HITL gates pass.
+- Any future wallet rotation is append-only provenance, not an in-place rewrite of founder history.
+
+### 10.7 Founder-specific off-limits
+
+- No directional price trading.
+- No autonomous custody of seed phrases or private keys.
+- No spend beyond declared caps without HITL.
+- No write to `~/wiki/` outside the wiki-librarian gate chain.
+- No bypass of `dispatch()` audit or of the host-signs custody posture.
 
 ## Source paths
 
 - `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`
 - `/Users/rudlord/HORCRX/research/09-hermes-binding-recon.md`
+- `/Users/rudlord/HORCRX/docs/roadmap/mission-A-horcrx-003-founder-vessel.md`
+- `/Users/rudlord/HORCRX/research/10-rags-to-riches-recon.md`
+- `/Users/rudlord/HORCRX/research/11-harness-landscape.md`
 - `/Users/rudlord/HORCRX/specs/vessel-format/SPEC.md`
 - `/Users/rudlord/HORCRX/specs/vessel-format/memory-split.md`
+- `/Users/rudlord/HORCRX/specs/vessel-format/mission-md.schema.md`
+- `/Users/rudlord/HORCRX/specs/vessel-format/ledger-md.schema.md`
+- `/Users/rudlord/HORCRX/specs/vessel-format/autonomy-md.schema.md`
 - `/Users/rudlord/.hermes/config.yaml`
 - `/Users/rudlord/.hermes/honcho.json`
 - `/Users/rudlord/.hermes/hermes-agent/AGENTS.md`
@@ -282,3 +357,7 @@ No current vessel-format decision in `specs/vessel-format/` requires HORCRX to v
 - `/Users/rudlord/.hermes/skills/kanban-task.md`
 - `/Users/rudlord/wiki/_meta/hermes-stack/hermes-content-os.md`
 - `/Users/rudlord/wiki/_meta/orbel-framework/profile-templates/README.md`
+- `/Users/rudlord/HORCRX/examples/horcrx-003-founder/mission.md`
+- `/Users/rudlord/HORCRX/examples/horcrx-003-founder/ledger.md`
+- `/Users/rudlord/HORCRX/examples/horcrx-003-founder/autonomy.md`
+- `/Users/rudlord/HORCRX/examples/horcrx-003-founder/plugins/marketplaces.json`

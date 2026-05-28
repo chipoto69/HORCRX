@@ -54,7 +54,8 @@ jobs:
             --spec=draft2020 \
             -s specs/vessel-format/manifest.schema.json \
             -d examples/horcrx-001-candysoul/manifest.json \
-            -d examples/horcrx-002-orbel-pack/manifest.json
+            -d examples/horcrx-002-orbel-pack/manifest.json \
+            -d examples/horcrx-003-founder/manifest.json
 
   markdown-link-check:
     name: ci/markdown-link-check

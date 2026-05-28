@@ -32,8 +32,10 @@
     "kind": {
       "type": "string",
       "enum": [
-        "vessel",
-        "pack"
+        "single",
+        "pack",
+        "founder",
+        "vessel"
       ]
     },
     "representation": {
@@ -56,6 +58,62 @@
     "slots": {
       "type": "object",
       "minProperties": 1,
+      "properties": {
+        "soul": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "voice": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "agents": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "principles": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "intuition": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "dreams": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "mission": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "ledger": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "autonomy": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "constraints": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "memory": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "crons": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "skills": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "plugins": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "workflows": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "traces": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "mark": {
+          "$ref": "#/$defs/slotBinding"
+        },
+        "multi_agent": {
+          "$ref": "#/$defs/slotBinding"
+        }
+      },
       "additionalProperties": {
         "$ref": "#/$defs/slotBinding"
       }
@@ -102,6 +160,140 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "single",
+              "vessel",
+              "founder"
+            ]
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "type": "object",
+            "required": [
+              "voice"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "founder"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "type": "object",
+            "required": [
+              "voice",
+              "mission",
+              "ledger",
+              "autonomy"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "not": {
+              "const": "founder"
+            }
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "not": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "mission"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "ledger"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "autonomy"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "constraints"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "not": {
+              "const": "founder"
+            }
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "$comment": "Only founder manifests may defer author public key publication during the spec-only pre-publication phase.",
+        "properties": {
+          "author_keys": {
+            "items": {
+              "not": {
+                "properties": {
+                  "key_status": {
+                    "const": "deferred-to-publication-phase"
+                  }
+                },
+                "required": [
+                  "key_status"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "cidString": {
       "type": "string",
@@ -166,33 +358,73 @@
       }
     },
     "authorKey": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "key_id",
-        "algorithm",
-        "public_key_multibase",
-        "scope"
-      ],
-      "properties": {
-        "key_id": {
-          "type": "string"
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "key_id",
+            "algorithm",
+            "public_key_multibase",
+            "scope"
+          ],
+          "properties": {
+            "key_id": {
+              "type": "string"
+            },
+            "algorithm": {
+              "type": "string",
+              "enum": [
+                "Ed25519",
+                "secp256k1"
+              ]
+            },
+            "public_key_multibase": {
+              "type": "string",
+              "minLength": 10
+            },
+            "scope": {
+              "type": "string"
+            }
+          }
         },
-        "algorithm": {
-          "type": "string",
-          "enum": [
-            "Ed25519",
-            "secp256k1"
-          ]
-        },
-        "public_key_multibase": {
-          "type": "string",
-          "minLength": 10
-        },
-        "scope": {
-          "type": "string"
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "key_id",
+            "algorithm",
+            "public_key",
+            "key_status",
+            "scope"
+          ],
+          "properties": {
+            "key_id": {
+              "type": "string"
+            },
+            "algorithm": {
+              "type": "string",
+              "enum": [
+                "Ed25519",
+                "secp256k1"
+              ]
+            },
+            "public_key": {
+              "type": "null"
+            },
+            "key_status": {
+              "type": "string",
+              "const": "deferred-to-publication-phase"
+            },
+            "scope": {
+              "type": "string"
+            },
+            "note": {
+              "type": "string"
+            }
+          }
         }
-      }
+      ]
     },
     "dependency": {
       "type": "object",
