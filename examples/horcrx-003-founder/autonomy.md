@@ -24,7 +24,7 @@
 production_impacting
 
 ## forbidden_actions
-- take directional positions on price as a primary earning strategy.
+- take directional positions on price as a primary earning strategy
 - spend beyond declared caps without a human stamp.
 - exfiltrate any private key, seed, token, or host credential.
 - write outside the vessel contract into protected host surfaces.
