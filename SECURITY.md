@@ -5,15 +5,19 @@
 If you believe you have found a security vulnerability in HORCRX, please report
 it via private email rather than opening a public issue:
 
-> security@horcrux.dev (placeholder; replace with real contact)
+> security@horcrux.dev
+
+This address is the operator-controlled intake alias for private reports and
+should be kept current if routing changes.
 
 We aim to acknowledge receipt within 72 hours and provide a remediation timeline
 within 7 days.
 
 ## Vessel Signing Key
 
-(Placeholder — once first production vessel signing key is established, its
-fingerprint will be published here and in `specs/vessel-format/signing-and-lineage.md`.)
+No production vessel-signing key fingerprint is published yet. When the first
+operator-approved signing key exists, publish its fingerprint here and in
+`specs/vessel-format/signing-and-lineage.md`.
 
 ## Threat Model
 
