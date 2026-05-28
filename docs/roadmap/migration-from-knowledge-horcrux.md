@@ -1,3 +1,10 @@
+---
+title: Migration from ATLAS knowledge-horcrux
+version: v0.1-draft
+updated: 2026-05-28
+owner: hardening-mission
+---
+
 # Migration from ATLAS knowledge-horcrux
 
 ATLAS → CORPUS → HORCRX.

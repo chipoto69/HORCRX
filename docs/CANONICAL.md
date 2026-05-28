@@ -9,6 +9,12 @@ owner: hardening-mission
 
 GATE-HX-07 treats every markdown file under `docs/` as opt-in canon. The allowlist is explicit so new documentation cannot appear silently.
 
+## Cross-link policy
+
+HORCRX `docs/*` MAY READ `~/wiki/` but MUST NEVER WRITE outside the wiki-librarian gate process. <!-- wiki source -->
+
+Any `~/wiki/...` source reference inside `docs/` must be annotated inline with `<!-- wiki source -->` so `ci/markdown-link-check` can distinguish an intentional cross-link from an accidental host-path leak. <!-- wiki source -->
+
 - `docs/CANONICAL.md`
 - `docs/infrastructure/hosting.md`
 - `docs/infrastructure/local-dev.md`

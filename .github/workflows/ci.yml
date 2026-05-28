@@ -82,10 +82,15 @@ jobs:
           root = Path.cwd()
           link_re = re.compile(r'(?<!!)\[[^\]]+\]\(([^)]+)\)')
           missing = []
+          unannotated_wiki_refs = []
           for md in root.rglob('*.md'):
               if '.git' in md.parts or 'node_modules' in md.parts:
                   continue
               text = md.read_text(encoding='utf-8')
+              if md.is_relative_to(root / 'docs'):
+                  for line_number, line in enumerate(text.splitlines(), start=1):
+                      if '~/wiki/' in line and '<!-- wiki source -->' not in line:
+                          unannotated_wiki_refs.append(f'{md.relative_to(root)}:{line_number}')
               for raw in link_re.findall(text):
                   target = raw.strip().split()[0].strip('<>')
                   if not target or target.startswith(('#', 'http://', 'https://', 'mailto:')):
@@ -104,7 +109,53 @@ jobs:
               print('Broken internal markdown links:')
               print('\n'.join(missing))
               sys.exit(1)
+          if unannotated_wiki_refs:
+              print('Unannotated ~/wiki/ references in docs (append <!-- wiki source -->):')
+              print('\n'.join(unannotated_wiki_refs))
+              sys.exit(1)
           print('markdown-link-check: PASS')
+          PY
+
+  docs-allowlist:
+    name: ci/docs-allowlist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Enforce canonical docs allowlist
+        run: ./validation/scripts/gate-hx-07-docs-allowlist.sh
+
+  docs-frontmatter:
+    name: ci/docs-frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Require minimum docs frontmatter
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import sys
+          from pathlib import Path
+
+          docs_root = Path('docs')
+          required_fields = ('title', 'version', 'updated')
+
+          for path in sorted(docs_root.rglob('*.md')):
+              lines = path.read_text(encoding='utf-8').splitlines()
+              if not lines or lines[0].strip() != '---':
+                  print(f'MISSING FRONTMATTER: {path}')
+                  sys.exit(1)
+              try:
+                  closing_index = lines[1:].index('---') + 1
+              except ValueError:
+                  print(f'UNTERMINATED FRONTMATTER: {path}')
+                  sys.exit(1)
+              frontmatter = lines[1:closing_index]
+              for field in required_fields:
+                  if not any(line.startswith(f'{field}:') for line in frontmatter):
+                      print(f'MISSING {field}: {path}')
+                      sys.exit(1)
+
+          print('docs-frontmatter: PASS')
           PY
 
   secret-scan:

@@ -1,3 +1,10 @@
+---
+title: Local development stack
+version: v0.1-draft
+updated: 2026-05-28
+owner: hardening-mission
+---
+
 # Local development stack
 
 Version: `v0.1-draft`
@@ -10,7 +17,7 @@ The local HORCRX stack should prove five things before any real deployment exist
 4. registry and search flows can run against a disposable local database, and
 5. Hermes-facing purchase/install flows can be rehearsed without putting secrets into vessel artifacts.
 
-This is a **spec for future worker setup**, not a runnable compose file. Sources: `specs/protocol/payment-layer.md`, `specs/hermes-binding/BINDING.md`, `research/02-prior-art.md`, `~/wiki/raw/downloads/2026-04-10/root/system-map.md`.
+This is a **spec for future worker setup**, not a runnable compose file. Sources: `specs/protocol/payment-layer.md`, `specs/hermes-binding/BINDING.md`, `research/02-prior-art.md`, `~/wiki/raw/downloads/2026-04-10/root/system-map.md`. <!-- wiki source -->
 
 ## 1. Local stack components
 
@@ -34,7 +41,7 @@ Before anything else:
 - keep LLM keys in the **shell environment**, not in repo files,
 - keep wallet or test-key material outside any vessel folder,
 - treat local test keys as disposable, and
-- preserve the system-map split: sandbox code may talk to local infra, but the secret boundary remains outside bundle assembly. Sources: `~/wiki/_meta/hermes-stack/hermes-content-os.md`, `~/wiki/raw/downloads/2026-04-10/root/system-map.md`, `specs/hermes-binding/BINDING.md`.
+- preserve the system-map split: sandbox code may talk to local infra, but the secret boundary remains outside bundle assembly. Sources: `~/wiki/_meta/hermes-stack/hermes-content-os.md`, `~/wiki/raw/downloads/2026-04-10/root/system-map.md`, `specs/hermes-binding/BINDING.md`. <!-- wiki source -->
 
 ### 2.2 Base local chain
 
@@ -85,7 +92,7 @@ The local payment surface should expose challenge/verify behavior compatible wit
 - record receipt keyed by manifest CID and listing ID,
 - reject replayed proof or expired nonce.
 
-Faremeter is the first TS surface to evaluate when this becomes real implementation work. Sources: `specs/protocol/payment-layer.md`, `~/wiki/raw/reader/Index - Faremeter*.md`.
+Faremeter is the first TS surface to evaluate when this becomes real implementation work. Sources: `specs/protocol/payment-layer.md`, `~/wiki/raw/reader/Index - Faremeter*.md`. <!-- wiki source -->
 
 ## 3. Suggested local workflow
 
@@ -155,8 +162,8 @@ A future worker should consider local-dev setup complete only when they can demo
 - `specs/marketplace/ARCHITECTURE.md`
 - `research/02-prior-art.md`
 - `research/05-risks-and-tensions.md`
-- `~/wiki/raw/downloads/2026-04-10/root/system-map.md`
-- `~/wiki/_meta/hermes-stack/hermes-content-os.md`
-- `~/wiki/raw/reader/Index - Faremeter*.md`
+- `~/wiki/raw/downloads/2026-04-10/root/system-map.md` <!-- wiki source -->
+- `~/wiki/_meta/hermes-stack/hermes-content-os.md` <!-- wiki source -->
+- `~/wiki/raw/reader/Index - Faremeter*.md` <!-- wiki source -->
 - `https://web3.storage/pricing/`
 - `https://pinata.cloud/pricing`

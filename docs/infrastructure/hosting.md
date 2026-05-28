@@ -1,3 +1,10 @@
+---
+title: Hosting and cost envelopes
+version: v0.1-draft
+updated: 2026-05-28
+owner: hardening-mission
+---
+
 # Hosting and cost envelopes
 
 Version: `v0.1-draft`

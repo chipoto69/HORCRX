@@ -1,3 +1,10 @@
+---
+title: Mission B — HORCRX hardening pass
+version: v0.1-draft
+updated: 2026-05-28
+owner: hardening-mission
+---
+
 # Mission B — HORCRX hardening pass
 
 ATLAS → CORPUS → HORCRX.
@@ -86,8 +93,8 @@ Eight phases, executable in **wave order H1 → H8**. Each phase is independentl
 - `docs/CANONICAL.md` allowlist (used by GATE-HX-07).
 - Every `docs/**.md` gains minimum frontmatter (`title`, `version`, `updated`).
 - `ci.yml` gains `ci/docs-frontmatter` job.
-- `markdown-link-check` tightened to flag unannotated `~/wiki/...` references.
-- Cross-link policy stated explicitly: HORCRX reads `~/wiki/`, never writes outside the wiki-librarian gate.
+- `markdown-link-check` tightened to flag unannotated `~/wiki/...` references. <!-- wiki source -->
+- Cross-link policy stated explicitly: HORCRX reads `~/wiki/`, never writes outside the wiki-librarian gate. <!-- wiki source -->
 
 ### H8 · supply chain + release discipline
 - SBOM generation in `release.yml` (CycloneDX or SPDX, pin SHA).
@@ -101,7 +108,7 @@ Eight phases, executable in **wave order H1 → H8**. Each phase is independentl
 - No runtime code (foundation-first per AGENTS.md).
 - No live contract deploys, no testnet/mainnet, no paid RPC.
 - No public package publishing (npm, etc.).
-- No edits to `~/wiki/`, `~/.hermes/`, `~/.claude-worktrees/ATLAS/`, `~/.factory/skills/`.
+- No edits to `~/wiki/`, `~/.hermes/`, `~/.claude-worktrees/ATLAS/`, `~/.factory/skills/`. <!-- wiki source -->
 - No production key generation; no real signing fingerprint published until operator confirms a key exists.
 - No production-ready listing intake (the schemas/policies land; the actual listing UI is Phase 3 of `next-missions.md`).
 - No team/CODEOWNERS expansion (single-operator stays); pre-stage only.
@@ -125,7 +132,7 @@ B10. `docs/roadmap/ROADMAP.md` Phase 0 marked complete; new entry "Mission B · 
 
 ## 6. off-limits (mission-specific, in addition to repo AGENTS.md off-limits)
 
-- Do NOT write to `~/wiki/` (recon 12 §B.1 one-way bridge). The wiki-librarian mission owns those writes.
+- Do NOT write to `~/wiki/` (recon 12 §B.1 one-way bridge). The wiki-librarian mission owns those writes. <!-- wiki source -->
 - Do NOT touch live Hermes profiles or `~/.hermes/` runtime files.
 - Do NOT create operator secrets, real or test, in the repo or in CI. CI must enforce, not import, secrets.
 - Do NOT generate signing keys; the fingerprint section in `SECURITY.md` stays placeholder until a real key exists and operator publishes it.
