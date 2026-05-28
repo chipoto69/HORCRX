@@ -14,7 +14,7 @@ jobs:
     name: ci/commitlint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
       - name: Validate Conventional Commit subjects
@@ -44,8 +44,8 @@ jobs:
     name: ci/schema-validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
       - name: Validate reference vessel manifests with ajv
@@ -61,7 +61,7 @@ jobs:
     name: ci/markdown-link-check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Check internal markdown links
         shell: bash
         run: |
@@ -114,7 +114,7 @@ jobs:
     name: ci/voice-lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Ensure identity-only files stay free of operational syntax
         run: |
           set -e
