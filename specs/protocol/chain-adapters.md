@@ -12,6 +12,7 @@ interface IChainAdapter {
   readonly family: 'evm' | 'solana' | 'other';
   readonly network: string;
   resolveOwner(registryPointer: string): Promise<OwnerRecord>;
+  getRecord(input: GetRecord): Promise<RecordSnapshot>;
   publishRecord(input: PublishRecord): Promise<ChainReceipt>;
   transferRecord(input: TransferOwnership): Promise<ChainReceipt>;
   publishListing(input: UpdateListing): Promise<ChainReceipt>;
@@ -92,7 +93,7 @@ For the Solana adapter, HORCRX specifies **Metaplex Core** as the baseline and k
 
 To keep Base and Solana first-class:
 
-1. both adapters must expose the same abstract operations;
+1. both adapters must expose the same abstract operations, including `getRecord`, `publishRecord`, `transferRecord`, and `revokeRecord`;
 2. both adapters must resolve royalties, revocations, and ownership changes;
 3. neither adapter may alter the abstract vessel manifest shape;
 4. chain-specific optimizations remain adapter-local.
