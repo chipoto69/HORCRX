@@ -223,7 +223,7 @@
         },
         "required": [
           "kind"
-        }
+        ]
       },
       "then": {
         "properties": {
