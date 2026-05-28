@@ -1,0 +1,26 @@
+{
+  "allocations": [
+    {
+      "amount": 1333,
+      "reason": "ancestor-depth-1",
+      "target": "creator:parent"
+    },
+    {
+      "amount": 667,
+      "reason": "ancestor-depth-2",
+      "target": "creator:grandparent"
+    },
+    {
+      "amount": 7000,
+      "reason": "creator",
+      "target": "creator:child"
+    },
+    {
+      "amount": 1000,
+      "reason": "protocol",
+      "target": "protocol:horcrx"
+    }
+  ],
+  "sale_amount": 10000,
+  "total_allocated": 10000
+}

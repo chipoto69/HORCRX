@@ -1,0 +1,28 @@
+{
+  "sale_amount": 10000,
+  "protocol_target": "protocol:horcrx",
+  "graph_depth": 2,
+  "lineage": {
+    "cid": "cid:sha256:child",
+    "payout_target": "creator:child",
+    "derivative_pays_parent": true,
+    "multi_hop": true,
+    "parents": [
+      {
+        "cid": "cid:sha256:parent",
+        "payout_target": "creator:parent",
+        "derivative_pays_parent": true,
+        "multi_hop": true,
+        "parents": [
+          {
+            "cid": "cid:sha256:grandparent",
+            "payout_target": "creator:grandparent",
+            "derivative_pays_parent": true,
+            "multi_hop": false,
+            "parents": []
+          }
+        ]
+      }
+    ]
+  }
+}

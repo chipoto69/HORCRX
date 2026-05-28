@@ -1,0 +1,14 @@
+model:
+  provider: openai
+  api_key: sk-test-redacted-fixture
+mcp_servers:
+  horcrx-marketplace:
+    url: https://marketplace.example.test/mcp
+    headers:
+      Authorization: Bearer fixture-secret-token
+    env:
+      SERVICE_TOKEN: fixture-secret-token
+tools:
+  allow:
+    - read
+    - write
