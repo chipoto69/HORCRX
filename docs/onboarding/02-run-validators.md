@@ -25,11 +25,21 @@ manifest_args=(
 )
 while IFS= read -r child; do
   manifest_args+=( -d "$child" )
-done < <(find examples -path 'examples/*/members/*/manifest.json' -print | sort)
+done < <(find examples \( -path 'examples/*/members/*/manifest.json' -o -path 'examples/*/orbel-*/manifest.json' \) -print | sort)
 npx --yes ajv-cli@5 validate \
   --spec=draft2020 \
   -s specs/vessel-format/manifest.schema.json \
   "${manifest_args[@]}"
+listing_args=()
+while IFS= read -r listing; do
+  listing_args+=( -d "$listing" )
+done < <(find examples/listings -maxdepth 1 -name '*.json' -print | sort)
+npx --yes ajv-cli@5 validate \
+  --spec=draft2020 \
+  -s specs/registry/listing.schema.json \
+  "${listing_args[@]}"
+npx --yes ajv-cli@5 compile --spec=draft2020 -s specs/marketplace/mcp.schema.json
+npx --yes ajv-cli@5 compile --spec=draft2020 -s specs/marketplace/anti-sybil-schema.json
 ```
 
 ## 3. `ci/commitlint`
@@ -200,7 +210,7 @@ PY
 ## 16. `ci/aead-kats`
 
 ```bash
-python3 -m pip install pynacl
+python3 -m pip install pynacl cryptography
 ./validation/scripts/aead-kats.py
 ```
 
@@ -208,6 +218,7 @@ python3 -m pip install pynacl
 
 ```bash
 ./validation/scripts/payout-target-format.py
+./validation/scripts/royalty-split-sum.py
 ```
 
 ## 18. `ci/revocation-never-deletes`
