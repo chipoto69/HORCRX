@@ -49,13 +49,21 @@ jobs:
         with:
           node-version: 24
       - name: Validate reference vessel manifests with ajv
+        shell: bash
         run: |
+          set -euo pipefail
+          manifest_args=(
+            -d examples/horcrx-001-candysoul/manifest.json
+            -d examples/horcrx-002-orbel-pack/manifest.json
+            -d examples/horcrx-003-founder/manifest.json
+          )
+          while IFS= read -r child; do
+            manifest_args+=( -d "$child" )
+          done < <(find examples -path 'examples/*/members/*/manifest.json' -print | sort)
           npx --yes ajv-cli@5 validate \
             --spec=draft2020 \
             -s specs/vessel-format/manifest.schema.json \
-            -d examples/horcrx-001-candysoul/manifest.json \
-            -d examples/horcrx-002-orbel-pack/manifest.json \
-            -d examples/horcrx-003-founder/manifest.json
+            "${manifest_args[@]}"
 
   markdown-link-check:
     name: ci/markdown-link-check
@@ -127,3 +135,59 @@ jobs:
             fi
           done
           echo "voice-lint OK"
+
+  gate-hx-04-signature-roundtrip:
+    name: ci/gate-hx-04-signature-roundtrip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate manifest and slot signing round-trip
+        run: ./validation/scripts/gate-hx-04-signature-roundtrip.py
+
+  gate-hx-05-parent-cid-resolves:
+    name: ci/gate-hx-05-parent-cid-resolves
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate parent CID resolution
+        run: ./validation/scripts/gate-hx-05-parent-cid-resolves.py
+
+  gate-hx-06-strip-rehydrate:
+    name: ci/gate-hx-06-strip-rehydrate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate strip and rehydrate rules
+        run: ./validation/scripts/gate-hx-06-strip-rehydrate.sh
+
+  gate-hx-07-docs-allowlist:
+    name: ci/gate-hx-07-docs-allowlist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Enforce docs allowlist
+        run: ./validation/scripts/gate-hx-07-docs-allowlist.sh
+
+  gate-hx-08-voice-lint-extended:
+    name: ci/gate-hx-08-voice-lint-extended
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Lint extended voice and soul surfaces
+        run: ./validation/scripts/gate-hx-08-voice-lint-extended.sh
+
+  x402-nonce-replay:
+    name: ci/x402-nonce-replay
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Reject replayed payment proofs
+        run: ./validation/scripts/x402-nonce-replay.py
+
+  royalty-determinism:
+    name: ci/royalty-determinism
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Ensure royalty payout determinism
+        run: ./validation/scripts/royalty-determinism.py

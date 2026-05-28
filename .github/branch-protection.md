@@ -18,6 +18,13 @@ required_status_checks:
     - ci/markdown-link-check
     - ci/voice-lint
     - ci/secret-scan
+    - ci/gate-hx-04-signature-roundtrip
+    - ci/gate-hx-05-parent-cid-resolves
+    - ci/gate-hx-06-strip-rehydrate
+    - ci/gate-hx-07-docs-allowlist
+    - ci/gate-hx-08-voice-lint-extended
+    - ci/x402-nonce-replay
+    - ci/royalty-determinism
 required_linear_history: true
 restrict_pushes: admins_only
 enforce_admins: true
