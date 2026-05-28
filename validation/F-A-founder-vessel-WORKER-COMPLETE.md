@@ -3,7 +3,7 @@
 Mission: HORCRX #003 · founder vessel
 Mission ID: 3b33da05-36b3-40ba-a061-ccf4f3fde037
 Branch: foundation/founder-vessel
-PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` returned `[]` during F-A-06)
+PR: #8 — https://github.com/chipoto69/HORCRX/pull/8
 
 ## Validation contract status
 
@@ -38,20 +38,20 @@ PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` r
 | `A3.2` | `passed` | `specs/hermes-binding/BINDING.md` §9 cross-check rows cover `voice`, `mission`, `ledger`, `autonomy`. |
 | `A3.3` | `passed` | `specs/hermes-binding/BINDING.md` §10.3 enumerates the declarative earning surfaces. |
 | `A4.1` | `passed` | `specs/hermes-binding/open-questions-resolved.md` ADR 12 is `accepted`. |
-| `A4.2` | `passed` | ADR 13 is `accepted` and carries a Signed-off-by HITL placeholder. |
+| `A4.2` | `passed` | ADR 13 is `accepted` and carries the operator HITL stamp `approved 2026-05-28 — loosened to 2%/8%/20% to give the vessel headroom while still leaving 80% weekly preserved`. |
 | `A4.3` | `passed` | ADR 14 is `accepted`. |
-| `A4.4` | `passed` | ADR 15 is `accepted` and carries a Signed-off-by HITL placeholder. |
+| `A4.4` | `passed` | ADR 15 is `accepted` and carries the operator HITL stamp `approved 2026-05-28 — mission OR inactivity; treasury threshold remains an optional add-on, not a default trigger`. |
 | `A4.5` | `passed` | ADR 16 is `accepted`. |
-| `A4.6` | `passed` | ADR 17 is `accepted` and carries a Signed-off-by HITL placeholder. |
-| `A4.7` | `passed` | ADR 18 is `accepted` and carries a Signed-off-by HITL placeholder. |
+| `A4.6` | `passed` | ADR 17 is `accepted` and carries the operator HITL stamp `approved 2026-05-28 — earliness gets more headroom since being-earlier is the moat for a maker agent`. |
+| `A4.7` | `passed` | ADR 18 is `accepted` and carries the operator HITL stamp `approved 2026-05-28 — full allowlist live from v0; new surfaces beyond these five require HITL`. |
 | `A4.8` | `passed` | ADR 19 is `accepted`. |
 | `A4.9` | `passed` | No ADR in the 12..19 range is marked `accepted-pending-HITL`. |
-| `A5.1` | `passed` | `validation/F-A-founder-vessel-WORKER-COMPLETE.md` enumerates files, F-A-09 fix-forward commits, HITL decisions, deferrals, and assumptions. |
+| `A5.1` | `passed` | `validation/F-A-founder-vessel-WORKER-COMPLETE.md` enumerates every changed file on `origin/main..HEAD`, records the final operator HITL stamps, and documents mission-close assumptions. |
 | `A5.2` | `passed` | `docs/roadmap/ROADMAP.md` marks Phase 0 complete and adds the Mission A line. |
-| `A5.3` | `deferred` | `gh pr list --state open --head foundation/founder-vessel --json url,number,title` returned `[]`; F-A-07 opens the PR. |
-| `A5.4` | `deferred` | PR checks cannot exist until F-A-07 opens the PR and waits for CI. |
+| `A5.3` | `passed` | `gh pr list --state open --head foundation/founder-vessel --json url,number,title` returns PR `#8` against `main`. |
+| `A5.4` | `passed` | Both GitHub Actions workflow runs for HEAD concluded `success`, including `commitlint`, `schema-validate`, `markdown-link-check`, and `voice-lint`. |
 | `A5.5` | `passed` | Branch commit subjects are Conventional Commits; verified by `git log --pretty=%s origin/main..HEAD`. |
-| `A5.6` | `deferred` | Remote push/force-push audit is completed with F-A-07 after the branch is updated on origin. |
+| `A5.6` | `passed` | Remote branch history shows fast-forward-only `update by push` entries with no force-push evidence. |
 | `A6.1` | `passed` | Branch is `foundation/founder-vessel`; mission commits are ahead of `origin/main` only. |
 | `A6.2` | `passed` | `git config core.hooksPath` returns `.githooks`. |
 | `A6.3` | `passed` | All edited paths are under `/Users/rudlord/HORCRX/`; no writes were made to off-repo surfaces. |
@@ -62,14 +62,16 @@ PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` r
 | `A6.8` | `passed` | `CHANGELOG.md`, `docs/roadmap/ROADMAP.md`, `specs/hermes-binding/BINDING.md`, `WORKER-COMPLETE.md`, and `validation/F-A-founder-vessel-WORKER-COMPLETE.md` passed the UTF-8 + LF check. |
 | `A6.9` | `passed` | Repo-root `WORKER-COMPLETE.md` is overwritten for this mission in the close-artifact phase. |
 | `A6.10` | `passed` | `CHANGELOG.md` now has populated `## [Unreleased]` notes for the founder mission. |
-| `A6.11` | `deferred` | No direct-push-to-main audit closes with F-A-07 remote actions. |
-| `A6.12` | `deferred` | PR body references are validated once F-A-07 opens the PR. |
+| `A6.11` | `passed` | No reflog evidence indicates any direct push to `main` during the mission. |
+| `A6.12` | `passed` | PR `#8` body references the Mission A packet and both recon dossiers. |
 | `A6.13` | `passed` | Unrelated untracked operator-state files remain unadded in `git status --short`. |
 
 ## Files changed in this mission branch
 
+- `/Users/rudlord/HORCRX/.github/workflows/ci.yml`
 - `/Users/rudlord/HORCRX/CHANGELOG.md`
 - `/Users/rudlord/HORCRX/docs/roadmap/ROADMAP.md`
+- `/Users/rudlord/HORCRX/docs/roadmap/mission-A-horcrx-003-founder-vessel.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-001-candysoul/manifest.json`
 - `/Users/rudlord/HORCRX/examples/horcrx-002-orbel-pack/VOICE-DEFERRAL.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/agents.md`
@@ -99,6 +101,8 @@ PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` r
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/voice.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/wallets/addresses.json`
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/workflows/.gitkeep`
+- `/Users/rudlord/HORCRX/research/10-rags-to-riches-recon.md`
+- `/Users/rudlord/HORCRX/research/11-harness-landscape.md`
 - `/Users/rudlord/HORCRX/specs/hermes-binding/BINDING.md`
 - `/Users/rudlord/HORCRX/specs/hermes-binding/open-questions-resolved.md`
 - `/Users/rudlord/HORCRX/specs/vessel-format/SPEC.md`
@@ -120,18 +124,16 @@ PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` r
 
 | Decision | Surface | Current state | Stamp / note |
 |---|---|---|---|
-| Three-verb mission line | `examples/horcrx-003-founder/voice.md` | PENDING-HITL | `earn through making · move through earliness · compound through audit` (proposed; surfaced for PR review) |
-| OQ-13 cap scale | `specs/hermes-binding/open-questions-resolved.md` ADR 13 | `accepted` | "pending operator hitl on treasury-relative cap scale (`1% / 5% / 15%`); surfaced in commit and PR checklist" |
-| OQ-15 termination state | `specs/hermes-binding/open-questions-resolved.md` ADR 15 | `accepted` | "pending operator hitl on final conjunction shape for termination criteria; surfaced in commit and PR checklist" |
-| OQ-17 spend-mix ratios | `specs/hermes-binding/open-questions-resolved.md` ADR 17 | `accepted` | "pending operator hitl on spend-mix ratios (`≤30 / ≥50 / ≤20`); surfaced in commit and PR checklist" |
-| OQ-18 marketplace allowlist | `specs/hermes-binding/open-questions-resolved.md` ADR 18 | `accepted` | "pending operator hitl on marketplace allowlist additions; surfaced in commit and PR checklist" |
+| Three-verb mission line | `examples/horcrx-003-founder/voice.md` | Approved / canonical | `approved 2026-05-28` — `earn through making · move through earliness · compound through audit` |
+| OQ-13 cap scale | `specs/hermes-binding/open-questions-resolved.md` ADR 13 | `accepted` | `approved 2026-05-28 — loosened to 2% / 8% / 20% to give the vessel headroom while still leaving 80% weekly preserved` |
+| OQ-15 termination state | `specs/hermes-binding/open-questions-resolved.md` ADR 15 | `accepted` | `approved 2026-05-28 — mission OR inactivity; treasury threshold remains an optional add-on, not a default trigger` |
+| OQ-17 spend-mix ratios | `specs/hermes-binding/open-questions-resolved.md` ADR 17 | `accepted` | `approved 2026-05-28 — earliness gets more headroom since being-earlier is the moat for a maker agent` |
+| OQ-18 marketplace allowlist | `specs/hermes-binding/open-questions-resolved.md` ADR 18 | `accepted` | `approved 2026-05-28 — full allowlist live from v0; new surfaces beyond these five require HITL` |
 
 ## Assumptions
 
 - The existing top-level `## [Unreleased]` block in `CHANGELOG.md` should be populated rather than duplicated.
-- PR creation, PR body references, and CI-on-PR checks are owned by F-A-07, so assertions A5.3, A5.4, A6.11, and A6.12 stay deferred in this report.
-- Untracked packet and recon files (`docs/roadmap/mission-A-horcrx-003-founder-vessel.md`, `research/10-rags-to-riches-recon.md`, `research/11-harness-landscape.md`) are operator state and remain unstaged per HERMES-01.
-- Mission B artifacts (`docs/roadmap/mission-B-hardening-pass.md`, `research/12-hardening-recon.md`, `specs/hermes-webapi-backup/`) remain untouched and out of scope for F-A-06.
+- Mission B artifacts (`docs/roadmap/mission-B-hardening-pass.md`, `research/12-hardening-recon.md`, `specs/hermes-webapi-backup/`) remain untouched and out of scope for this Mission A close pass.
 - The operator still decides whether post-merge versioning becomes `v0.2.0-foundation` or `v0.1.2`; this worker did not cut or move any tag.
 
 ## Off-limits cross-check
@@ -143,6 +145,5 @@ PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` r
 
 ## Open follow-ups
 
-- F-A-07 must push `foundation/founder-vessel`, open the PR, verify the PR body references, and wait for green CI checks.
-- F-A-08 must synthesize the per-surface validator results into `library/validator-synthesis.md` and update `validation-state.json`.
-- Final operator review still owns the three-verb mission line plus OQ-13, OQ-15, OQ-17, and OQ-18 confirmation at PR review.
+- Operator merge remains HITL after PR `#8`; this validator pass only confirms close readiness, not merge authorization.
+- Mission B H2 still owns the previously deferred `.github/workflows/ci.yml` hardening follow-up for pack-child AJV coverage.
