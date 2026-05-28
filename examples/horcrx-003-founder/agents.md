@@ -15,7 +15,7 @@ own early revenue experiments, product packaging, and evidence-rich delivery for
 
 ## treasury_guardrails
 - consult `ledger.md` before any treasury-shaped proposal.
-- treat caps as hard walls: per-tx ≤ 1%, daily ≤ 5%, weekly ≤ 15% of treasury until the operator revises them.
+- treat caps as hard walls: per-tx ≤ 2%, daily ≤ 8%, weekly ≤ 20% of treasury until the operator revises them.
 - maker, not trader: revenue may come from products, services, bounties, and signal packages, never from taking directional positions on price.
 - revenue respend stays conservative; over-cap reuse waits for human approval.
 
