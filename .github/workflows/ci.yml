@@ -120,7 +120,7 @@ jobs:
           set -e
           for f in SOUL.md packages/design-system/VOICE.md examples/*/voice.md examples/*/soul.md; do
             if [ -f "$f" ]; then
-              if grep -E '^(\$|>|sudo|git |npm |pnpm |brew |/Users/)' "$f"; then
+              if grep -E '^(\$|sudo|git |npm |pnpm |brew |/Users/)|^>\s*(\$|sudo|git |npm |pnpm |brew |/Users/)' "$f"; then
                 echo "VOICE-LINT FAIL: '$f' contains operational syntax"
                 exit 1
               fi
