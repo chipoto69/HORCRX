@@ -11,7 +11,7 @@ Version: `v0.1-draft`
 
 HORCRX observability should answer one question end to end: **who published, who paid, what bundle was served, what runtime installed it, and can we prove that chain of events after the fact?**
 
-That means metrics alone are not enough. The stack needs structured logs for evidence, traces for flow reconstruction, and runtime-linked audit rows for Hermes-mediated purchases and installs. Sources: `specs/hermes-binding/BINDING.md`, `specs/protocol/payment-layer.md`, `specs/marketplace/ARCHITECTURE.md`, `~/wiki/_meta/hermes-stack/hermes-content-os.md`. <!-- wiki source -->
+That means metrics alone are not enough. The stack needs structured logs for evidence, traces for flow reconstruction, and runtime-linked audit rows for Hermes-mediated purchases and installs. Sources: `specs/hermes-binding/BINDING.md`, `specs/protocol/payment-layer.md`, `specs/marketplace/ARCHITECTURE.md`, `research/09-hermes-binding-recon.md`.
 
 ## 1. Logging contract
 
@@ -80,7 +80,7 @@ This keeps marketplace, gateway, and runtime evidence joinable later.
 
 This is the load-bearing piece.
 
-When a Hermes profile buys or installs a vessel, the marketplace flow must still produce the existing Hermes audit artifacts described in `~/wiki/_meta/hermes-stack/hermes-content-os.md`: <!-- wiki source -->
+When a Hermes profile buys or installs a vessel, the marketplace flow must still produce the Hermes audit artifacts described in `specs/hermes-binding/BINDING.md` and `specs/hermes-binding/strip-and-rehydrate.md`:
 
 - profile-scoped NDJSON audit log,
 - profile-scoped SQLite audit mirror,
@@ -97,7 +97,7 @@ A Hermes-mediated marketplace action should add, at minimum:
 - `royalty_target`
 - `run_id` or equivalent dispatch correlation field
 
-This aligns directly with the provenance requirement in `specs/hermes-binding/BINDING.md` and ensures that later royalty or dispute analysis can join runtime activity back to the signed bundle lineage. Sources: `specs/hermes-binding/BINDING.md`, `~/wiki/_meta/hermes-stack/hermes-content-os.md`. <!-- wiki source -->
+This aligns directly with the provenance requirement in `specs/hermes-binding/BINDING.md` and ensures that later royalty or dispute analysis can join runtime activity back to the signed bundle lineage. Sources: `specs/hermes-binding/BINDING.md`, `specs/hermes-binding/strip-and-rehydrate.md`.
 
 ## 5. Dashboard sketch
 

@@ -2,7 +2,7 @@
 
 Date: 2026-05-28
 Repo: `chipoto69/HORCRX`
-Local path: `/Users/rudlord/HORCRX`
+Local path: repo checkout root
 Branch: `foundation/hardening-pass`
 PR: `https://github.com/chipoto69/HORCRX/pull/9`
 
@@ -13,7 +13,7 @@ Mission B · hardening pass close fix-forward
 ## Diagnosis
 
 - Mission B started from a foundation-only repo with the doctrinal packet already landed, but enforcement drift remained: live `main` branch protection still exposed only five required contexts while `.github/branch-protection.md` documented eighteen.
-- The final validator synthesis at `/Users/rudlord/.factory/missions/3b33da05-36b3-40ba-a061-ccf4f3fde037/library/validator-synthesis-B-final.md` reported nine blockers at local head `d83fd91`, including an unpushed branch, a stale repo-root `WORKER-COMPLETE.md`, a stale `[Unreleased]` section, onboarding/runbook documentation gaps, a missing signing-key follow-up link, and the HX.5 false positive around the H6 pack-deferral note.
+- The final validator synthesis at `mission:library/validator-synthesis-B-final.md` reported nine blockers at local head `d83fd91`, including an unpushed branch, a stale repo-root `WORKER-COMPLETE.md`, a stale `[Unreleased]` section, onboarding/runbook documentation gaps, a missing signing-key follow-up link, and the HX.5 false positive around the H6 pack-deferral note.
 - Repo-root `WORKER-COMPLETE.md` still described the Mission A founder-vessel close on `foundation/founder-vessel`, so Mission B no longer had the required top-level close artifact.
 - Operator-only follow-up remained intentionally open: GitHub `release` environment required reviewers (`H8.3`) still needs a Settings UI stamp during PR review.
 
@@ -70,7 +70,7 @@ Mission B · hardening pass close fix-forward
 
 ## Verification
 
-- Validator synthesis pointer: `/Users/rudlord/.factory/missions/3b33da05-36b3-40ba-a061-ccf4f3fde037/library/validator-synthesis-B-final.md` recorded the pre-fix state and drove this fix-forward scope.
+- Validator synthesis pointer: `mission:library/validator-synthesis-B-final.md` recorded the pre-fix state and drove this fix-forward scope.
 - Published the previously local Mission B stack with `git push` from `d83fd91`; that head initially failed `ci/secret-scan`, which was traced to a public libsodium AEAD fixture being scanned as a secret.
 - Re-applied live branch protection via `gh api --method PUT repos/chipoto69/HORCRX/branches/main/protection` using the required context list parsed from `.github/branch-protection.md`; the API now returns all 18 documented required checks.
 - Post-fix CI truth on head `18daa27` completed green in both workflows: push run `26573919722` and pull_request run `26573921348` each returned `status=completed` and `conclusion=success`.
@@ -91,124 +91,124 @@ Mission B · hardening pass close fix-forward
 
 - `H8.3` remains the only operator-only blocker from the final validator pass; F-B-Vf2 should treat it as deferred-by-operator-choice if the Settings UI stamp has not landed yet.
 - PR #9 still carries 19 bot review comments. They are intentionally left for separate triage after F-B-Vf2 confirms the branch is otherwise green.
-- The mission-local validation contract edit for HX.5 lives at `/Users/rudlord/.factory/missions/3b33da05-36b3-40ba-a061-ccf4f3fde037/validation-contract.md` and should be consumed by F-B-Vf2; it is not a repo commit by design.
+- The mission-local validation contract edit for HX.5 lives at `mission:validation-contract.md` and should be consumed by F-B-Vf2; it is not a repo commit by design.
 
 ## Files written / modified
 
-- `/Users/rudlord/HORCRX/.githooks/commit-msg`
-- `/Users/rudlord/HORCRX/.githooks/pre-push`
-- `/Users/rudlord/HORCRX/.github/branch-protection.md`
-- `/Users/rudlord/HORCRX/.github/workflows/ci.yml`
-- `/Users/rudlord/HORCRX/.github/workflows/release.yml`
-- `/Users/rudlord/HORCRX/.gitleaks.toml`
-- `/Users/rudlord/HORCRX/CHANGELOG.md`
-- `/Users/rudlord/HORCRX/README.md`
-- `/Users/rudlord/HORCRX/SECURITY.md`
-- `/Users/rudlord/HORCRX/apps/api/README.md`
-- `/Users/rudlord/HORCRX/apps/marketplace-api/README.md`
-- `/Users/rudlord/HORCRX/apps/marketplace-ui/README.md`
-- `/Users/rudlord/HORCRX/docs/CANONICAL.md`
-- `/Users/rudlord/HORCRX/docs/infrastructure/hosting.md`
-- `/Users/rudlord/HORCRX/docs/infrastructure/local-dev.md`
-- `/Users/rudlord/HORCRX/docs/infrastructure/observability.md`
-- `/Users/rudlord/HORCRX/docs/infrastructure/security.md`
-- `/Users/rudlord/HORCRX/docs/infrastructure/services.md`
-- `/Users/rudlord/HORCRX/docs/onboarding/01-clone-and-hooks.md`
-- `/Users/rudlord/HORCRX/docs/onboarding/02-run-validators.md`
-- `/Users/rudlord/HORCRX/docs/onboarding/03-troubleshoot-ci.md`
-- `/Users/rudlord/HORCRX/docs/onboarding/04-mission-checklist.md`
-- `/Users/rudlord/HORCRX/docs/ops/MARKETPLACE-OPERATOR-RUNBOOK.md`
-- `/Users/rudlord/HORCRX/docs/ops/RUNBOOK.md`
-- `/Users/rudlord/HORCRX/docs/release/RELEASING.md`
-- `/Users/rudlord/HORCRX/docs/roadmap/ROADMAP.md`
-- `/Users/rudlord/HORCRX/docs/roadmap/migration-from-knowledge-horcrux.md`
-- `/Users/rudlord/HORCRX/docs/roadmap/mission-A-horcrx-003-founder-vessel.md`
-- `/Users/rudlord/HORCRX/docs/roadmap/mission-B-hardening-pass.md`
-- `/Users/rudlord/HORCRX/docs/roadmap/next-missions.md`
-- `/Users/rudlord/HORCRX/docs/security/SECRETS.md`
-- `/Users/rudlord/HORCRX/examples/horcrx-002-orbel-pack/MANIFEST-DEFERRAL.md`
-- `/Users/rudlord/HORCRX/examples/listings/listing-001.json`
-- `/Users/rudlord/HORCRX/examples/listings/listing-002.json`
-- `/Users/rudlord/HORCRX/research/12-hardening-recon.md`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/README.md`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/__init__.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/__main__.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/app.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/deps.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/errors.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/models/__init__.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/models/chat.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/models/common.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/models/config.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/models/memory.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/models/sessions.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/models/skills.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/routes/chat.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/routes/config.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/routes/health.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/routes/memory.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/routes/models.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/routes/sessions.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/routes/skills.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/sse.py`
-- `/Users/rudlord/HORCRX/research/archive/hermes-webapi-backup/zai_defaults.py`
-- `/Users/rudlord/HORCRX/specs/hermes-binding/BINDING.md`
-- `/Users/rudlord/HORCRX/specs/marketplace/anti-sybil-schema.json`
-- `/Users/rudlord/HORCRX/specs/marketplace/ip-preservation.md`
-- `/Users/rudlord/HORCRX/specs/marketplace/mcp.schema.json`
-- `/Users/rudlord/HORCRX/specs/marketplace/ranking-transparency.md`
-- `/Users/rudlord/HORCRX/specs/protocol/chain-adapters.md`
-- `/Users/rudlord/HORCRX/specs/protocol/wallet-adapter-mock.md`
-- `/Users/rudlord/HORCRX/specs/registry/listing.schema.json`
-- `/Users/rudlord/HORCRX/specs/vessel-format/compatibility-matrix.md`
-- `/Users/rudlord/HORCRX/specs/vessel-format/memory-graft-provenance.md`
-- `/Users/rudlord/HORCRX/specs/vessel-format/traces-format.md`
-- `/Users/rudlord/HORCRX/validation/VAL-INDEX.md`
-- `/Users/rudlord/HORCRX/validation/fixtures/aead/age-cctv-x25519.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/aead/x25519-xsalsa20-poly1305-libsodium.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/envelopes/operator-slot-body.age.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/envelopes/per-buyer-envelope.x25519-xsalsa20-poly1305.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/known-cids.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/payout-target-format/invalid.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/payout-target-format/valid.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/previews/preview-integrity.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/AGENTS.md`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/SOUL.md`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/audio_cache/audio.tmp`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/auth.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/auth.lock`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/cache/cache.tmp`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/config.yaml`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/cron/jobs.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/cron/output/last-run.txt`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/gateway.lock`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/gateway.pid`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/gateway_state.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/home/.keep`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/image_cache/image.tmp`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/pastes/paste.txt`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/processes.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/sessions/session-001.md`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/state.db`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/state.db-shm`
-- `/Users/rudlord/HORCRX/validation/fixtures/profile-fixture/state.db-wal`
-- `/Users/rudlord/HORCRX/validation/fixtures/registry/revocation-lineage.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/royalty/expected-payout-plan.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/royalty/lineage-fixture.json`
-- `/Users/rudlord/HORCRX/validation/fixtures/traces/redaction-expected.ndjson`
-- `/Users/rudlord/HORCRX/validation/fixtures/traces/redaction-input.ndjson`
-- `/Users/rudlord/HORCRX/validation/scripts/aead-kats.py`
-- `/Users/rudlord/HORCRX/validation/scripts/chain-adapter-symmetry.py`
-- `/Users/rudlord/HORCRX/validation/scripts/gate-hx-04-signature-roundtrip.py`
-- `/Users/rudlord/HORCRX/validation/scripts/gate-hx-05-parent-cid-resolves.py`
-- `/Users/rudlord/HORCRX/validation/scripts/gate-hx-06-strip-rehydrate.sh`
-- `/Users/rudlord/HORCRX/validation/scripts/gate-hx-07-docs-allowlist.sh`
-- `/Users/rudlord/HORCRX/validation/scripts/gate-hx-08-voice-lint-extended.sh`
-- `/Users/rudlord/HORCRX/validation/scripts/marketplace-envelope-kats.py`
-- `/Users/rudlord/HORCRX/validation/scripts/payout-target-format.py`
-- `/Users/rudlord/HORCRX/validation/scripts/preview-integrity.py`
-- `/Users/rudlord/HORCRX/validation/scripts/redaction-validator.py`
-- `/Users/rudlord/HORCRX/validation/scripts/revocation-never-deletes.py`
-- `/Users/rudlord/HORCRX/validation/scripts/royalty-determinism.py`
-- `/Users/rudlord/HORCRX/validation/scripts/x402-nonce-replay.py`
-- `/Users/rudlord/.factory/missions/3b33da05-36b3-40ba-a061-ccf4f3fde037/validation-contract.md` *(mission-local HX.5 allowance for the H6 pack-deferral note)*
+- `.githooks/commit-msg`
+- `.githooks/pre-push`
+- `.github/branch-protection.md`
+- `.github/workflows/ci.yml`
+- `.github/workflows/release.yml`
+- `.gitleaks.toml`
+- `CHANGELOG.md`
+- `README.md`
+- `SECURITY.md`
+- `apps/api/README.md`
+- `apps/marketplace-api/README.md`
+- `apps/marketplace-ui/README.md`
+- `docs/CANONICAL.md`
+- `docs/infrastructure/hosting.md`
+- `docs/infrastructure/local-dev.md`
+- `docs/infrastructure/observability.md`
+- `docs/infrastructure/security.md`
+- `docs/infrastructure/services.md`
+- `docs/onboarding/01-clone-and-hooks.md`
+- `docs/onboarding/02-run-validators.md`
+- `docs/onboarding/03-troubleshoot-ci.md`
+- `docs/onboarding/04-mission-checklist.md`
+- `docs/ops/MARKETPLACE-OPERATOR-RUNBOOK.md`
+- `docs/ops/RUNBOOK.md`
+- `docs/release/RELEASING.md`
+- `docs/roadmap/ROADMAP.md`
+- `docs/roadmap/migration-from-knowledge-horcrux.md`
+- `docs/roadmap/mission-A-horcrx-003-founder-vessel.md`
+- `docs/roadmap/mission-B-hardening-pass.md`
+- `docs/roadmap/next-missions.md`
+- `docs/security/SECRETS.md`
+- `examples/horcrx-002-orbel-pack/MANIFEST-DEFERRAL.md`
+- `examples/listings/listing-001.json`
+- `examples/listings/listing-002.json`
+- `research/12-hardening-recon.md`
+- `research/archive/hermes-webapi-backup/README.md`
+- `research/archive/hermes-webapi-backup/__init__.py`
+- `research/archive/hermes-webapi-backup/__main__.py`
+- `research/archive/hermes-webapi-backup/app.py`
+- `research/archive/hermes-webapi-backup/deps.py`
+- `research/archive/hermes-webapi-backup/errors.py`
+- `research/archive/hermes-webapi-backup/models/__init__.py`
+- `research/archive/hermes-webapi-backup/models/chat.py`
+- `research/archive/hermes-webapi-backup/models/common.py`
+- `research/archive/hermes-webapi-backup/models/config.py`
+- `research/archive/hermes-webapi-backup/models/memory.py`
+- `research/archive/hermes-webapi-backup/models/sessions.py`
+- `research/archive/hermes-webapi-backup/models/skills.py`
+- `research/archive/hermes-webapi-backup/routes/chat.py`
+- `research/archive/hermes-webapi-backup/routes/config.py`
+- `research/archive/hermes-webapi-backup/routes/health.py`
+- `research/archive/hermes-webapi-backup/routes/memory.py`
+- `research/archive/hermes-webapi-backup/routes/models.py`
+- `research/archive/hermes-webapi-backup/routes/sessions.py`
+- `research/archive/hermes-webapi-backup/routes/skills.py`
+- `research/archive/hermes-webapi-backup/sse.py`
+- `research/archive/hermes-webapi-backup/zai_defaults.py`
+- `specs/hermes-binding/BINDING.md`
+- `specs/marketplace/anti-sybil-schema.json`
+- `specs/marketplace/ip-preservation.md`
+- `specs/marketplace/mcp.schema.json`
+- `specs/marketplace/ranking-transparency.md`
+- `specs/protocol/chain-adapters.md`
+- `specs/protocol/wallet-adapter-mock.md`
+- `specs/registry/listing.schema.json`
+- `specs/vessel-format/compatibility-matrix.md`
+- `specs/vessel-format/memory-graft-provenance.md`
+- `specs/vessel-format/traces-format.md`
+- `validation/VAL-INDEX.md`
+- `validation/fixtures/aead/age-cctv-x25519.json`
+- `validation/fixtures/aead/x25519-xsalsa20-poly1305-libsodium.json`
+- `validation/fixtures/envelopes/operator-slot-body.age.json`
+- `validation/fixtures/envelopes/per-buyer-envelope.x25519-xsalsa20-poly1305.json`
+- `validation/fixtures/known-cids.json`
+- `validation/fixtures/payout-target-format/invalid.json`
+- `validation/fixtures/payout-target-format/valid.json`
+- `validation/fixtures/previews/preview-integrity.json`
+- `validation/fixtures/profile-fixture/AGENTS.md`
+- `validation/fixtures/profile-fixture/SOUL.md`
+- `validation/fixtures/profile-fixture/audio_cache/audio.tmp`
+- `validation/fixtures/profile-fixture/auth.json`
+- `validation/fixtures/profile-fixture/auth.lock`
+- `validation/fixtures/profile-fixture/cache/cache.tmp`
+- `validation/fixtures/profile-fixture/config.yaml`
+- `validation/fixtures/profile-fixture/cron/jobs.json`
+- `validation/fixtures/profile-fixture/cron/output/last-run.txt`
+- `validation/fixtures/profile-fixture/gateway.lock`
+- `validation/fixtures/profile-fixture/gateway.pid`
+- `validation/fixtures/profile-fixture/gateway_state.json`
+- `validation/fixtures/profile-fixture/home/.keep`
+- `validation/fixtures/profile-fixture/image_cache/image.tmp`
+- `validation/fixtures/profile-fixture/pastes/paste.txt`
+- `validation/fixtures/profile-fixture/processes.json`
+- `validation/fixtures/profile-fixture/sessions/session-001.md`
+- `validation/fixtures/profile-fixture/state.db`
+- `validation/fixtures/profile-fixture/state.db-shm`
+- `validation/fixtures/profile-fixture/state.db-wal`
+- `validation/fixtures/registry/revocation-lineage.json`
+- `validation/fixtures/royalty/expected-payout-plan.json`
+- `validation/fixtures/royalty/lineage-fixture.json`
+- `validation/fixtures/traces/redaction-expected.ndjson`
+- `validation/fixtures/traces/redaction-input.ndjson`
+- `validation/scripts/aead-kats.py`
+- `validation/scripts/chain-adapter-symmetry.py`
+- `validation/scripts/gate-hx-04-signature-roundtrip.py`
+- `validation/scripts/gate-hx-05-parent-cid-resolves.py`
+- `validation/scripts/gate-hx-06-strip-rehydrate.sh`
+- `validation/scripts/gate-hx-07-docs-allowlist.sh`
+- `validation/scripts/gate-hx-08-voice-lint-extended.sh`
+- `validation/scripts/marketplace-envelope-kats.py`
+- `validation/scripts/payout-target-format.py`
+- `validation/scripts/preview-integrity.py`
+- `validation/scripts/redaction-validator.py`
+- `validation/scripts/revocation-never-deletes.py`
+- `validation/scripts/royalty-determinism.py`
+- `validation/scripts/x402-nonce-replay.py`
+- `mission:validation-contract.md` *(mission-local HX.5 allowance for the H6 pack-deferral note)*

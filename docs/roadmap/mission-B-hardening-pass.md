@@ -10,8 +10,8 @@ owner: hardening-mission
 ATLAS → CORPUS → HORCRX.
 
 Status: kickoff-ready (foundation-spec mission; no runtime code yet)
-Recon: `/Users/rudlord/HORCRX/research/12-hardening-recon.md`
-Parallel mission: `/Users/rudlord/HORCRX/docs/roadmap/mission-A-horcrx-003-founder-vessel.md`
+Recon: `research/12-hardening-recon.md`
+Parallel mission: `docs/roadmap/mission-A-horcrx-003-founder-vessel.md`
 
 ## 1. mission line
 
@@ -158,7 +158,7 @@ B10. `docs/roadmap/ROADMAP.md` Phase 0 marked complete; new entry "Mission B · 
 
 Suggested execution shape: H1 first, fully serialized through operator approval. Then waves: {H2, H3, H4, H5} run in parallel; {H6, H7} run when their dependencies clear; H8 closes.
 
-Use `dispatching-parallel-agents` SKILL pattern (`/Users/rudlord/.agents/skills/dispatching-parallel-agents/SKILL.md`) and the GATE-discipline of `content-os` (`/Users/rudlord/.factory/skills/content-os/SKILL.md`) as live precedents.
+Use `dispatching-parallel-agents` SKILL pattern (`~/.agents/skills/dispatching-parallel-agents/SKILL.md`) and the GATE-discipline of `content-os` (`~/.factory/skills/content-os/SKILL.md`) as live precedents.
 
 ## 8. dependencies and blockers
 
