@@ -1,0 +1,31 @@
+{
+  "listing_id": "listing-2d0fef34-90cb-4b1d-9b9d-c0af44ebdb75",
+  "initial_rows": [
+    {
+      "sequence": 1,
+      "state": "draft",
+      "revoked": false,
+      "lineage_hash": "lineage-001",
+      "evidence": "listing-created"
+    },
+    {
+      "sequence": 2,
+      "state": "listed",
+      "revoked": false,
+      "lineage_hash": "lineage-002",
+      "evidence": "owner-published"
+    },
+    {
+      "sequence": 3,
+      "state": "frozen",
+      "revoked": false,
+      "lineage_hash": "lineage-003",
+      "evidence": "dispute-opened"
+    }
+  ],
+  "revocation_event": {
+    "sequence": 4,
+    "reason": "rights-holder dispute sustained",
+    "operator": "did:operator:marketplace"
+  }
+}

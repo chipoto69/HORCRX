@@ -1,0 +1,7 @@
+{
+  "preview_id": "preview-001",
+  "original_text": "HORCRX preview payload\\nlisting=listing-001\\nslot=preview/body.txt\\nsha-scope=public-preview\\n",
+  "honest_fetch_text": "HORCRX preview payload\\nlisting=listing-001\\nslot=preview/body.txt\\nsha-scope=public-preview\\n",
+  "tampered_text": "HORCRX preview payload\\nlisting=listing-001\\nslot=preview/body.txt\\nsha-scope=public-preview\\ninjected=malicious-gateway-rewrite\\n",
+  "expected_sha256": "9403d1fcd6d7883a5b6e92649bf93d30f90b9fa791c9a67bf8f6c7cb2ab669fc"
+}
