@@ -213,7 +213,7 @@ The Hermes-binding ADR ledger, including the founder-vessel additions, is resolv
 
 - `/Users/rudlord/HORCRX/specs/hermes-binding/open-questions-resolved.md`
 
-ADRs 01..11 remain `accepted-pending-HITL`. ADRs 12..19 land as founder-vessel resolutions; the HITL-sensitive rows carry explicit `Signed-off-by` placeholders so operator review remains auditable. Sources: `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`, `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/mission.md`.
+ADRs 01..11 remain `accepted-pending-HITL`. ADRs 12..19 land as founder-vessel resolutions; the HITL-sensitive rows now carry explicit operator stamps so review remains auditable. Sources: `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`, `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/mission.md`.
 
 ## 8. Hard constraints (verbatim, locked)
 
@@ -291,15 +291,15 @@ On a future authorized install, the founder-only slots mirror into profile-local
 
 ### 10.3 Earning surfaces (declarative only; no live integration in v0)
 
-The founder vessel may declare earning surfaces, but each surface remains inactive until an operator approves that surface in a later runtime phase.
+The founder vessel may declare earning surfaces, and the five canonical surfaces below are default-allowed from v0 per ADR 18. Any surface beyond these five still requires HITL before it joins the allowlist in a later runtime phase.
 
 | Surface | Class | Doc |
 |---|---|---|
 | `agentic.market` | hosted agent-economy marketplace | `https://agentic.market/` |
-| ClawHub-class bounty boards | operator-named bounty boards | runtime allowlist |
-| Code-bounty surfaces | Gitcoin / Replit-class issue-and-PR markets | per-board manifest |
-| Self-hosted micro-products | operator-owned sites, APIs, or hosted tools | per-product manifest |
-| Data / scrape services | bounded pay-per-task delivery surfaces | per-task manifest |
+| `ClawHub-class bounty boards` | operator-named bounty boards | runtime allowlist |
+| `code-bounty-generic` | issue-and-PR bounty markets | per-board manifest |
+| `self-hosted-microproduct` | operator-owned sites, APIs, or hosted tools | per-product manifest |
+| `data-scrape-service` | bounded pay-per-task delivery surfaces | per-task manifest |
 
 The canonical declaration surface is `examples/horcrx-003-founder/plugins/marketplaces.json`, where each marketplace entry records `name`, `surface_url`, `account_model`, `settlement_currency`, `fee_posture`, `evidence_schema`, and `anti_sybil`. This section authorizes the categories declaratively only; it does not authorize live accounts, live payouts, live scraping, or live market actions.
 

@@ -4,7 +4,7 @@ Version: `v0.1-draft`
 
 ATLAS → CORPUS → HORCRX.
 
-These ADRs resolve the open Hermes-binding questions identified across the Hermes recon and the founder-vessel mission packet. ADR 01..11 remain `accepted-pending-HITL`. ADR 12..19 land as founder-vessel resolutions; the HITL-sensitive rows carry explicit `Signed-off-by` placeholders so the operator review surface stays auditable.
+These ADRs resolve the open Hermes-binding questions identified across the Hermes recon and the founder-vessel mission packet. ADR 01..11 remain `accepted-pending-HITL`. ADR 12..19 land as founder-vessel resolutions; the HITL-sensitive rows now carry explicit operator stamps so the review surface stays auditable.
 
 ## ADR 01 — Session memory mobility
 
@@ -192,16 +192,16 @@ How should founder-vessel spend caps scale when the initial treasury is only `$6
 - (c) use treasury-relative caps with an absolute floor
 
 **Decision**  
-Option (b). Outflow caps are treasury-relative: per-tx `≤ 1%`, daily `≤ 5%`, weekly `≤ 15%`.
+Option (b). Outflow caps are treasury-relative: per-tx `≤ 2%`, daily `≤ 8%`, weekly `≤ 20%`, with a `60s` cooldown.
 
 **Rationale**  
-At the seed stage, fixed absolute caps can burn most of the treasury in one bad approval path. Treasury-relative caps preserve the same control shape as the treasury grows and keep losses bounded from the first dollar onward.
+At the seed stage, fixed absolute caps can burn most of the treasury in one bad approval path. Treasury-relative caps preserve the same control shape as the treasury grows and keep losses bounded from the first dollar onward, while the loosened `2% / 8% / 20%` profile gives the vessel enough headroom to keep shipping without sacrificing weekly survival.
 
 **Status**  
 `accepted`
 
 **Signed-off-by**  
-pending operator hitl on treasury-relative cap scale (`1% / 5% / 15%`); surfaced in commit and PR checklist
+approved 2026-05-28 — loosened to 2%/8%/20% to give the vessel headroom while still leaving 80% weekly preserved
 
 ## ADR 14 — Kill-switch contract shape
 
@@ -236,16 +236,16 @@ Which criteria are allowed to terminate the founder mission once the vessel is l
 - (c) a conjunction drawn from `{treasury threshold met, mission-line satisfied, inactivity timeout > 14d}`
 
 **Decision**  
-Option (c). The termination contract is built from those three criteria, with the default founder posture allowing any of them to force a stop until the operator stamps the final conjunction shape.
+Option (c). The default termination state is `mission-line satisfied OR inactivity timeout > 14d`. Treasury threshold is removed from the default trigger and may be added later as an operator-defined extension.
 
 **Rationale**  
-A forced stop condition closes the paperclip vector, while keeping the conjunction operator-stamped makes the close rule explicit and auditable instead of letting runtime drift decide when the mission ends.
+A forced stop condition closes the paperclip vector. Using mission completion or operator disappearance as the default stop shape preserves the anti-paperclip guardrail without making treasury size the automatic arbiter of when the company should die.
 
 **Status**  
 `accepted`
 
 **Signed-off-by**  
-pending operator hitl on final conjunction shape for termination criteria; surfaced in commit and PR checklist
+approved 2026-05-28 — mission OR inactivity; treasury threshold remains an optional add-on, not a default trigger
 
 ## ADR 16 — No-financial-trading off-limit
 
@@ -280,16 +280,16 @@ How should weekly spend be split between earliness, making, and overhead?
 - (c) earliness `≤ 30%`, making `≥ 50%`, overhead `≤ 20%`
 
 **Decision**  
-Option (c). Set `earliness_max_pct = 30`, `making_min_pct = 50`, `overhead_max_pct = 20`, with the invariant `earliness_max + overhead_max ≤ 50`.
+Option (c). Set `earliness_max_pct = 40`, `making_min_pct = 40`, `overhead_max_pct = 20`, with the invariants `earliness_max + overhead_max ≤ 60` and `making_min ≥ 40`.
 
 **Rationale**  
-Earliness needs real spend — paid data, scraping, model upgrades — but it is a means, not the end. Making must stay dominant so the treasury compounds through shipped value instead of disappearing into research or tool overhead.
+Earliness needs real spend — paid data, scraping, model upgrades — and for a maker agent being earlier is the moat. The mix still keeps making at or above forty percent so shipped value remains the center of gravity instead of overhead.
 
 **Status**  
 `accepted`
 
 **Signed-off-by**  
-pending operator hitl on spend-mix ratios (`≤30 / ≥50 / ≤20`); surfaced in commit and PR checklist
+approved 2026-05-28 — earliness gets more headroom since being-earlier is the moat for a maker agent
 
 ## ADR 18 — Agentic-marketplace allowlist
 
@@ -302,16 +302,16 @@ Which earning surfaces are allowed by default for the founder vessel?
 - (c) single-surface operation on `agentic.market` only
 
 **Decision**  
-Option (b). The default allowlist is `{agentic.market, operator-named bounty boards}`. Any new surface requires HITL before addition.
+Option (b). The default allowlist is the full `BINDING.md §10.3` surface set from day 1: `agentic.market`, `ClawHub-class bounty boards`, `code-bounty-generic`, `self-hosted-microproduct`, and `data-scrape-service`. Any new surface beyond those five requires HITL before addition.
 
 **Rationale**  
-`agentic.market` is the clearest current agent-economy surface, but broad marketplace exposure increases supply-chain and account-risk quickly. Growing the allowlist one named surface at a time keeps the earning lane auditable.
+The founder vessel already names five bounded surface classes in `BINDING.md §10.3`, and treating them as live from v0 removes ambiguity between the binding and the ledger. The allowlist is still auditable because growth beyond those five named surfaces remains HITL-gated.
 
 **Status**  
 `accepted`
 
 **Signed-off-by**  
-pending operator hitl on marketplace allowlist additions; surfaced in commit and PR checklist
+approved 2026-05-28 — full allowlist live from v0; new surfaces beyond these five require HITL
 
 ## ADR 19 — Revenue-respend posture
 
