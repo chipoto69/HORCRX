@@ -35,10 +35,10 @@
       "role": "operations",
       "artifacts": [
         {
-          "cid": "cid:sha256:87d3222022e221cea0a180861dfe0c7fa67969240be398a8b8dd6a096e6a5f4d",
+          "cid": "cid:sha256:d18baacee5b9ba58a127a2f4856dbdae08822bc3ca167d62a4fb5f4ed7f1bcd8",
           "path": "horcrx-003-founder/agents.md",
           "media_type": "text/markdown",
-          "digest": "sha256:87d3222022e221cea0a180861dfe0c7fa67969240be398a8b8dd6a096e6a5f4d",
+          "digest": "sha256:d18baacee5b9ba58a127a2f4856dbdae08822bc3ca167d62a4fb5f4ed7f1bcd8",
           "signer_key_id": "founder-ed25519-publication-phase"
         }
       ]
@@ -107,10 +107,10 @@
       "role": "autonomy-contract",
       "artifacts": [
         {
-          "cid": "cid:sha256:68273ad726769a40271428eaf2c9115ae04c7be096e1e9c737c221c5c5f8268c",
+          "cid": "cid:sha256:caa9e0a316a471b91d2bebed456933b264eb9c7149f67897fbc84a1e62e1610f",
           "path": "horcrx-003-founder/autonomy.md",
           "media_type": "text/markdown",
-          "digest": "sha256:68273ad726769a40271428eaf2c9115ae04c7be096e1e9c737c221c5c5f8268c",
+          "digest": "sha256:caa9e0a316a471b91d2bebed456933b264eb9c7149f67897fbc84a1e62e1610f",
           "signer_key_id": "founder-ed25519-publication-phase"
         }
       ]
