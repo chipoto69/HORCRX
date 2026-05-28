@@ -92,7 +92,7 @@ def verify_per_buyer_envelope() -> None:
     message = bytes.fromhex(source['message_hex'])
     nonce = bytes.fromhex(source['nonce_hex'])
     public_key = bytes.fromhex(source['bob_public_key_hex'])
-    secret_key = bytes.fromhex(source['alice_secret_key_hex'])
+    secret_key = bytes.fromhex(source['alice_scalar_hex'])
     ciphertext = bindings.crypto_box(message, nonce, public_key, secret_key)
 
     if hashlib.sha256(message).hexdigest() != wrapper['expected_message_sha256']:

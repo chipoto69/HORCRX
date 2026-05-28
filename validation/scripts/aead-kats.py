@@ -126,7 +126,7 @@ def verify_crypto_box_vector() -> None:
     message = bytes.fromhex(fixture["message_hex"])
     nonce = bytes.fromhex(fixture["nonce_hex"])
     public_key = bytes.fromhex(fixture["bob_public_key_hex"])
-    secret_key = bytes.fromhex(fixture["alice_secret_key_hex"])
+    secret_key = bytes.fromhex(fixture["alice_scalar_hex"])
     expected_ciphertext = bytes.fromhex(fixture["ciphertext_hex"])
 
     ciphertext = bindings.crypto_box(message, nonce, public_key, secret_key)
