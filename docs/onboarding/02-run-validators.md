@@ -1,0 +1,204 @@
+---
+title: Run validators locally
+version: v0.1-draft
+updated: 2026-05-28
+owner: hardening-mission
+---
+
+# Run validators locally
+
+Run every command below from the repo root after `git fetch origin --prune`.
+
+## 1. Baseline schema sanity
+
+```bash
+pnpm test
+```
+
+## 2. `ci/schema-validate`
+
+```bash
+manifest_args=(
+  -d examples/horcrx-001-candysoul/manifest.json
+  -d examples/horcrx-002-orbel-pack/manifest.json
+  -d examples/horcrx-003-founder/manifest.json
+)
+while IFS= read -r child; do
+  manifest_args+=( -d "$child" )
+done < <(find examples -path 'examples/*/members/*/manifest.json' -print | sort)
+npx --yes ajv-cli@5 validate \
+  --spec=draft2020 \
+  -s specs/vessel-format/manifest.schema.json \
+  "${manifest_args[@]}"
+```
+
+## 3. `ci/commitlint`
+
+```bash
+regex='^(feat|fix|docs|chore|build|ci|refactor|test|polish)(\(.+\))?: .+'
+git log --pretty=format:'%s' origin/main..HEAD | while IFS= read -r subject; do
+  [ -z "$subject" ] && continue
+  if printf '%s\n' "$subject" | grep -Eq '^(Merge|Revert) '; then
+    continue
+  fi
+  printf '%s\n' "$subject" | grep -Eq "$regex"
+done
+```
+
+## 4. `ci/markdown-link-check`
+
+```bash
+python3 - <<'PY'
+import re
+import sys
+from pathlib import Path
+from urllib.parse import unquote
+
+root = Path.cwd()
+link_re = re.compile(r'(?<!!)\[[^\]]+\]\(([^)]+)\)')
+missing = []
+for md in root.rglob('*.md'):
+    if '.git' in md.parts or 'node_modules' in md.parts:
+        continue
+    text = md.read_text(encoding='utf-8')
+    for raw in link_re.findall(text):
+        target = raw.strip().split()[0].strip('<>')
+        if not target or target.startswith(('#', 'http://', 'https://', 'mailto:')):
+            continue
+        target = unquote(target.split('#', 1)[0])
+        if not target:
+            continue
+        candidate = (md.parent / target).resolve()
+        try:
+            candidate.relative_to(root.resolve())
+        except ValueError:
+            continue
+        if not candidate.exists():
+            missing.append(f'{md.relative_to(root)} -> {raw}')
+if missing:
+    print('Broken internal markdown links:')
+    print('\n'.join(missing))
+    sys.exit(1)
+print('markdown-link-check: PASS')
+PY
+```
+
+## 5. `ci/secret-scan`
+
+Fast local diff-hunk scan (matches the mission helper posture):
+
+```bash
+diff_added=$(git diff origin/main..HEAD -- ':!**/*.md' ':!validation/**' | grep -E '^\+[^+]' || true)
+patterns='(-----BEGIN [A-Z ]*PRIVATE KEY-----|sk_live_[A-Za-z0-9]{20,}|sk_test_[A-Za-z0-9]{20,}|xox[bpars]-[A-Za-z0-9-]{20,}|ghp_[A-Za-z0-9]{30,}|AIza[0-9A-Za-z\-_]{30,})'
+if [ -n "$diff_added" ] && echo "$diff_added" | grep -E -q "$patterns"; then
+  echo 'SECRET-SCAN FAIL: high-entropy match in added lines'
+  echo "$diff_added" | grep -E "$patterns" | head -5
+  exit 1
+fi
+echo 'secret-scan OK'
+```
+
+If you have the `gitleaks` CLI installed locally, run the CI-equivalent full scanner as well:
+
+```bash
+gitleaks git .
+```
+
+## 6. `ci/voice-lint`
+
+```bash
+set -e
+for f in SOUL.md packages/design-system/VOICE.md examples/*/voice.md examples/*/soul.md; do
+  if [ -f "$f" ]; then
+    if grep -E '^(\$|sudo|git |npm |pnpm |brew |/Users/)|^>\s*(\$|sudo|git |npm |pnpm |brew |/Users/)' "$f"; then
+      echo "VOICE-LINT FAIL: '$f' contains operational syntax"
+      exit 1
+    fi
+  fi
+done
+echo 'voice-lint OK'
+```
+
+## 7. `ci/gate-hx-04-signature-roundtrip`
+
+```bash
+./validation/scripts/gate-hx-04-signature-roundtrip.py
+```
+
+## 8. `ci/gate-hx-05-parent-cid-resolves`
+
+```bash
+./validation/scripts/gate-hx-05-parent-cid-resolves.py
+```
+
+## 9. `ci/gate-hx-06-strip-rehydrate`
+
+```bash
+./validation/scripts/gate-hx-06-strip-rehydrate.sh
+```
+
+## 10. `ci/gate-hx-07-docs-allowlist`
+
+```bash
+./validation/scripts/gate-hx-07-docs-allowlist.sh
+```
+
+## 11. `ci/gate-hx-08-voice-lint-extended`
+
+```bash
+./validation/scripts/gate-hx-08-voice-lint-extended.sh
+```
+
+## 12. `ci/x402-nonce-replay`
+
+```bash
+./validation/scripts/x402-nonce-replay.py
+```
+
+## 13. `ci/royalty-determinism`
+
+```bash
+./validation/scripts/royalty-determinism.py
+```
+
+## 14. Recommended pre-push sequence
+
+For documentation-heavy changes, this order catches most mistakes quickly:
+
+```bash
+pnpm test
+./validation/scripts/gate-hx-07-docs-allowlist.sh
+python3 - <<'PY'
+import re
+import sys
+from pathlib import Path
+from urllib.parse import unquote
+
+root = Path.cwd()
+link_re = re.compile(r'(?<!!)\[[^\]]+\]\(([^)]+)\)')
+missing = []
+for md in root.rglob('*.md'):
+    if '.git' in md.parts or 'node_modules' in md.parts:
+        continue
+    text = md.read_text(encoding='utf-8')
+    for raw in link_re.findall(text):
+        target = raw.strip().split()[0].strip('<>')
+        if not target or target.startswith(('#', 'http://', 'https://', 'mailto:')):
+            continue
+        target = unquote(target.split('#', 1)[0])
+        if not target:
+            continue
+        candidate = (md.parent / target).resolve()
+        try:
+            candidate.relative_to(root.resolve())
+        except ValueError:
+            continue
+        if not candidate.exists():
+            missing.append(f'{md.relative_to(root)} -> {raw}')
+if missing:
+    print('Broken internal markdown links:')
+    print('\n'.join(missing))
+    sys.exit(1)
+print('markdown-link-check: PASS')
+PY
+```
