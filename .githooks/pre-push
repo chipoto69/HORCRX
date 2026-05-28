@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 while read local_ref local_sha remote_ref remote_sha; do
-  if [[ "$remote_ref" == "refs/heads/main" ]]; then
-    echo "ERROR: direct push to main is forbidden. Open a PR."
+  if [[ "$remote_ref" == "refs/heads/main" || "$remote_ref" == refs/heads/release/* || "$remote_ref" == refs/tags/* ]]; then
+    echo "ERROR: direct push to protected ref '$remote_ref' is forbidden. Open a PR."
     exit 1
   fi
 done
