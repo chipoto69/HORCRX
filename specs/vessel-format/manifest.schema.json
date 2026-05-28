@@ -231,21 +231,25 @@
             "not": {
               "anyOf": [
                 {
+                  "type": "object",
                   "required": [
                     "mission"
                   ]
                 },
                 {
+                  "type": "object",
                   "required": [
                     "ledger"
                   ]
                 },
                 {
+                  "type": "object",
                   "required": [
                     "autonomy"
                   ]
                 },
                 {
+                  "type": "object",
                   "required": [
                     "constraints"
                   ]
