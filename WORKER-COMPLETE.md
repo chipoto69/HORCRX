@@ -35,7 +35,10 @@ HORCRX #003 · founder vessel (rags-to-riches, maker-not-trader)
 7. `6433706 docs(roadmap): mark Phase 0 complete; add Mission A spec-complete line`
 8. `c3f2a13 docs(release): append Unreleased notes for vessel #003`
 9. `67e1129 docs(validation): write F-A-founder-vessel worker-complete`
-10. Current close-artifact step overwrites `WORKER-COMPLETE.md` itself per repo convention.
+10. `445ea28 feat(spec): rename founder ledger knobs to short form`
+11. `4e5e472 docs(spec): clarify forbidden_actions as the no-trading invariant`
+12. `789ca68 docs(examples): add pack-level voice deferral note`
+13. Current close-artifact step overwrites `WORKER-COMPLETE.md` itself per repo convention.
 
 ## Verification
 
@@ -84,6 +87,7 @@ HORCRX #003 · founder vessel (rags-to-riches, maker-not-trader)
 - `/Users/rudlord/HORCRX/CHANGELOG.md`
 - `/Users/rudlord/HORCRX/docs/roadmap/ROADMAP.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-001-candysoul/manifest.json`
+- `/Users/rudlord/HORCRX/examples/horcrx-002-orbel-pack/VOICE-DEFERRAL.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/agents.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/autonomy.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/briefs/daily/.gitkeep`

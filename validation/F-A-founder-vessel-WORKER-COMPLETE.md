@@ -17,7 +17,7 @@ PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` r
 | `A1.6` | `passed` | `specs/vessel-format/autonomy-md.schema.md` exists with HITL and no-trading fields. |
 | `A1.7` | `passed` | `specs/vessel-format/manifest.schema.json`; `examples/horcrx-001-candysoul/manifest.json`; `examples/horcrx-002-orbel-pack/manifest.json`; `examples/horcrx-003-founder/manifest.json`. |
 | `A1.8` | `passed` | `examples/horcrx-001-candysoul/manifest.json` references the required voice slot. |
-| `A1.9` | `passed` | `examples/horcrx-002-orbel-pack/manifest.json` remains valid under the updated manifest schema. |
+| `A1.9` | `passed` | `examples/horcrx-002-orbel-pack/VOICE-DEFERRAL.md` explains the deferred pack-level voice handling under the updated slot requirement. |
 | `A2.1` | `passed` | `examples/horcrx-003-founder/soul.md` plus voice-lint coverage. |
 | `A2.2` | `passed` | `examples/horcrx-003-founder/agents.md` includes treasury + dispatch-audit guardrails. |
 | `A2.3` | `passed` | `examples/horcrx-003-founder/principles.md` carries maker-not-trader doctrine. |
@@ -46,7 +46,7 @@ PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` r
 | `A4.7` | `passed` | ADR 18 is `accepted` and carries a Signed-off-by HITL placeholder. |
 | `A4.8` | `passed` | ADR 19 is `accepted`. |
 | `A4.9` | `passed` | No ADR in the 12..19 range is marked `accepted-pending-HITL`. |
-| `A5.1` | `passed` | `validation/F-A-founder-vessel-WORKER-COMPLETE.md` enumerates files, HITL decisions, deferrals, and assumptions. |
+| `A5.1` | `passed` | `validation/F-A-founder-vessel-WORKER-COMPLETE.md` enumerates files, F-A-09 fix-forward commits, HITL decisions, deferrals, and assumptions. |
 | `A5.2` | `passed` | `docs/roadmap/ROADMAP.md` marks Phase 0 complete and adds the Mission A line. |
 | `A5.3` | `deferred` | `gh pr list --state open --head foundation/founder-vessel --json url,number,title` returned `[]`; F-A-07 opens the PR. |
 | `A5.4` | `deferred` | PR checks cannot exist until F-A-07 opens the PR and waits for CI. |
@@ -71,6 +71,7 @@ PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` r
 - `/Users/rudlord/HORCRX/CHANGELOG.md`
 - `/Users/rudlord/HORCRX/docs/roadmap/ROADMAP.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-001-candysoul/manifest.json`
+- `/Users/rudlord/HORCRX/examples/horcrx-002-orbel-pack/VOICE-DEFERRAL.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/agents.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/autonomy.md`
 - `/Users/rudlord/HORCRX/examples/horcrx-003-founder/briefs/daily/.gitkeep`
@@ -108,6 +109,12 @@ PR: pending F-A-07 (`gh pr list --state open --head foundation/founder-vessel` r
 - `/Users/rudlord/HORCRX/specs/vessel-format/voice-md.schema.md`
 - `/Users/rudlord/HORCRX/WORKER-COMPLETE.md`
 - `/Users/rudlord/HORCRX/validation/F-A-founder-vessel-WORKER-COMPLETE.md`
+
+## F-A-09 fix-forward commits
+
+- `445ea28 feat(spec): rename founder ledger knobs to short form`
+- `4e5e472 docs(spec): clarify forbidden_actions as the no-trading invariant`
+- `789ca68 docs(examples): add pack-level voice deferral note`
 
 ## Operator HITL decisions
 
