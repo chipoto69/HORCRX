@@ -255,7 +255,8 @@ fi
 
 for tag in "${annotated_tags[@]}"; do
   version="${tag#v}"
-  if ! grep -Eq "^## \\[$version\\]( - .+)?$" CHANGELOG.md; then
+  section_prefix="^## \\[$version\\]"
+  if ! grep -Eq "${section_prefix}( - .+)?$" CHANGELOG.md; then
     echo "CHANGELOG.md is missing a matching section for $tag" >&2
     exit 1
   fi
