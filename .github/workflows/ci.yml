@@ -75,6 +75,16 @@ jobs:
             --spec=draft2020 \
             -s specs/vessel-format/manifest.schema.json \
             "${manifest_args[@]}"
+          listing_args=()
+          while IFS= read -r listing; do
+            listing_args+=( -d "$listing" )
+          done < <(find examples/listings -maxdepth 1 -name '*.json' -print | sort)
+          npx --yes ajv-cli@5 validate \
+            --spec=draft2020 \
+            -s specs/registry/listing.schema.json \
+            "${listing_args[@]}"
+          npx --yes ajv-cli@5 compile --spec=draft2020 -s specs/marketplace/mcp.schema.json
+          npx --yes ajv-cli@5 compile --spec=draft2020 -s specs/marketplace/anti-sybil-schema.json
 
   markdown-link-check:
     name: ci/markdown-link-check
