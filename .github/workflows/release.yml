@@ -12,8 +12,25 @@ jobs:
   draft-release:
     name: draft GitHub release
     runs-on: ubuntu-latest
+    environment:
+      name: release # Required reviewers are configured in the GitHub UI.
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Enable Corepack
+        shell: bash
+        run: corepack enable
+      - name: Install dependencies for SBOM generation
+        shell: bash
+        run: pnpm install --no-frozen-lockfile --ignore-scripts
+      - name: Generate CycloneDX SBOM
+        uses: CycloneDX/gh-node-module-generatebom@27e13c2bf0fae78d66387b35ca9749d8cc853060 # v1.0.3
+        with:
+          path: ./
+          output: sbom.cdx.xml
       - name: Extract matching CHANGELOG section
         shell: bash
         run: |
@@ -28,7 +45,8 @@ jobs:
             echo "No CHANGELOG.md section found for $version" >&2
             exit 1
           fi
-      - uses: softprops/action-gh-release@v3
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         with:
           draft: true
           body_path: release-notes.md
+          files: sbom.cdx.xml

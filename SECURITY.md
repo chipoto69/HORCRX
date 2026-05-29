@@ -5,15 +5,22 @@
 If you believe you have found a security vulnerability in HORCRX, please report
 it via private email rather than opening a public issue:
 
-> security@horcrux.dev (placeholder; replace with real contact)
+> security@horcrux.dev
+
+This address is the operator-controlled intake alias for private reports and
+should be kept current if routing changes.
 
 We aim to acknowledge receipt within 72 hours and provide a remediation timeline
 within 7 days.
 
 ## Vessel Signing Key
 
-(Placeholder — once first production vessel signing key is established, its
-fingerprint will be published here and in `specs/vessel-format/signing-and-lineage.md`.)
+**Status:** DEFERRED to
+[`Phase 1 — vessel CLI and Hermes export`](docs/roadmap/next-missions.md#phase-1--vessel-cli-and-hermes-export).
+No production vessel-signing key exists in the foundation phase per `AGENTS.md`.
+The first operator-approved signing key fingerprint will be published here and
+in `specs/vessel-format/signing-and-lineage.md` when that roadmap follow-up
+lands.
 
 ## Threat Model
 

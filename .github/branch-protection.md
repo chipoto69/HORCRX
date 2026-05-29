@@ -1,6 +1,6 @@
 # Branch protection specification
 
-This file documents the intended protection rules for `main`. The F09 publisher run used the default operator decision: **spec-only** branch protection documentation, with no live `gh api` protection mutation.
+This file documents the intended protection rules for `main`. Mission B H1 applies this rule via `gh api` as an operator-gated hardening step.
 
 ## `main` rule
 
@@ -9,12 +9,29 @@ branch: main
 require_pull_request_reviews: true
 dismiss_stale_reviews: true
 require_code_owner_reviews: true
+required_approving_review_count: 1
 required_status_checks:
   strict: true
   contexts:
     - ci/commitlint
     - ci/schema-validate
     - ci/markdown-link-check
+    - ci/docs-frontmatter
+    - ci/voice-lint
+    - ci/secret-scan
+    - ci/gate-hx-04-signature-roundtrip
+    - ci/gate-hx-05-parent-cid-resolves
+    - ci/gate-hx-06-strip-rehydrate
+    - ci/gate-hx-07-docs-allowlist
+    - ci/gate-hx-08-voice-lint-extended
+    - ci/x402-nonce-replay
+    - ci/royalty-determinism
+    - ci/payout-target-format
+    - ci/revocation-never-deletes
+    - ci/chain-adapter-symmetry
+    - ci/preview-integrity
+    - ci/marketplace-envelope-kats
+    - ci/changelog-regression
 required_linear_history: true
 restrict_pushes: admins_only
 enforce_admins: true
@@ -26,6 +43,7 @@ allow_deletions: false
 
 - All changes should arrive through pull requests.
 - CODEOWNERS approval is required for changes under `/specs/`, `/contracts/`, and `/.github/`.
+- Owner-opened PRs by `@chipoto69` use the documented operator bypass path (`bypass_pull_request_allowances: ["chipoto69"]`) or explicit admin override during merge review; the repo does not rely on self-approval to satisfy the single-CODEOWNER case.
 - Direct pushes to `main` are blocked locally by `.githooks/pre-push`; the remote rule above is the corresponding GitHub-side policy.
 - Actual branch protection API application remains optional for a later operator-approved hardening pass.
 

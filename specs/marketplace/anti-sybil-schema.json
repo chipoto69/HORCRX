@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://horcrx.dev/schemas/marketplace/anti-sybil-schema.json",
+  "title": "HORCRX marketplace anti-Sybil policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reviewer_eligibility",
+    "rate_limits"
+  ],
+  "properties": {
+    "reviewer_eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min_account_age_days",
+        "min_prior_approvals",
+        "required_badge_tier"
+      ],
+      "properties": {
+        "min_account_age_days": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "min_prior_approvals": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "required_badge_tier": {
+          "$ref": "#/$defs/badgeTier"
+        }
+      }
+    },
+    "rate_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_actions"
+      ],
+      "properties": {
+        "review_actions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "submit_review",
+            "edit_review",
+            "helpful_vote",
+            "open_dispute"
+          ],
+          "properties": {
+            "submit_review": {
+              "$ref": "#/$defs/rateLimit"
+            },
+            "edit_review": {
+              "$ref": "#/$defs/rateLimit"
+            },
+            "helpful_vote": {
+              "$ref": "#/$defs/rateLimit"
+            },
+            "open_dispute": {
+              "$ref": "#/$defs/rateLimit"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "badgeTier": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "trusted",
+        "steward"
+      ]
+    },
+    "rateLimit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_count",
+        "window_seconds",
+        "cooldown_seconds"
+      ],
+      "properties": {
+        "max_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "window_seconds": {
+          "type": "integer",
+          "minimum": 60
+        },
+        "cooldown_seconds": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

@@ -4,3 +4,9 @@ if ! echo "$msg" | grep -qE '^(feat|fix|docs|chore|build|ci|refactor|test|polish
   echo "ERROR: commit subject must match Conventional Commits format."
   exit 1
 fi
+scope=$(printf '%s\n' "$msg" | sed -nE 's/^[^(]+\(([^)]*)\): .+/\1/p')
+lower_scope=$(printf '%s\n' "$scope" | tr '[:upper:]' '[:lower:]')
+if [[ -n "$lower_scope" && "$lower_scope" =~ (^|[[:space:]_.:/-])(wip|tmp|temp|fixup)($|[[:space:]_.:/-]) ]]; then
+  echo "ERROR: commit scope contains a deny-listed token (wip, tmp, temp, fixup)."
+  exit 1
+fi

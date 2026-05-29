@@ -1,0 +1,10 @@
+{
+  "suite": "marketplace-envelope",
+  "flow": "per-buyer-envelope",
+  "source_fixture": "../aead/x25519-xsalsa20-poly1305-libsodium.json",
+  "listing_id": "listing-001",
+  "buyer_reference": "buyer:test-001",
+  "cipher_suite": "x25519-xsalsa20-poly1305",
+  "expected_message_sha256": "11a7c7c6b97319c1152dbf7163b1165154fb2bf47eb1eb2f75a511f1d44af622",
+  "expected_ciphertext_sha256": "89796fcb6abd563758425f6b3ddd8e8b6694ba9f973d3953fd86c813e1d0c2a7"
+}

@@ -1,3 +1,10 @@
+---
+title: Mission A — HORCRX #003 · founder (rags-to-riches vessel)
+version: v0.1-draft
+updated: 2026-05-28
+owner: hardening-mission
+---
+
 # Mission A — HORCRX #003 · founder (rags-to-riches vessel)
 
 ATLAS → CORPUS → HORCRX.
@@ -129,7 +136,7 @@ A10. `docs/roadmap/ROADMAP.md` Phase 0 marked complete; new line entry for "Miss
 ## 6. off-limits (mission-specific, in addition to repo AGENTS.md off-limits)
 
 - Do NOT generate any wallet keys, real or test. Public addresses in `wallets/addresses.json` MUST be declared empty (the slot exists; the binding does not).
-- Do NOT write to `~/.hermes/`, `~/wiki/`, `~/.claude-worktrees/ATLAS/`, `~/.factory/skills/`, or any of the operator's running runtime locations.
+- Do NOT write to `~/.hermes/`, `~/wiki/`, `~/.claude-worktrees/ATLAS/`, `~/.factory/skills/`, or any of the operator's running runtime locations. <!-- wiki source -->
 - Do NOT install or activate the founder profile in Hermes; this mission ends at "spec on disk."
 - Do NOT modify the existing reference vessels (`examples/horcrx-001-candysoul/`, `examples/horcrx-002-orbel-pack/`) except to mirror the new required slot changes consistently (the `voice.md` promotion forces a `voice.md` check across all three references).
 - Do NOT add LLM keys, wallet seeds, or any service token anywhere in the repo or in CI.

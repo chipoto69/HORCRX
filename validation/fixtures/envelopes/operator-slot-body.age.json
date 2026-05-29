@@ -1,0 +1,10 @@
+{
+  "suite": "marketplace-envelope",
+  "flow": "operator-encrypted-slot-body",
+  "source_fixture": "../aead/age-cctv-x25519.json",
+  "listing_id": "listing-001",
+  "slot_path": "slots/private-body.md.age",
+  "cipher_suite": "age-x25519",
+  "recipient_role": "operator",
+  "expected_payload_sha256": "013f54400c82da08037759ada907a8b864e97de81c088a182062c4b5622fd2ab"
+}

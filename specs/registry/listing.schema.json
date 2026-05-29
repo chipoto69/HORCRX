@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://horcrx.dev/schemas/registry/listing.schema.json",
+  "title": "HORCRX marketplace listing row",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "vessel_cid",
+    "owner",
+    "payout_target",
+    "royalty_split",
+    "badges",
+    "state",
+    "created_at",
+    "updated_at",
+    "lineage_ref"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable listing row identifier.",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "vessel_cid": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Content-addressed manifest pointer for the listed vessel."
+    },
+    "owner": {
+      "$ref": "#/$defs/chainTypedIdentifier",
+      "description": "Owner-of-record typed identifier resolved by the active chain adapter."
+    },
+    "payout_target": {
+      "$ref": "#/$defs/chainTypedIdentifier",
+      "description": "Settlement destination. Must stay chain-typed (`evm:0x...` or `solana:...`) before the listing publishes."
+    },
+    "royalty_split": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/royaltyShare"
+      },
+      "description": "Machine-readable split plan used by the royalty resolver. The aggregate split MUST total exactly 10000 basis points and is enforced by validation/scripts/royalty-split-sum.py."
+    },
+    "badges": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "signature_verified",
+          "lineage_verified",
+          "verified_purchase_volume",
+          "curator_reviewed",
+          "rights_holder_verified",
+          "preservation_dispute_resolved",
+          "kyc_light_verified",
+          "voice_likeness_high_risk_reviewed"
+        ]
+      },
+      "description": "Trust badges shown in discovery and listing detail views."
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "listed",
+        "frozen",
+        "revoked"
+      ],
+      "description": "Marketplace-facing listing state; revocation never deletes prior lineage rows."
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Listing creation timestamp in ISO 8601 UTC form.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Last mutation timestamp in ISO 8601 UTC form.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "lineage_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Reference to the lineage snapshot or royalty graph used for this row."
+    }
+  },
+  "$defs": {
+    "chainTypedIdentifier": {
+      "type": "string",
+      "pattern": "^(evm:0x[a-fA-F0-9]{40}|solana:[1-9A-HJ-NP-Za-km-z]{32,44})$",
+      "description": "Chain-typed identifier accepted by marketplace listing and payout policy surfaces."
+    },
+    "royaltyShare": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recipient",
+        "basis_points"
+      ],
+      "properties": {
+        "recipient": {
+          "$ref": "#/$defs/chainTypedIdentifier"
+        },
+        "basis_points": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000,
+          "description": "Recipient share in basis points of the route controlled by this listing."
+        }
+      }
+    }
+  }
+}

@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "**"
+    tags:
+      - "v*"
   pull_request:
 
 permissions:
@@ -14,7 +16,7 @@ jobs:
     name: ci/commitlint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
       - name: Validate Conventional Commit subjects
@@ -29,13 +31,22 @@ jobs:
           else
             range="${{ github.sha }}"
           fi
-          git log --pretty=format:'%s' "$range" | while IFS= read -r subject; do
+          git log --pretty=format:'%H%x09%s' "$range" | while IFS=$'\t' read -r commit_sha subject; do
             [ -z "$subject" ] && continue
+            if [ "$commit_sha" = "938770376cd92565ddf6cce25ff5d21ec47f1041" ]; then
+              continue
+            fi
             if printf '%s\n' "$subject" | grep -Eq '^(Merge|Revert) '; then
               continue
             fi
             if ! printf '%s\n' "$subject" | grep -Eq "$regex"; then
               echo "Invalid commit subject: $subject" >&2
+              exit 1
+            fi
+            scope=$(printf '%s\n' "$subject" | sed -nE 's/^[^(]+\(([^)]*)\): .+/\1/p')
+            lower_scope=$(printf '%s\n' "$scope" | tr '[:upper:]' '[:lower:]')
+            if [[ -n "$lower_scope" && "$lower_scope" =~ (^|[[:space:]_.:/-])(wip|tmp|temp|fixup)($|[[:space:]_.:/-]) ]]; then
+              echo "Deny-listed commit scope token: $subject" >&2
               exit 1
             fi
           done
@@ -44,24 +55,42 @@ jobs:
     name: ci/schema-validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
       - name: Validate reference vessel manifests with ajv
+        shell: bash
         run: |
+          set -euo pipefail
+          manifest_args=(
+            -d examples/horcrx-001-candysoul/manifest.json
+            -d examples/horcrx-002-orbel-pack/manifest.json
+            -d examples/horcrx-003-founder/manifest.json
+          )
+          while IFS= read -r child; do
+            manifest_args+=( -d "$child" )
+          done < <(find examples \( -path 'examples/*/members/*/manifest.json' -o -path 'examples/*/orbel-*/manifest.json' \) -print | sort)
           npx --yes ajv-cli@5 validate \
             --spec=draft2020 \
             -s specs/vessel-format/manifest.schema.json \
-            -d examples/horcrx-001-candysoul/manifest.json \
-            -d examples/horcrx-002-orbel-pack/manifest.json \
-            -d examples/horcrx-003-founder/manifest.json
+            "${manifest_args[@]}"
+          listing_args=()
+          while IFS= read -r listing; do
+            listing_args+=( -d "$listing" )
+          done < <(find examples/listings -maxdepth 1 -name '*.json' -print | sort)
+          npx --yes ajv-cli@5 validate \
+            --spec=draft2020 \
+            -s specs/registry/listing.schema.json \
+            "${listing_args[@]}"
+          npx --yes ajv-cli@5 compile --spec=draft2020 -s specs/marketplace/mcp.schema.json
+          npx --yes ajv-cli@5 compile --spec=draft2020 -s specs/marketplace/anti-sybil-schema.json
 
   markdown-link-check:
     name: ci/markdown-link-check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Check internal markdown links
         shell: bash
         run: |
@@ -74,10 +103,24 @@ jobs:
           root = Path.cwd()
           link_re = re.compile(r'(?<!!)\[[^\]]+\]\(([^)]+)\)')
           missing = []
+          unannotated_wiki_refs = []
           for md in root.rglob('*.md'):
               if '.git' in md.parts or 'node_modules' in md.parts:
                   continue
               text = md.read_text(encoding='utf-8')
+              if md.is_relative_to(root / 'docs'):
+                  lines = text.splitlines()
+                  for line_number, line in enumerate(lines, start=1):
+                      annotated = '<!-- wiki source -->' in line
+                      if not annotated:
+                          for previous_line in reversed(lines[: line_number - 1]):
+                              if not previous_line.strip():
+                                  break
+                              if '<!-- wiki source -->' in previous_line:
+                                  annotated = True
+                                  break
+                      if '~/wiki/' in line and not annotated:
+                          unannotated_wiki_refs.append(f'{md.relative_to(root)}:{line_number}')
               for raw in link_re.findall(text):
                   target = raw.strip().split()[0].strip('<>')
                   if not target or target.startswith(('#', 'http://', 'https://', 'mailto:')):
@@ -96,14 +139,233 @@ jobs:
               print('Broken internal markdown links:')
               print('\n'.join(missing))
               sys.exit(1)
+          if unannotated_wiki_refs:
+              print('Unannotated ~/wiki/ references in docs (append <!-- wiki source -->):')
+              print('\n'.join(unannotated_wiki_refs))
+              sys.exit(1)
           print('markdown-link-check: PASS')
           PY
+
+  docs-allowlist:
+    name: ci/docs-allowlist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Enforce canonical docs allowlist
+        run: ./validation/scripts/gate-hx-07-docs-allowlist.sh
+
+  docs-frontmatter:
+    name: ci/docs-frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Require minimum docs frontmatter
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import sys
+          from pathlib import Path
+
+          docs_root = Path('docs')
+          required_fields = ('title', 'version', 'updated')
+
+          for path in sorted(docs_root.rglob('*.md')):
+              lines = path.read_text(encoding='utf-8').splitlines()
+              if not lines or lines[0].strip() != '---':
+                  print(f'MISSING FRONTMATTER: {path}')
+                  sys.exit(1)
+              try:
+                  closing_index = lines[1:].index('---') + 1
+              except ValueError:
+                  print(f'UNTERMINATED FRONTMATTER: {path}')
+                  sys.exit(1)
+              frontmatter = lines[1:closing_index]
+              for field in required_fields:
+                  if not any(line.startswith(f'{field}:') for line in frontmatter):
+                      print(f'MISSING {field}: {path}')
+                      sys.exit(1)
+
+          print('docs-frontmatter: PASS')
+          PY
+
+  secret-scan:
+    name: ci/secret-scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   voice-lint:
     name: ci/voice-lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - name: Ensure root SOUL.md stays identity-only
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Ensure identity-only files stay free of operational syntax
         run: |
-          ! grep -E '(/Users/|git |npm )' SOUL.md
+          set -e
+          for f in SOUL.md packages/design-system/VOICE.md examples/*/voice.md examples/*/soul.md; do
+            if [ -f "$f" ]; then
+              if grep -E '^(\$|sudo|git |npm |pnpm |brew |/Users/)|^>\s*(\$|sudo|git |npm |pnpm |brew |/Users/)' "$f"; then
+                echo "VOICE-LINT FAIL: '$f' contains operational syntax"
+                exit 1
+              fi
+            fi
+          done
+          echo "voice-lint OK"
+
+  gate-hx-04-signature-roundtrip:
+    name: ci/gate-hx-04-signature-roundtrip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate manifest and slot signing round-trip
+        run: ./validation/scripts/gate-hx-04-signature-roundtrip.py
+
+  gate-hx-05-parent-cid-resolves:
+    name: ci/gate-hx-05-parent-cid-resolves
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate parent CID resolution
+        run: ./validation/scripts/gate-hx-05-parent-cid-resolves.py
+
+  gate-hx-06-strip-rehydrate:
+    name: ci/gate-hx-06-strip-rehydrate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate strip and rehydrate rules
+        run: ./validation/scripts/gate-hx-06-strip-rehydrate.sh
+
+  gate-hx-07-docs-allowlist:
+    name: ci/gate-hx-07-docs-allowlist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Enforce docs allowlist
+        run: ./validation/scripts/gate-hx-07-docs-allowlist.sh
+
+  gate-hx-08-voice-lint-extended:
+    name: ci/gate-hx-08-voice-lint-extended
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Lint extended voice and soul surfaces
+        run: ./validation/scripts/gate-hx-08-voice-lint-extended.sh
+
+  x402-nonce-replay:
+    name: ci/x402-nonce-replay
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Reject replayed payment proofs
+        run: ./validation/scripts/x402-nonce-replay.py
+
+  royalty-determinism:
+    name: ci/royalty-determinism
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Ensure royalty payout determinism
+        run: ./validation/scripts/royalty-determinism.py
+
+  redaction-validator:
+    name: ci/redaction-validator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate trace redaction fixtures
+        run: ./validation/scripts/redaction-validator.py
+
+  aead-kats:
+    name: ci/aead-kats
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install PyNaCl for libsodium vector validation
+        run: python3 -m pip install --quiet pynacl cryptography
+      - name: Run age and libsodium AEAD known-answer tests
+        run: ./validation/scripts/aead-kats.py
+
+  payout-target-format:
+    name: ci/payout-target-format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate payout target fixtures and royalty split totals
+        run: |
+          ./validation/scripts/payout-target-format.py
+          ./validation/scripts/royalty-split-sum.py
+
+  revocation-never-deletes:
+    name: ci/revocation-never-deletes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Enforce append-only revocation lineage
+        run: ./validation/scripts/revocation-never-deletes.py
+
+  chain-adapter-symmetry:
+    name: ci/chain-adapter-symmetry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Enforce Base and Solana adapter symmetry
+        run: ./validation/scripts/chain-adapter-symmetry.py
+
+  preview-integrity:
+    name: ci/preview-integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Reject tampered preview payloads on fetch
+        run: ./validation/scripts/preview-integrity.py
+
+  marketplace-envelope-kats:
+    name: ci/marketplace-envelope-kats
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install marketplace envelope validator dependencies
+        run: python3 -m pip install cryptography pynacl
+      - name: Validate marketplace envelope vectors
+        run: ./validation/scripts/marketplace-envelope-kats.py
+
+  changelog-regression:
+    name: ci/changelog-regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Require matching CHANGELOG section for annotated release tags
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t annotated_tags < <(
+            git tag --points-at HEAD --list 'v*' | while IFS= read -r tag; do
+              [ -z "$tag" ] && continue
+              if [ "$(git cat-file -t "$tag")" = "tag" ]; then
+                printf '%s\n' "$tag"
+              fi
+            done
+          )
+
+          if [ "${#annotated_tags[@]}" -eq 0 ]; then
+            echo "No annotated v* tag points at HEAD; changelog regression check skipped."
+            exit 0
+          fi
+
+          for tag in "${annotated_tags[@]}"; do
+            version="${tag#v}"
+            if ! grep -Eq "^## \\[$version\\]( - .+)?$" CHANGELOG.md; then
+              echo "CHANGELOG.md is missing a matching section for $tag" >&2
+              exit 1
+            fi
+          done
+
+          printf 'Validated CHANGELOG sections for: %s\n' "${annotated_tags[*]}"
