@@ -94,10 +94,13 @@ trade-off because:
 1. Personal repositories do not support `bypass_pull_request_allowances`
    (returns HTTP 422 "Only organization repositories can have users and team
    restrictions"), so review-bypass cannot be narrowly scoped.
-2. The local pre-push hook (`.githooks/pre-push`) rejects direct pushes to
-   `main` and any `release/*` branch on the operator's workstation. This is
-   the compensating guard. Tag pushes are operator-trusted by design (tags are
-   immutable and any tag push is auditable in the GitHub tag log).
+2. The local pre-push hook (`.githooks/pre-push`) branches on
+   `refs/heads/main`, `refs/heads/release/*`, and `refs/tags/*`: it rejects
+   direct pushes to `main` and any `release/*` branch on the operator's
+   workstation, and it only permits annotated `refs/tags/v*` tag pushes. This
+   is the compensating guard. Tag pushes are operator-trusted by design —
+   auditable via the GitHub tag log; tag force-pushes are rare and themselves
+   logged.
 3. Server-side admin pushes are auditable in the GitHub commit log.
 4. When CODEOWNERS expands to a team or the repo migrates to a GitHub
    organization, `enforce_admins` can be re-enabled and
