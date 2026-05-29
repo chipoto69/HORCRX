@@ -23,6 +23,17 @@ def load_listing(path: Path) -> dict:
         fail(f'{path.relative_to(REPO)} is not valid JSON: {exc}')
 
 
+def validate_basis_points(path: Path, index: int, basis_points: object) -> int:
+    field = f'{path.relative_to(REPO)} royalty_split[{index}].basis_points'
+    if type(basis_points) is not int:
+        fail(f'{field} must be an integer')
+    if basis_points < 0:
+        fail(f'{field} must be greater than or equal to 0')
+    if basis_points > 10000:
+        fail(f'{field} must be less than or equal to 10000')
+    return basis_points
+
+
 def main() -> None:
     listing_paths = [Path(arg).resolve() for arg in sys.argv[1:]] or DEFAULT_FIXTURES
     if not listing_paths:
@@ -39,10 +50,7 @@ def main() -> None:
         for index, share in enumerate(royalty_split):
             if not isinstance(share, dict):
                 fail(f'{path.relative_to(REPO)} royalty_split[{index}] must be an object')
-            basis_points = share.get('basis_points')
-            if not isinstance(basis_points, int):
-                fail(f'{path.relative_to(REPO)} royalty_split[{index}].basis_points must be an integer')
-            total += basis_points
+            total += validate_basis_points(path, index, share.get('basis_points'))
 
         if total != 10000:
             fail(f'{path.relative_to(REPO)} royalty_split totals {total} basis points; expected exactly 10000')
