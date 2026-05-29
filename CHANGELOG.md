@@ -7,20 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-05-29
+
 ### Added
-- Mission B validation index plus runnable local/CI gates for signature round-trip, parent-CID resolution, strip/rehydrate, docs allowlist, voice-lint extension, x402 nonce replay, royalty determinism, and the Mission A pack-child schema-validation handoff.
-- Memory hardening additions for graft provenance, append-only traces, Hermes lineage chain-hash rows, redaction validation, and AEAD known-answer fixtures.
-- Marketplace pre-launch policy surfaces including `specs/registry/listing.schema.json`, ranking transparency, anti-sybil schema, payout-target validation, and five marketplace validation gates.
-- Apps foundation-prep stubs and fixtures for `apps/marketplace-ui/`, `apps/marketplace-api/`, `apps/api/`, listing fixtures, the wallet-adapter mock, the marketplace MCP schema, and the ORBEL pack manifest deferral note.
+- Release environment configuration checklist landed in `docs/ops/RUNBOOK.md` and related release surfaces via PR #12 (`3841d7fe`).
 
 ### Changed
-- Mission B hardened CI and repository policy with `ci/secret-scan`, extended voice-lint scope, stricter git hooks, SHA-pinned GitHub Actions, and live `main` branch protection aligned to `.github/branch-protection.md`.
-- Onboarding, operations, release, and security docs now cover local validator runs, the service runbook, release procedure, secret handling, marketplace operations, and the private `security@horcrux.dev` intake path.
-- Docs hygiene now enforces canonical allowlisting and minimum frontmatter across `docs/**`.
-- Release posture now includes SBOM generation, the operator-gated `release` environment, changelog regression checks, and an explicit Phase 1 roadmap deferral for vessel-signing-key publication.
+- Branch-protection doctrine now drops `enforce_admins` to match the single-owner admin-override policy via PR #13 (`8cc8dfec`).
+
+### Fixed
+- `validation/scripts/royalty-split-sum.py` now rejects `bool`, non-integer, negative, over-10000, and sum-mismatch `basis_points` cases via PR #14 (`a848df03`).
 
 ### Operator HITL
-- GitHub `release` environment required reviewers remain an operator-owned follow-up in PR review.
+- PR #12, PR #13, and PR #14 were merged after `v0.2.0-foundation`; `v0.2.1` records those post-tag follow-up changes without republishing the earlier draft.
 
 ## [0.2.0-foundation] - 2026-05-29
 
@@ -68,6 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open binding questions resolved as ADRs but pending operator HITL confirmation on production-bound ones (see `specs/hermes-binding/open-questions-resolved.md`)
 
 [Unreleased]: https://github.com/chipoto69/HORCRX/compare/v0.2.0-foundation...HEAD
+[0.2.1]: https://github.com/chipoto69/HORCRX/compare/v0.2.0-foundation...main
 [0.2.0-foundation]: https://github.com/chipoto69/HORCRX/compare/v0.1.1...v0.2.0-foundation
 [0.1.1]: https://github.com/chipoto69/HORCRX/compare/v0.1.0-foundation...v0.1.1
 [0.1.0-foundation]: https://github.com/chipoto69/HORCRX/releases/tag/v0.1.0-foundation
