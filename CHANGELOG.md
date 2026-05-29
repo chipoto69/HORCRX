@@ -77,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open binding questions resolved as ADRs but pending operator HITL confirmation on production-bound ones (see `specs/hermes-binding/open-questions-resolved.md`)
 
 [Unreleased]: https://github.com/chipoto69/HORCRX/compare/v0.2.0-foundation...HEAD
-[0.2.1]: https://github.com/chipoto69/HORCRX/compare/v0.2.0-foundation...main
+[0.2.1]: https://github.com/chipoto69/HORCRX/compare/v0.2.0-foundation...v0.2.1
 [0.2.0-foundation]: https://github.com/chipoto69/HORCRX/compare/v0.1.1...v0.2.0-foundation
 [0.1.1]: https://github.com/chipoto69/HORCRX/compare/v0.1.0-foundation...v0.1.1
 [0.1.0-foundation]: https://github.com/chipoto69/HORCRX/releases/tag/v0.1.0-foundation
