@@ -95,8 +95,9 @@ trade-off because:
    (returns HTTP 422 "Only organization repositories can have users and team
    restrictions"), so review-bypass cannot be narrowly scoped.
 2. The local pre-push hook (`.githooks/pre-push`) rejects direct pushes to
-   `main` and `refs/tags/v*` on the operator's workstation. This is the
-   compensating guard.
+   `main` and any `release/*` branch on the operator's workstation. This is
+   the compensating guard. Tag pushes are operator-trusted by design (tags are
+   immutable and any tag push is auditable in the GitHub tag log).
 3. Server-side admin pushes are auditable in the GitHub commit log.
 4. When CODEOWNERS expands to a team or the repo migrates to a GitHub
    organization, `enforce_admins` can be re-enabled and
