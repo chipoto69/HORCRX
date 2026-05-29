@@ -84,6 +84,29 @@ single merge action. It is auditable in the PR history.
 - Do NOT use admin-override on cross-mission handoff PRs that should genuinely
   wait for a reviewer.
 
+### Trade-off: admin push capability
+
+With `enforce_admins: false`, branch protection does NOT apply to admin
+accounts. This means the operator can technically push directly to `main`
+(bypassing the PR requirement) or push to other protected refs. We accept this
+trade-off because:
+
+1. Personal repositories do not support `bypass_pull_request_allowances`
+   (returns HTTP 422 "Only organization repositories can have users and team
+   restrictions"), so review-bypass cannot be narrowly scoped.
+2. The local pre-push hook (`.githooks/pre-push`) rejects direct pushes to
+   `main` and `refs/tags/v*` on the operator's workstation. This is the
+   compensating guard.
+3. Server-side admin pushes are auditable in the GitHub commit log.
+4. When CODEOWNERS expands to a team or the repo migrates to a GitHub
+   organization, `enforce_admins` can be re-enabled and
+   `bypass_pull_request_allowances` can replace the admin-override path.
+
+The operator commits to using the PR flow even though it is no longer
+machine-enforced server-side. Admin direct-push to `main` is reserved for
+genuine emergency scenarios (broken protection, lockout recovery) and must be
+documented in a follow-up PR.
+
 ### Future: migrate to organization
 
 If/when CODEOWNERS expands to a team, migrate the repo to a GitHub organization
