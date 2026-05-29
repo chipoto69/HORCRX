@@ -161,6 +161,7 @@ Minimum schema:
 
 | Column | Type | Meaning |
 |---|---|---|
+| `lineage_seq` | `INTEGER` | monotonically increasing append-only sequence number |
 | `installed_at` | `TEXT` | ISO8601 UTC install or graft time |
 | `profile_name` | `TEXT` | target Hermes profile |
 | `vessel_cid` | `TEXT` | installed or grafted vessel manifest CID |
@@ -170,6 +171,17 @@ Minimum schema:
 | `royalty_target` | `TEXT` | royalty recipient target from the manifest |
 | `signed_manifest_cid` | `TEXT` | signed manifest CID actually installed |
 | `strategy` | `TEXT` | conflict strategy used at install or graft |
+| `previous_chain_hash` | `TEXT` | chain hash from the immediately previous lineage row for this profile, or 64 zero hex characters for the first row |
+| `chain_hash` | `TEXT` | SHA-256 of the canonical row payload, including `previous_chain_hash` but excluding `chain_hash` itself |
+
+Lineage storage is an explicit append-only history surface:
+
+- implementations MUST insert new rows only;
+- implementations MUST NOT `UPDATE` or `DELETE` lineage rows, including revocations;
+- revocation, correction, and re-install events append a fresh row that references the earlier lineage path;
+- `chain_hash` verification is computed over the canonical row payload, making in-place mutation detectable.
+
+Canonical `chain_hash` payload rules are fixed for every lineage row: serialize the row as sorted-key JSON encoded as UTF-8 with LF line endings, exclude the `chain_hash` field itself from the payload, keep `previous_chain_hash` as an ordinary field inside that payload, and then compute `sha256(canonical_row_payload)`. This makes the first row deterministic (`previous_chain_hash = 64 * "0"`) and keeps later rows chained without relying on implementation-specific key ordering.
 
 Hermes audit rows emitted by vessel-installed or vessel-grafted material MUST also carry `vessel_cid` so downstream marketplace or royalty accounting can attribute execution to a lineage path without mutating Hermes' base audit requirement. Sources: `/Users/rudlord/.factory/missions/df2673b6-89f8-4626-b2b1-0857353d356c/library/W-F-hermes-binding.md`, `/Users/rudlord/wiki/_meta/hermes-stack/hermes-content-os.md`, `/Users/rudlord/.hermes/profiles/hermes-content-os/SOUL.md`.
 

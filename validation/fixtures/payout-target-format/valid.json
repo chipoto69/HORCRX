@@ -1,0 +1,12 @@
+{
+  "cases": [
+    {
+      "name": "valid evm payout target",
+      "value": "evm:0x1234567890abcdef1234567890ABCDEF12345678"
+    },
+    {
+      "name": "valid solana payout target",
+      "value": "solana:9xQeWvG816bUx9EPuQ1LxM5r8Y1koXSPoaqe7zuTWD4w"
+    }
+  ]
+}

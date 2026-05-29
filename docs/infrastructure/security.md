@@ -1,8 +1,15 @@
+---
+title: Security and threat model
+version: v0.1-draft
+updated: 2026-05-28
+owner: hardening-mission
+---
+
 # Security and threat model
 
 Version: `v0.1-draft`
 
-The security rule that matters most for HORCRX is simple: **the mind and the secrets do not live in the same trust domain**. A vessel may carry portable cognition, memory canon, skills, and lineage. It must not become a bag of credentials. Every infrastructure choice below follows from that split. Sources: `~/wiki/raw/downloads/2026-04-10/root/system-map.md`, `specs/hermes-binding/BINDING.md`, `research/05-risks-and-tensions.md`.
+The security rule that matters most for HORCRX is simple: **the mind and the secrets do not live in the same trust domain**. A vessel may carry portable cognition, memory canon, skills, and lineage. It must not become a bag of credentials. Every infrastructure choice below follows from that split. Sources: `~/wiki/raw/downloads/2026-04-10/root/system-map.md`, `specs/hermes-binding/BINDING.md`, `research/05-risks-and-tensions.md`. <!-- wiki source -->
 
 ## 1. Trust domains
 
@@ -14,12 +21,13 @@ The security rule that matters most for HORCRX is simple: **the mind and the sec
 | **Sandbox / LLM execution** | minimally scoped task context, approved bundle payloads, temporary working state | direct Vault access, unredacted secret stores, permanent credential copies |
 | **Public marketplace plane** | listings, previews, signed public metadata, cached public blobs | export-time secrets, signing keys, privileged admin tooling |
 
-This reproduces the system-map doctrine in marketplace form: Archive is read-mostly truth, Vault is secret isolation, Nucleus mediates access, and Sandbox never talks to Vault directly. Sources: `~/wiki/raw/downloads/2026-04-10/root/system-map.md`.
+This reproduces the system-map doctrine in marketplace form: Archive is read-mostly truth, Vault is secret isolation, Nucleus mediates access, and Sandbox never talks to Vault directly. Sources: `~/wiki/raw/downloads/2026-04-10/root/system-map.md`. <!-- wiki source -->
 
 ## 2. Threat model
 
 ### 2.1 Threat matrix
 
+<!-- wiki source -->
 | Threat | Attacker model and capabilities | Impact | Mitigations | Residual risk |
 |---|---|---|---|---|
 | **Soul theft** | Attacker gains access to unsigned export staging, CI artifacts, or a compromised operator workstation before the bundle is finalized. | Identity, tone, and hard-won behavioral patterns are copied and resold or impersonated. | Sign only after allowlisted export; keep unsigned staging short-lived; require manifest diff preview before signing; never stage decrypted secret-bearing files with bundle assets. Sources: `research/05-risks-and-tensions.md`, `specs/hermes-binding/strip-and-rehydrate.md` | Public-facing vessels are still inherently copyable after release; provenance reduces harm but cannot make public cognition non-copyable. |
@@ -36,7 +44,7 @@ This reproduces the system-map doctrine in marketplace form: Archive is read-mos
 1. **No raw secret reuse across domains.** Export and install tooling may reference host-provided secret handles, never bundle secret material itself.
 2. **Public preview is always redacted.** The content gateway may expose public slots and previews, but encrypted or sensitive slots remain gated.
 3. **Signing stays isolated.** The signing surface is not the same host or process as the public preview surface.
-4. **Runtime approval remains manual for irreversible flows.** Hermes install and purchase flows preserve operator approval and audit evidence. Sources: `specs/hermes-binding/BINDING.md`, `~/wiki/_meta/hermes-stack/hermes-content-os.md`.
+4. **Runtime approval remains manual for irreversible flows.** Hermes install and purchase flows preserve operator approval and audit evidence. Sources: `specs/hermes-binding/BINDING.md`, `~/wiki/_meta/hermes-stack/hermes-content-os.md`. <!-- wiki source -->
 
 ## 4. Security review checklist for future implementation workers
 
@@ -61,6 +69,6 @@ Before any real service ships, a future worker should verify:
 - `specs/marketplace/discovery-and-trust.md`
 - `specs/hermes-binding/BINDING.md`
 - `specs/hermes-binding/strip-and-rehydrate.md`
-- `~/wiki/raw/downloads/2026-04-10/root/system-map.md`
-- `~/wiki/_meta/hermes-stack/hermes-content-os.md`
+- `~/wiki/raw/downloads/2026-04-10/root/system-map.md` <!-- wiki source -->
+- `~/wiki/_meta/hermes-stack/hermes-content-os.md` <!-- wiki source -->
 - `~/.claude-worktrees/ATLAS/knowledge-horcrux/atlas/billing/x402/`

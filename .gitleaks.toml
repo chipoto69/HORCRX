@@ -1,0 +1,7 @@
+title = "HORCRX gitleaks allowlist"
+
+[[allowlists]]
+description = "Public libsodium AEAD test vector fixture"
+paths = [
+  '''validation/fixtures/aead/x25519-xsalsa20-poly1305-libsodium\.json''',
+]

@@ -102,6 +102,17 @@ Preservation artifacts should support three disclosure levels:
 
 This lets HORCRX preserve monetizable work without forcing every artifact into full public release. Sources: `specs/vessel-format/SPEC.md`, `specs/marketplace/ARCHITECTURE.md`.
 
+## 5.1 Payout target format
+
+Every monetized preservation listing MUST expose a chain-typed `payout_target` before it can publish. Foundation phase v0.1 accepts exactly two forms:
+
+- `evm:0x[a-fA-F0-9]{40}`
+- `solana:[1-9A-HJ-NP-Za-km-z]{32,44}`
+
+Canonical regex: `^(evm:0x[a-fA-F0-9]{40}|solana:[1-9A-HJ-NP-Za-km-z]{32,44})$`
+
+This keeps settlement routing auditable at listing time and prevents arbitrary free-form payout strings from bypassing chain-adapter verification.
+
 ## 6. Dispute workflow
 
 HORCRX must provide a **dispute workflow** because preservation without enforcement becomes theater.

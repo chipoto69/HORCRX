@@ -13,6 +13,15 @@ HORCRX is a soul-vessel protocol: a portable, signable, content-addressed, trade
 - `packages/design-system/` — inherited HORCRX brand canon and voice doctrine.
 - `research/INDEX.md` — source-path-cited research spine for the foundation mission.
 
+## Security & Operator Contract
+
+- [`SECURITY.md`](SECURITY.md) — private vulnerability reporting path and disclosure posture.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — branch, commit, and contribution rules.
+- [`validation/`](validation/) — mission reports, fixtures, and validation scripts.
+- [`docs/infrastructure/security.md`](docs/infrastructure/security.md) — threat model and trust-boundary doctrine.
+
+If you need to report a vulnerability, use the private intake path documented in [`SECURITY.md`](SECURITY.md) instead of opening a public issue.
+
 ## Monorepo shape
 
 ```text

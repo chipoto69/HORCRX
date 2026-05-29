@@ -68,27 +68,27 @@
       {
         "id": "orbel-orchestrator",
         "role": "orchestrator",
-        "manifest_cid": "cid:sha256:bc1e3ef18fcf5d4c03bc366f6767b4d3803602202c4359fa395720e3b88d5fb2"
+        "manifest_cid": "cid:sha256:4a006cd4c0510e55b607f1210a0307814a6b043519c54976d998fb7ad97e5388"
       },
       {
         "id": "orbel-researcher",
         "role": "researcher",
-        "manifest_cid": "cid:sha256:f6a66bf42fae9511412f798bbf2cf223695f3bbfe84b2366931ad03fc8308470"
+        "manifest_cid": "cid:sha256:732972d68bc438437095bc021d48a42f3a083aa6f1d7d3e76f7b829680b448e5"
       },
       {
         "id": "orbel-builder",
         "role": "builder",
-        "manifest_cid": "cid:sha256:7186466fa557d15a1d669b48945c162a9f22f12e802e0fb01a5ca55e522f2958"
+        "manifest_cid": "cid:sha256:9dbd768cdd71c91e56e85e72988e4482fde13369382cc121173031feadf5e2f1"
       },
       {
         "id": "orbel-evaluator-evolver",
         "role": "evaluator-evolver",
-        "manifest_cid": "cid:sha256:ce87cb077c7f09d24fe731a31d0fb5c39cbd7b2d1f2c006a227c3ad51b059c92"
+        "manifest_cid": "cid:sha256:c778bdef5f5d5c08b8be9c17f40ec076a2276983b7003fe17e6b4d5d80e27178"
       },
       {
         "id": "orbel-librarian",
         "role": "librarian",
-        "manifest_cid": "cid:sha256:da9665b26498e1afa560e5b8c9259aab517853965c48869ed7e8ab003de083e3"
+        "manifest_cid": "cid:sha256:c1a2bf6d735b5fea1d0ee620a57f5d335ffd4c282a4b62d33d9501230848d178"
       }
     ],
     "task_graph": [

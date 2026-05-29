@@ -2,7 +2,7 @@
   "id": "orbel-librarian",
   "version": "0.1.0",
   "manifest_version": "0.1",
-  "kind": "vessel",
+  "kind": "pack-member",
   "representation": "folder",
   "catalog_number": 5,
   "parent_cids": [],

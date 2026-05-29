@@ -1,3 +1,10 @@
+---
+title: HORCRX next missions
+version: v0.1-draft
+updated: 2026-05-28
+owner: hardening-mission
+---
+
 # HORCRX next missions
 
 ATLAS → CORPUS → HORCRX.

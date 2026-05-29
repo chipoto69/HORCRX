@@ -1,0 +1,16 @@
+{
+  "cases": [
+    {
+      "name": "missing chain prefix",
+      "value": "0x1234567890abcdef1234567890ABCDEF12345678"
+    },
+    {
+      "name": "wrong length evm target",
+      "value": "evm:0x1234"
+    },
+    {
+      "name": "invalid solana base58 characters",
+      "value": "solana:O0Il23456789ABCDEFGHJKLMNPQRSTUVWXYZabcd"
+    }
+  ]
+}
