@@ -1,7 +1,7 @@
 ---
 title: HORCRX docs canonical allowlist
 version: v0.1-draft
-updated: 2026-05-28
+updated: 2026-05-29
 owner: hardening-mission
 ---
 
@@ -25,6 +25,7 @@ Any `~/wiki/...` source reference inside `docs/` must be annotated inline with `
 - `docs/onboarding/02-run-validators.md`
 - `docs/onboarding/03-troubleshoot-ci.md`
 - `docs/onboarding/04-mission-checklist.md`
+- `docs/ops/H8.3-RELEASE-ENVIRONMENT-CHECKLIST.md`
 - `docs/ops/MARKETPLACE-OPERATOR-RUNBOOK.md`
 - `docs/ops/RUNBOOK.md`
 - `docs/release/RELEASING.md`
